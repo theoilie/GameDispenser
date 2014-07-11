@@ -1,0 +1,13 @@
+GameDispenser
+==========
+
+Description:
+------------
+	
+
+Features:
+---------
+
+
+Permissions:
+------------
