@@ -11,11 +11,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * @author t7seven7t
  */
-public class LogHelper {
+public class LogUtil {
     
 	private final JavaPlugin plugin;
 	
-	public LogHelper(JavaPlugin plugin) {
+	public LogUtil(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 

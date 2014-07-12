@@ -111,7 +111,7 @@ public class JavaGameLoader implements GameLoader {
             }
             
             for (Command command : loader.loadEventClasses(Command.class)) {
-                CommandManager.addCommand(command);
+                CommandManager.registerCommand(command, type);
             }
         } catch (InvalidGameException e) {
             GameDispenser.getInstance().getLogger().log(Level.WARNING,

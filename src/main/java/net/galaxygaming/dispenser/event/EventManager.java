@@ -27,7 +27,7 @@ import com.google.common.collect.Sets;
  * @author t7seven7t
  */
 public class EventManager {
-    
+
     private static EventManager instance;
     private static final Map<GameType, Set<Listener>> listeners = Maps.newHashMap();
 
@@ -39,7 +39,6 @@ public class EventManager {
     }
     
     public static void registerListener(Listener listener, GameType type) {
-        System.out.println("Registering listener: " + listener.getClass().getName());
         Set<Method> methods;
         try {
             Method[] publicMethods = listener.getClass().getMethods();
