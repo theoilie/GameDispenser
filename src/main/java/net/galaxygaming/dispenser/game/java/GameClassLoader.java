@@ -4,11 +4,17 @@
 package net.galaxygaming.dispenser.game.java;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
 
@@ -17,6 +23,7 @@ import net.galaxygaming.dispenser.game.GameDescriptionFile;
 import net.galaxygaming.dispenser.game.InvalidGameException;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * @author t7seven7t
@@ -96,21 +103,45 @@ public class GameClassLoader extends URLClassLoader {
         return classes.keySet();
     }
     
-    <T> T loadInstance(String name, Class<T> superClass) throws InvalidGameException {
+    /**
+     * Gives a collection of classes that inherit the super class specified
+     * @param superClass super class to inherit
+     * @return set of classes inheriting superClass
+     * @throws InvalidGameException
+     */
+    <T> Set<T> loadEventClasses(Class<T> superClass) throws InvalidGameException {
+        Set<T> result = Sets.newHashSet();
+        
+        JarFile jar = null;
+        Pattern filter = Pattern.compile("\\.class$");
+        
         try {
-            Class<?> clazz = Class.forName(name, true, this);
-            if (clazz.isAssignableFrom(superClass)) {
-                Class<? extends T> result = clazz.asSubclass(superClass);
-                return result.newInstance();
-            } 
-        } catch (IllegalAccessException e) {
-            throw new InvalidGameException("class '" + name + "' has no public constructor", e);
-        } catch (ClassNotFoundException e) {
-            // That's stupid.
-        } catch (InstantiationException e) {
+            jar = new JarFile(file);
+            for (Enumeration<JarEntry> e = jar.entries(); e.hasMoreElements(); ) {
+                JarEntry entry = e.nextElement();
+                Matcher match = filter.matcher(entry.getName());
+                if (!match.find()) {
+                    continue;
+                }
+                
+                String binaryName = entry.getName().replaceAll("/", ".").replace(".class", "");
+                Class<?> clazz = Class.forName(binaryName, false, this);
+                if (superClass.isAssignableFrom(clazz)) {
+                    Class<? extends T> event = clazz.asSubclass(superClass);
+                    result.add(event.newInstance());
+                }
+            }
+        } catch (Throwable e) {
             throw new InvalidGameException(e);
-        }  
-        return null;
+        } finally {
+            if (jar != null) {
+                try {
+                    jar.close();
+                } catch (IOException e) {}
+            }
+        }
+        
+        return result;
     }
     
 }

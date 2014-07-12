@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 /**
  * @author t7seven7t
@@ -73,7 +74,7 @@ public class GameDescriptionFile {
      * @return an immutable list of this game's dependencies
      */
     public List<String> getDepend() {
-        return depend;
+        return depend == null ? Lists.<String>newArrayList() : depend;
     }
     
     private void loadMap(Map<?, ?> map) throws InvalidDescriptionException {

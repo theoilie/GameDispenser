@@ -8,9 +8,9 @@ import org.bukkit.event.Listener;
 /**
  * @author t7seven7t
  */
-public class EventsManager {
+public abstract class BaseListener implements Listener {
 
-    public static void addListener(Listener listener) {
+    public BaseListener() {
         
     }
     

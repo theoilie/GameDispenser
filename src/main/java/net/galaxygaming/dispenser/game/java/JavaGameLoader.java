@@ -25,8 +25,8 @@ import com.google.common.collect.Maps;
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.command.Command;
 import net.galaxygaming.dispenser.command.CommandManager;
-import net.galaxygaming.dispenser.event.EventListener;
-import net.galaxygaming.dispenser.event.EventsManager;
+import net.galaxygaming.dispenser.event.BaseListener;
+import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameDescriptionFile;
 import net.galaxygaming.dispenser.game.GameLoader;
@@ -105,22 +105,17 @@ public class JavaGameLoader implements GameLoader {
         GameClassLoader loader = loaders.get(type.toString());
         Validate.notNull(loader, "Game type '" + type.toString() + "' must be loaded first");
         
-        for (String name : loader.getClasses()) {
-            try {
-                Listener listener = loader.loadInstance(name, EventListener.class);
-                if (listener != null) {
-                    EventsManager.addListener(listener);
-                    continue;
-                }
-                
-                Command command = loader.loadInstance(name, Command.class);
-                if (command != null) {
-                    CommandManager.addCommand(command);
-                }
-            } catch (InvalidGameException e) {
-                GameDispenser.getInstance().getLogger().log(Level.WARNING,
-                        "Event failed to initialize.", e);
+        try {            
+            for (Listener listener : loader.loadEventClasses(BaseListener.class)) {
+                EventManager.registerListener(listener, type);
             }
+            
+            for (Command command : loader.loadEventClasses(Command.class)) {
+                CommandManager.addCommand(command);
+            }
+        } catch (InvalidGameException e) {
+            GameDispenser.getInstance().getLogger().log(Level.WARNING,
+                    "Failed to register events for " + type.toString(), e);
         }
     }
     
