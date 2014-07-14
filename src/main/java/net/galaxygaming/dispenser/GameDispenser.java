@@ -3,7 +3,6 @@
  */
 package net.galaxygaming.dispenser;
 
-import net.galaxygaming.dispenser.command.CommandResource;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.util.LogUtil;
@@ -20,8 +19,6 @@ public class GameDispenser extends JavaPlugin {
     
     private LogUtil logHelper;
     private GameManager gameManager;
-    private EventManager eventManager;
-    private CommandResource commandResource;
         
     public void onEnable() {
         GameDispenser.instance = this;
@@ -30,8 +27,8 @@ public class GameDispenser extends JavaPlugin {
             this.getDataFolder().mkdir();
         
         this.gameManager = new GameManager(this, this.getDataFolder());
-        this.eventManager = new EventManager(this);
-        this.commandResource = new CommandResource();
+        EventManager.getInstance().setup(this);
+        MessagesResource.getInstance().setup(this);
         
         logHelper.log("Loaded {0} games.", gameManager.loadGameTypes().length);
     }
@@ -43,10 +40,6 @@ public class GameDispenser extends JavaPlugin {
     public static GameDispenser getInstance() {
         Validate.notNull(GameDispenser.instance, "GameDispenser not yet initialized.");
         return GameDispenser.instance;
-    }
-    
-    public CommandResource getCommandResource() {
-        return this.commandResource;
     }
     
 }

@@ -6,6 +6,7 @@ package net.galaxygaming.dispenser.command;
 import java.util.List;
 
 import net.galaxygaming.dispenser.GameDispenser;
+import net.galaxygaming.dispenser.MessagesResource;
 import net.galaxygaming.util.FormatUtil;
 import net.galaxygaming.util.PermissionUtil;
 
@@ -21,6 +22,7 @@ import com.google.common.collect.Lists;
  * @author t7seven7t
  */
 public abstract class Command implements CommandExecutor {
+    
     private final GameDispenser plugin = GameDispenser.getInstance();
     
     protected CommandSender sender;
@@ -38,9 +40,7 @@ public abstract class Command implements CommandExecutor {
     
     protected String prefix = "";
     
-    public Command() {
-        
-    }
+    protected MessagesResource messages = MessagesResource.getInstance();
     
     public abstract void perform();
     
@@ -52,17 +52,17 @@ public abstract class Command implements CommandExecutor {
         }
         
         if (mustBePlayer && !isPlayer()) {
-            error(plugin.getCommandResource().getMessage(CommandResource.MUST_BE_PLAYER));
+            error(messages.getMessage(CommandMessage.MUST_BE_PLAYER));
             return true;
         }
         
         if (requiredArgs.size() > args.length) {
-            error(plugin.getCommandResource().getMessage(CommandResource.TOO_FEW_ARGS), getUsageTemplate(false));
+            error(messages.getMessage(CommandMessage.TOO_FEW_ARGS), getUsageTemplate(false));
             return true;
         }
         
         if (!hasPermission()) {
-            error(plugin.getCommandResource().getMessage(CommandResource.INSUFFICIENT_PERMISSION));
+            error(messages.getMessage(CommandMessage.INSUFFICIENT_PERMISSION));
             return true;
         }
         
@@ -87,7 +87,7 @@ public abstract class Command implements CommandExecutor {
     }
     
     protected final void error(String message, Object... args) {
-        sendMessage(plugin.getCommandResource().getMessage(CommandResource.ERROR), FormatUtil.format(message, args));
+        sendMessage(messages.getMessage(CommandMessage.ERROR), FormatUtil.format(message, args));
     }
     
     protected final void sendMessage(String message, Object... args) {
@@ -146,6 +146,14 @@ public abstract class Command implements CommandExecutor {
         }
         
         return FormatUtil.format(result.toString());
+    }
+    
+    protected class CommandMessage {
+        protected static final String
+            ERROR                        = "commands.error",
+            INSUFFICIENT_PERMISSION      = "commands.insufficientPermission",
+            TOO_FEW_ARGS                 = "commands.tooFewArgs",
+            MUST_BE_PLAYER               = "commands.mustBePlayer";
     }
     
 }

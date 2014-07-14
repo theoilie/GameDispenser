@@ -25,7 +25,6 @@ import com.google.common.collect.Maps;
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.command.Command;
 import net.galaxygaming.dispenser.command.CommandManager;
-import net.galaxygaming.dispenser.event.BaseListener;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameDescriptionFile;
@@ -106,12 +105,12 @@ public class JavaGameLoader implements GameLoader {
         Validate.notNull(loader, "Game type '" + type.toString() + "' must be loaded first");
         
         try {            
-            for (Listener listener : loader.loadEventClasses(BaseListener.class)) {
-                EventManager.registerListener(listener, type);
+            for (Listener listener : loader.loadEventClasses(Listener.class)) {
+                EventManager.getInstance().registerListener(listener, type);
             }
             
             for (Command command : loader.loadEventClasses(Command.class)) {
-                CommandManager.registerCommand(command, type);
+                CommandManager.getInstance().registerCommand(command, type);
             }
         } catch (InvalidGameException e) {
             GameDispenser.getInstance().getLogger().log(Level.WARNING,

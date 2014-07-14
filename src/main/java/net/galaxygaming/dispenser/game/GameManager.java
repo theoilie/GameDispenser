@@ -101,7 +101,7 @@ public class GameManager {
                     continue;
                 }
                 
-                GameType type = new GameType(entry.getKey().getName());
+                GameType type = entry.getKey().getGameType();
                 
                 try {
                     gameLoader.loadGameType(entry.getValue(), entry.getKey(), true);
@@ -121,5 +121,61 @@ public class GameManager {
         
         return loadedGameTypes.toArray(new GameType[0]);
     }
+    
+    public Game[] loadGames() {
+        Pattern filter = Pattern.compile("\\.dat$");
+        
+        for (File file : directory.listFiles()) {
+            Matcher match = filter.matcher(file.getName());
+            if (!match.find()) {
+                continue;
+            }
+            
+            try {
+                games.add(loadGame(file));
+            } catch (InvalidGameException e) {
+                plugin.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", e);
+            }
+        }
+        
+        return games.toArray(new Game[0]);
+    }
+    
+    Game loadGame(File file) throws InvalidGameException {
+        Validate.notNull(file, "File cannot be null");
+        
+        Game result = null;
+        
+        return result;
+    }
+    
+    public Game newGame(GameType type) throws InvalidGameException {
+        return null;
+    }
+    
+    public Game[] saveGames(File directory) {
+        Validate.notNull(directory, "Directory cannot be null");
+        return null;
+    }
+    
+    void saveGame(File file, Game game) {
+        
+    }
+    
+    Game getGame(String name) {
+        return null;
+    }
+    
+    Game[] getGames() {
+        return null;
+    }
+    
+    GameType[] getGameTypes() {
+        return null;
+    }
+    
+    
+    
+    
 
 }

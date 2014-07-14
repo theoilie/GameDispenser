@@ -16,11 +16,11 @@ import com.google.common.collect.Sets;
 /**
  * @author t7seven7t
  */
-class PrefixedCommand extends ReflectCommand implements CommandExecutor {
+class PrefixedReflectCommand extends ReflectCommand implements CommandExecutor {
 
     private final Set<Command> subCommands;
     
-    public PrefixedCommand(String prefix) {
+    public PrefixedReflectCommand(String prefix) {
         super(prefix);
         this.setDescription(prefix + " base command");
         this.setExecutor(this);

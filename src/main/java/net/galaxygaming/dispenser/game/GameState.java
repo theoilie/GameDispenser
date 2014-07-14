@@ -8,18 +8,23 @@ package net.galaxygaming.dispenser.game;
  */
 public class GameState {
     
-    public static final GameState   EDITING     = new GameState("editing"),
-                                    INACTIVE    = new GameState("inactive"), 
-                                    LOBBY       = new GameState("lobby"), 
-                                    ACTIVE      = new GameState("active");
+    public static final GameState   
+        EDITING     = new GameState(0),
+        INACTIVE    = new GameState(1), 
+        LOBBY       = new GameState(2), 
+        ACTIVE      = new GameState(3);
     
-    private final String name;
-    public GameState(String name) {
-        this.name = name;
+    private final int ordinal;
+    public GameState(int ordinal) {
+        this.ordinal = ordinal;
     }
     
-    @Override
-    public String toString() {
-        return this.name;
+    /**
+     * Returns the ordinal of this GameState (its position in 
+     * the progression of a game)
+     * @return the ordinal of this state
+     */
+    public int ordinal() {
+        return this.ordinal;
     }
 }

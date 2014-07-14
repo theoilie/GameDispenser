@@ -27,18 +27,27 @@ import com.google.common.collect.Sets;
  * @author t7seven7t
  */
 public class EventManager {
-
-    private static EventManager instance;
-    private static final Map<GameType, Set<Listener>> listeners = Maps.newHashMap();
-
-    private final GameDispenser plugin;
     
-    public EventManager(GameDispenser plugin) {
-        EventManager.instance = this;
+    /** Singleton instance */
+    private static final EventManager instance = new EventManager();
+    
+    private final Map<GameType, Set<Listener>> listeners;
+    private GameDispenser plugin;
+
+    private EventManager() {
+        listeners = Maps.newHashMap();
+    }
+    
+    public void setup(GameDispenser plugin) {
         this.plugin = plugin;
     }
     
-    public static void registerListener(Listener listener, GameType type) {
+    @Override
+    public EventManager clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
+    
+    public void registerListener(Listener listener, GameType type) {
         Set<Method> methods;
         try {
             Method[] publicMethods = listener.getClass().getMethods();
@@ -51,7 +60,7 @@ public class EventManager {
                 methods.add(method);
             }
         } catch (NoClassDefFoundError e) {
-            instance.plugin.getLogger().severe(type.toString() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
+            plugin.getLogger().severe(type.toString() + " has failed to register events for " + listener.getClass() + " because " + e.getMessage() + " does not exist.");
             return;
         }
         
@@ -60,7 +69,7 @@ public class EventManager {
             if (eh == null) continue;
             final Class<?> checkClass;
             if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) {
-                instance.plugin.getLogger().severe(type.toString() + " attempted to register an invalid EventHandler method signature '" + method.toGenericString() + "' in " + listener.getClass());
+                plugin.getLogger().severe(type.toString() + " attempted to register an invalid EventHandler method signature '" + method.toGenericString() + "' in " + listener.getClass());
                 continue;
             }
             
@@ -89,11 +98,11 @@ public class EventManager {
             }
             
             listenerSet.add(listener);
-            instance.plugin.getServer().getPluginManager().registerEvent(eventClass, listener, eh.priority(), executor, instance.plugin, eh.ignoreCancelled());
+            plugin.getServer().getPluginManager().registerEvent(eventClass, listener, eh.priority(), executor, plugin, eh.ignoreCancelled());
         }          
     }
     
-    public static void unregisterListener(Listener listener) {
+    public void unregisterListener(Listener listener) {
         HandlerList.unregisterAll(listener);
         for (Entry<GameType, Set<Listener>> entry : listeners.entrySet()) {
             if (entry.getValue() != null) {
@@ -102,7 +111,7 @@ public class EventManager {
         }
     }
     
-    public static void unregisterListeners(GameType type) {
+    public void unregisterListeners(GameType type) {
         Set<Listener> listenerSet = listeners.get(type);
         if (listenerSet != null) {
             for (Listener listener : listenerSet) {
@@ -110,6 +119,10 @@ public class EventManager {
             }
         }
         listeners.remove(type);
+    }
+    
+    public static EventManager getInstance() {
+        return instance;
     }
     
 }

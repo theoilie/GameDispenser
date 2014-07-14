@@ -10,10 +10,12 @@ import java.io.File;
  */
 public interface Game {
     
+    public void end();
+    
     public File getDataFolder();
     
     public GameDescriptionFile getDescription();
-        
+            
     public GameLoader getGameLoader();
     
     public GameState getState();
@@ -21,13 +23,11 @@ public interface Game {
     public GameType getType(); 
     
     public GameIdentifier getUniqueIdentifier();
-        
-    public void onEnd();
     
     public void onLoad();
     
-    public void onStart();
-    
     public void onTick();
+    
+    public void start();
 
 }

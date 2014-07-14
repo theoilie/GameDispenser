@@ -19,11 +19,23 @@ import com.google.common.collect.Sets;
  * @author t7seven7t
  */
 public class CommandManager {
-        
-    private static final Map<GameType, Set<ReflectCommand>> commands = Maps.newHashMap();
-    private static CommandMap cmap;
     
-    public static void registerCommand(Command command, GameType type) {
+    /** Singleton instance */
+    private static final CommandManager instance = new CommandManager();
+    
+    private final Map<GameType, Set<ReflectCommand>> commands;
+    private CommandMap cmap;
+    
+    private CommandManager() {
+        commands = Maps.newHashMap();
+    }
+    
+    @Override
+    public CommandManager clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
+    
+    public void registerCommand(Command command, GameType type) {
         Set<ReflectCommand> commandSet = commands.get(type);
         if (commandSet == null) {
             commandSet = Sets.newHashSet();
@@ -33,20 +45,20 @@ public class CommandManager {
         ReflectCommand cmd;
         
         if (command.hasPrefix()) {
-            PrefixedCommand prefixedCommand = null;
+            PrefixedReflectCommand prefixedCommand = null;
             
             for (ReflectCommand reflectCommand : commandSet) {
-                if (reflectCommand instanceof PrefixedCommand 
-                        && ((PrefixedCommand) reflectCommand).getName()
+                if (reflectCommand instanceof PrefixedReflectCommand 
+                        && ((PrefixedReflectCommand) reflectCommand).getName()
                         .equalsIgnoreCase(command.getPrefix())) 
                 {
-                    prefixedCommand = (PrefixedCommand) reflectCommand;
+                    prefixedCommand = (PrefixedReflectCommand) reflectCommand;
                     break;
                 }
             }
             
             if (prefixedCommand == null) {
-                prefixedCommand = new PrefixedCommand(command.getPrefix());
+                prefixedCommand = new PrefixedReflectCommand(command.getPrefix());
                 commandSet.add(prefixedCommand);
             }
             
@@ -57,10 +69,11 @@ public class CommandManager {
             commandSet.add(cmd);
         }
         
-        getCommandMap().register("", cmd);
+        if (getCommandMap().getCommand(cmd.getName()) == null)
+            getCommandMap().register("", cmd);
     }
     
-    static final CommandMap getCommandMap() {
+    CommandMap getCommandMap() {
         if (cmap == null) {
             try {
                 final Field f = Bukkit.getServer().getClass().getDeclaredField("commandMap");
@@ -74,7 +87,7 @@ public class CommandManager {
         return cmap;
     }
     
-    public static void unregisterCommands(GameType type) {
+    public void unregisterCommands(GameType type) {
         Set<ReflectCommand> commandSet = commands.get(type);
         if (commandSet != null) {
             for (ReflectCommand command : commandSet) {
@@ -82,6 +95,19 @@ public class CommandManager {
             }
         }
         commands.remove(type);
+    }
+    
+    public void unregisterAll() {
+        for (Set<ReflectCommand> commandSet : commands.values()) {
+            for (ReflectCommand command : commandSet) {
+                command.unregister(getCommandMap());
+            }
+        }
+        commands.clear();
+    }
+    
+    public static CommandManager getInstance() {
+        return instance;
     }
 
 }

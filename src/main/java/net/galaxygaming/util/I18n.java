@@ -13,12 +13,16 @@ import java.util.ResourceBundle;
  */
 public abstract class I18n {
     
-    public static ResourceBundle getResourceBundle(File directory, String bundleName, ClassLoader classLoader) {
+    public static ResourceBundle getResourceBundle(File directory, String bundleName, Locale locale, ClassLoader classLoader) {
         try {
-            return ResourceBundle.getBundle(bundleName, Locale.getDefault(), new FileResourceLoader(classLoader, directory));
+            return ResourceBundle.getBundle(bundleName, locale, new FileResourceLoader(classLoader, directory));
         } catch (MissingResourceException e) {
             throw new RuntimeException("Could not find resource bundle: " + bundleName + ".properties");
         }
+    }
+    
+    public static ResourceBundle getResourceBundle(File directory, String bundleName, ClassLoader classLoader) {
+        return getResourceBundle(directory, bundleName, Locale.getDefault(), classLoader);
     }
     
 }
