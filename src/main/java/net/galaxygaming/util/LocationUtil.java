@@ -12,6 +12,10 @@ import org.bukkit.World;
  */
 public class LocationUtil {
 
+	public LocationUtil() {
+		throw new AssertionError("Cannot instantiate utility class.");
+	}
+	
 	public static String serializeLocation(Location location) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(location.getWorld().getName());
@@ -46,6 +50,5 @@ public class LocationUtil {
 			throw new RuntimeException("Location string was invalid: " + string);
 		
 		return new Location(world, x, y, z);
-	}
-	
+	}	
 }

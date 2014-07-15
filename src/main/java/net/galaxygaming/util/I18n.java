@@ -13,6 +13,10 @@ import java.util.ResourceBundle;
  */
 public abstract class I18n {
     
+	public I18n() {
+		throw new AssertionError("Cannot instantiate utility class.");
+	}
+	
     public static ResourceBundle getResourceBundle(File directory, String bundleName, Locale locale, ClassLoader classLoader) {
         try {
             return ResourceBundle.getBundle(bundleName, locale, new FileResourceLoader(classLoader, directory));
@@ -23,6 +27,5 @@ public abstract class I18n {
     
     public static ResourceBundle getResourceBundle(File directory, String bundleName, ClassLoader classLoader) {
         return getResourceBundle(directory, bundleName, Locale.getDefault(), classLoader);
-    }
-    
+    }   
 }

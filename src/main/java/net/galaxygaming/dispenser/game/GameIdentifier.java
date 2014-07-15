@@ -25,9 +25,8 @@ public class GameIdentifier {
     public static GameIdentifier fromString(String identifier) {
         String[] args = identifier.split(",");
         
-        
+        //TODO ???
         GameIdentifier result = null;
         return result;
-    }
-    
+    }   
 }

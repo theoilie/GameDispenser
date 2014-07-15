@@ -12,6 +12,10 @@ import org.bukkit.permissions.Permission;
  */
 public class PermissionUtil {
 
+	public PermissionUtil() {
+		throw new AssertionError("Cannot instantiate utility class.");	
+	}
+	
     public static boolean hasPermission(CommandSender sender, Permission permission) {
         return (permission == null) ? true : hasPermission(sender, permission.getName());
     }
@@ -23,6 +27,5 @@ public class PermissionUtil {
         }
         
         return true;
-    }
-    
+    }   
 }

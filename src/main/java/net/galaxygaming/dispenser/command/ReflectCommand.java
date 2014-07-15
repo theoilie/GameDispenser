@@ -37,6 +37,5 @@ class ReflectCommand extends org.bukkit.command.Command {
             return executor.onCommand(sender, this, commandLabel, args);
         }
         return false;
-    }
-    
+    }   
 }

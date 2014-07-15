@@ -50,5 +50,4 @@ class PrefixedReflectCommand extends ReflectCommand implements CommandExecutor {
         
         return false;
     }
-
 }

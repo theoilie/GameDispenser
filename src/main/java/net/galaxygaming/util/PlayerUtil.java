@@ -14,7 +14,10 @@ import org.bukkit.entity.Player;
  */
 public class PlayerUtil {
 
-    @SuppressWarnings("deprecation")
+	public PlayerUtil() {
+		throw new AssertionError("Cannot instantiate utility class.");	
+	}
+	
     public static Player matchPlayer(String p) {
         List<Player> players = Bukkit.matchPlayer(p);
         
@@ -32,8 +35,6 @@ public class PlayerUtil {
             if (o.getName().equalsIgnoreCase(p))
                 return o;
         }
-        
         return null;
-    }
-    
+    }   
 }
