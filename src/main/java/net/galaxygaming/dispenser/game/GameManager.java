@@ -174,8 +174,11 @@ public class GameManager {
         return null;
     }
     
+    public void launchFireworks(Game game) {
+		// TODO
+    }
     
-    
-    
-
+    public void announceWinner(String winner) {
+    	// TODO: Broadcast victory message from file
+    }
 }

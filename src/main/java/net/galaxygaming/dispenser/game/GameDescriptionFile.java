@@ -148,6 +148,5 @@ public class GameDescriptionFile {
             }
             depend = authorsBuilder.build();
         }
-    }
-    
+    }   
 }

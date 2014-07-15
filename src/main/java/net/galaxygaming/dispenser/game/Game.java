@@ -10,8 +10,6 @@ import java.io.File;
  */
 public interface Game {
     
-    public void end();
-    
     public File getDataFolder();
     
     public GameDescriptionFile getDescription();
@@ -25,9 +23,14 @@ public interface Game {
     public GameIdentifier getUniqueIdentifier();
     
     public void onLoad();
-    
+    	
     public void onTick();
     
-    public void start();
-
+    public void startCountdown(); // After enough players have joined
+    
+    public void startGame(); // After countdown is over
+    
+    public void endGame(); // After someone wins
+    
+    public void returnToLobby(); // After ending state is over and fireworks finish
 }

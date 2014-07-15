@@ -154,6 +154,5 @@ public abstract class Command implements CommandExecutor {
             INSUFFICIENT_PERMISSION      = "commands.insufficientPermission",
             TOO_FEW_ARGS                 = "commands.tooFewArgs",
             MUST_BE_PLAYER               = "commands.mustBePlayer";
-    }
-    
+    }   
 }

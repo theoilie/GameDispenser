@@ -38,8 +38,7 @@ public class GameDispenser extends JavaPlugin {
     }
     
     public static GameDispenser getInstance() {
-        Validate.notNull(GameDispenser.instance, "GameDispenser not yet initialized.");
+        Validate.notNull(GameDispenser.instance, "GameDispenser is not yet initialized.");
         return GameDispenser.instance;
-    }
-    
+    }   
 }

@@ -18,6 +18,5 @@ public class GamePlayer {
     
     public Player getPlayer() {
         return this.player;
-    }
-    
+    }   
 }

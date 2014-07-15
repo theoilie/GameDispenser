@@ -32,8 +32,6 @@ public class GameType {
                 return true;
             }
         }
-        
         return false;
     }
-
 }

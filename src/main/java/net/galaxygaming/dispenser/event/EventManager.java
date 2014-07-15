@@ -123,6 +123,5 @@ public class EventManager {
     
     public static EventManager getInstance() {
         return instance;
-    }
-    
+    }   
 }
