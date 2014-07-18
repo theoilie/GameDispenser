@@ -46,11 +46,11 @@ public class JavaGameLoader implements GameLoader {
         this.loaders = Maps.newHashMap();
     }
     
-    public Game loadGame(GameType type) throws InvalidGameException {
+    public Game loadGame(GameType type, String name) throws InvalidGameException {
         GameClassLoader loader = loaders.get(type.toString());
         Validate.notNull(loader, "Game type '" + type.toString() + "' must be loaded first");
         
-        return loader.newInstance();
+        return loader.newInstance(name);
     }
     
     public void loadGameType(File file, GameDescriptionFile description) throws InvalidGameException {

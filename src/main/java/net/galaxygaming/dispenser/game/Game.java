@@ -20,7 +20,9 @@ public interface Game {
     
     public GameType getType(); 
     
-    public GameIdentifier getUniqueIdentifier();
+    public String getName();
+    
+    public void setName(String name);
     
     public void onLoad();
     	

@@ -24,6 +24,9 @@ public abstract class JavaGame implements Game {
     /** The current game state */
     protected GameState state = GameState.INACTIVE;
     
+    /** Name of this game instance */
+    private String name;
+    
     private GameLoader loader;
     private GameDescriptionFile description;
     private File dataFolder;
@@ -58,6 +61,16 @@ public abstract class JavaGame implements Game {
         return this.state;
     }
     
+    @Override
+    public final String getName() {
+        return this.name;
+    }
+    
+    @Override
+    public final void setName(String name) {
+        this.name = name;
+    }
+    
     public final InputStream getResource(String fileName) {
         Validate.notNull(fileName, "Filename cannot be null");
         
@@ -83,7 +96,8 @@ public abstract class JavaGame implements Game {
         }
     }
     
-    final void initialize(GameLoader loader, GameDescriptionFile description, File dataFolder, File file, ClassLoader classLoader) {
+    final void initialize(String name, GameLoader loader, GameDescriptionFile description, File dataFolder, File file, ClassLoader classLoader) {
+        this.name = name;
         this.loader = loader;
         this.description = description;
         this.dataFolder = dataFolder;

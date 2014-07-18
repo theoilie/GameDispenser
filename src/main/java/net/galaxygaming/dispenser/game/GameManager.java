@@ -4,7 +4,9 @@
 package net.galaxygaming.dispenser.game;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -15,6 +17,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidDescriptionException;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -149,8 +152,54 @@ public class GameManager {
         return result;
     }
     
-    public Game newGame(GameType type) throws InvalidGameException {
+    /**
+     * Returns a new game instance of the type given.
+     * @param type type of game
+     * @param name name of the instance
+     * @return a new game instance
+     * @throws InvalidGameException
+     */
+    public Game newGame(GameType type, String name) throws InvalidGameException {
         return null;
+    }
+    
+    /**
+     * Returns a new game instance of the type given. A name
+     * will automatically be assigned to this instance.
+     * @param type type of game
+     * @return a new game instance
+     * @throws InvalidGameException
+     */
+    public Game newGame(GameType type) throws InvalidGameException {
+        List<Integer> ids = Lists.newArrayList();
+        Pattern filter = Pattern.compile("^" + type.toString());
+        
+        for (Game game : games) {
+            Matcher match = filter.matcher(game.getName());
+            if (!match.find()) {
+                continue;
+            }
+            
+            String suffix = game.getName().substring(match.end());
+            
+            try {
+                int id = Integer.valueOf(suffix);
+                ids.add(id);
+            } catch (NumberFormatException e) {
+                // expected
+            }
+        }
+        
+        Collections.sort(ids);
+        int result = 0;
+        
+        for (int id : ids) {
+            if (id == result) {
+                result = id + 1;
+            }
+        }
+                
+        return newGame(type, type.toString() + result);
     }
     
     public Game[] saveGames(File directory) {

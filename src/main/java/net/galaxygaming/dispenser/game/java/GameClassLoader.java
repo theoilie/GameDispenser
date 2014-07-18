@@ -62,10 +62,13 @@ public class GameClassLoader extends URLClassLoader {
 
     }
     
-    Game newInstance() throws InvalidGameException {
+    Game newInstance(String name) throws InvalidGameException {
+        Validate.notNull(name, "Name cannot be null");
+        Validate.isTrue(!name.isEmpty(), "Name cannot be empty");
+        
         try {
             JavaGame result = mainClass.newInstance();
-            result.initialize(loader, description, dataFolder, file, this);
+            result.initialize(name, loader, description, dataFolder, file, this);
             return result;
         } catch (Throwable e) {
             throw new InvalidGameException(e);

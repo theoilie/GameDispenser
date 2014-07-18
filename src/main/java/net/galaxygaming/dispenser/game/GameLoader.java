@@ -17,7 +17,7 @@ public interface GameLoader {
     
     public void loadEvents(GameType type);
     
-    public Game loadGame(GameType type) throws InvalidGameException;
+    public Game loadGame(GameType type, String name) throws InvalidGameException;
     
     public void loadGameType(File file, GameDescriptionFile description, boolean reload) throws InvalidGameException;
     
