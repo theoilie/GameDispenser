@@ -76,6 +76,30 @@ public abstract class JavaGame implements Game {
         this.name = name;
     }
     
+    @Override
+    public final boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        
+        JavaGame other = (JavaGame) o;
+        
+        if (other.name == null || !other.name.equalsIgnoreCase(this.name)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    @Override
+    public final int hashCode() {
+        return name.hashCode();
+    }
+    
     public final InputStream getResource(String fileName) {
         Validate.notNull(fileName, "Filename cannot be null");
         

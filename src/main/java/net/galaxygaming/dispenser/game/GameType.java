@@ -65,6 +65,11 @@ public class GameType {
         return false;
     }
     
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+    
     public static GameType get(String name) {
         GameType result = lookup.get(name);
         
