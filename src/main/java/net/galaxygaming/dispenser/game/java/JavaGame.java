@@ -86,13 +86,16 @@ public abstract class JavaGame implements Game {
             return false;
         }
         
-        JavaGame other = (JavaGame) o;
-        
-        if (other.name == null || !other.name.equalsIgnoreCase(this.name)) {
-            return false;
+        if (getClass() == o.getClass()) {            
+            if (this.name.equalsIgnoreCase(((JavaGame) o).name)) {
+                return true;
+            }
+        } else if (o.getClass() == String.class) {
+            if (this.name.equalsIgnoreCase((String) o)) {
+                return true;
+            }
         }
-        
-        return true;
+        return false;
     }
     
     @Override
