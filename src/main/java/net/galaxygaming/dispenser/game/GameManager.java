@@ -24,6 +24,7 @@ import com.google.common.collect.Sets;
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.entity.GamePlayer;
 import net.galaxygaming.dispenser.game.java.JavaGameLoader;
+import net.galaxygaming.util.FormatUtil;
 
 /**
  * @author t7seven7t
@@ -86,14 +87,17 @@ public class GameManager {
             while (it.hasNext()) {
                 Entry<GameDescriptionFile, File> entry = it.next();
                 
+                final File file = entry.getValue();
+                final GameDescriptionFile description = entry.getKey();
+
                 boolean dependLoaded = true;
-                for (String game : entry.getKey().getDepend()) {
+                for (String game : description.getDepend()) {
                     if (!loadedGameTypes.contains(game)) {
                         if (!games.contains(game)) {
                             it.remove();
                             plugin.getLogger().log(Level.WARNING,
                                     "Dependency '" + game + "' for game '" 
-                                    + entry.getKey().getName() + "' does not exist"
+                                    + description.getName() + "' does not exist"
                             );
                         }
 
@@ -106,11 +110,22 @@ public class GameManager {
                     continue;
                 }
                 
-                GameType type = entry.getKey().getGameType();
-                
+                final File dataFolder = new File(file.getParentFile(), description.getName());
+
                 try {
-                    gameLoader.loadGameType(entry.getValue(), entry.getKey(), true);
+                    if (dataFolder.exists() && !dataFolder.isDirectory()) {
+                        throw new InvalidGameException(FormatUtil.format(
+                                "Projected datafolder: '{0}' for {1} ({2}) exists and is not a directory",
+                                dataFolder,
+                                description.getFullName(),
+                                file
+                        ));
+                    }
+                    
+                    gameLoader.loadGameType(file, description, true);
+                    GameType type = new GameType(description.getName(), description, dataFolder);
                     gameLoader.loadEvents(type);
+                    loadedGameTypes.add(type);
                 } catch (InvalidGameException e) {
                     plugin.getLogger().log(Level.WARNING, 
                             "Could not load '" + entry.getValue().getPath() 
@@ -120,7 +135,6 @@ public class GameManager {
                 }
                 
                 it.remove();
-                loadedGameTypes.add(type);
             }
         }
         

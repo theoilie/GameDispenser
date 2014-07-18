@@ -33,20 +33,16 @@ public class GameClassLoader extends URLClassLoader {
 
     private final JavaGameLoader loader;
     private final Map<String, Class<?>> classes;
-    private final GameDescriptionFile description;
     private final File file;
-    private final File dataFolder;
     private final Class<? extends JavaGame> mainClass;
     
-    GameClassLoader(final JavaGameLoader loader, final File file, final File dataFolder, final ClassLoader parent, final GameDescriptionFile description) throws MalformedURLException, InvalidGameException {
+    GameClassLoader(final JavaGameLoader loader, final File file, final ClassLoader parent, final GameDescriptionFile description) throws MalformedURLException, InvalidGameException {
         super(new URL[] {file.toURI().toURL()}, parent);
         Validate.notNull(loader, "Loader cannot be null");
         
         this.loader = loader;
         this.classes = Maps.newHashMap();
-        this.description = description;
         this.file = file;
-        this.dataFolder = dataFolder;
         
         Class<?> jarClass;
         try {
@@ -58,18 +54,18 @@ public class GameClassLoader extends URLClassLoader {
         try {
             mainClass = jarClass.asSubclass(JavaGame.class);
         } catch (ClassCastException e) {
-            throw new InvalidGameException("main class '" +description.getMain() + "' does not extend JavaGame", e);
+            throw new InvalidGameException("main class '" + description.getMain() + "' does not extend JavaGame", e);
         }
 
     }
     
-    Game newInstance(String name, FileConfiguration config) throws InvalidGameException {
+    Game newInstance(String name, FileConfiguration config, File configFile) throws InvalidGameException {
         Validate.notNull(name, "Name cannot be null");
         Validate.isTrue(!name.isEmpty(), "Name cannot be empty");
         
         try {
             JavaGame result = mainClass.newInstance();
-            result.initialize(name, config, loader, description, dataFolder, file, this);
+            result.initialize(name, config, loader, configFile, this);
             return result;
         } catch (Throwable e) {
             throw new InvalidGameException(e);

@@ -35,7 +35,6 @@ import net.galaxygaming.dispenser.game.GameLoader;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.GameType;
 import net.galaxygaming.dispenser.game.InvalidGameException;
-import net.galaxygaming.util.FormatUtil;
 
 /**
  * @author t7seven7t
@@ -70,12 +69,12 @@ public class JavaGameLoader implements GameLoader {
             throw new InvalidGameException("Cannot load " + file, e);
         }
         
-        GameType type = new GameType(config.getString("type"));
+        GameType type = GameType.get(config.getString("type"));
         
         GameClassLoader loader = loaders.get(type.toString());
         Validate.notNull(loader, "Game type '" + type.toString() + "' must be loaded first");
 
-        return loader.newInstance(name, config);
+        return loader.newInstance(name, config, file);
     }
     
     public void loadGameType(File file, GameDescriptionFile description) throws InvalidGameException {
@@ -106,20 +105,8 @@ public class JavaGameLoader implements GameLoader {
             }
         }
         
-        final File parentFile = file.getParentFile();
-        final File dataFolder = new File(parentFile, description.getName());
-        
-        if (dataFolder.exists() && !dataFolder.isDirectory()) {
-            throw new InvalidGameException(FormatUtil.format(
-                    "Projected datafolder: '{0}' for {1} ({2}) exists and is not a directory",
-                    dataFolder,
-                    description.getFullName(),
-                    file
-            ));
-        }
-                
         try {            
-            loaders.put(description.getName(), new GameClassLoader(this, file, dataFolder, getClass().getClassLoader(), description));
+            loaders.put(description.getName(), new GameClassLoader(this, file, getClass().getClassLoader(), description));
         } catch (Throwable e) {
             throw new InvalidGameException(e);
         }

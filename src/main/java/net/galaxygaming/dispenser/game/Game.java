@@ -3,8 +3,6 @@
  */
 package net.galaxygaming.dispenser.game;
 
-import java.io.File;
-
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -18,14 +16,6 @@ public interface Game {
      */
     public FileConfiguration getConfig();
     
-    public File getDataFolder();   
-    
-    /**
-     * Retrieves the description file defining this game type
-     * @return game description file
-     */
-    public GameDescriptionFile getDescription();
-            
     public GameLoader getGameLoader();
     
     public GameState getState();

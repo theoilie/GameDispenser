@@ -13,9 +13,9 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import net.galaxygaming.dispenser.game.Game;
-import net.galaxygaming.dispenser.game.GameDescriptionFile;
 import net.galaxygaming.dispenser.game.GameLoader;
 import net.galaxygaming.dispenser.game.GameState;
+import net.galaxygaming.dispenser.game.GameType;
 
 /**
  * @author t7seven7t
@@ -28,10 +28,9 @@ public abstract class JavaGame implements Game {
     /** Name of this game instance */
     private String name;
     
+    private GameType type;
     private GameLoader loader;
-    private GameDescriptionFile description;
     private FileConfiguration config;
-    private File dataFolder;
     private File file;
     private ClassLoader classLoader;
     
@@ -44,16 +43,10 @@ public abstract class JavaGame implements Game {
         return this.config;
     }
     
-    @Override
-    public final File getDataFolder() {
-        return this.dataFolder;
-    }
-    
-    @Override
-    public final GameDescriptionFile getDescription() {
-        return this.description;
-    }
-    
+    /**
+     * Gives the file associated with this game's config
+     * @return config file
+     */
     protected final File getFile() {
         return this.file;
     }
@@ -66,6 +59,11 @@ public abstract class JavaGame implements Game {
     @Override
     public final GameState getState() {
         return this.state;
+    }
+    
+    @Override
+    public final GameType getType() {
+        return this.type;
     }
     
     @Override
@@ -103,11 +101,10 @@ public abstract class JavaGame implements Game {
         }
     }
     
-    final void initialize(String name, FileConfiguration config, GameLoader loader, GameDescriptionFile description, File dataFolder, File file, ClassLoader classLoader) {
+    final void initialize(String name, FileConfiguration config, GameLoader loader, File file, ClassLoader classLoader) {
         this.name = name;
+        this.config = config;
         this.loader = loader;
-        this.description = description;
-        this.dataFolder = dataFolder;
         this.file = file;
         this.classLoader = classLoader;
         

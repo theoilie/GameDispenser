@@ -24,7 +24,6 @@ public class GameDescriptionFile {
     private String version;
     private List<String> authors;
     private List<String> depend;
-    private GameType type;
     
     public GameDescriptionFile(final InputStream stream) throws InvalidDescriptionException {
         loadMap((Map<?, ?>) yaml.load(stream));
@@ -36,14 +35,6 @@ public class GameDescriptionFile {
      */
     public String getName() {
         return name;
-    }
-    
-    /**
-     * Gives the GameType object representing the type of game
-     * @return the type of game
-     */
-    public GameType getGameType() {
-        return type;
     }
     
     /**
@@ -98,9 +89,7 @@ public class GameDescriptionFile {
         } catch (ClassCastException e) {
             throw new InvalidDescriptionException(e, "name is of wrong type");
         }
-        
-        type = new GameType(name);
-        
+                
         try {
             version = map.get("version").toString();
         } catch (NullPointerException e) {
