@@ -5,13 +5,25 @@ package net.galaxygaming.dispenser.game;
 
 import java.io.File;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 /**
  * @author t7seven7t
  */
 public interface Game {
     
-    public File getDataFolder();
+    /**
+     * Retrieves a config file unique to this game instance.
+     * @return config
+     */
+    public FileConfiguration getConfig();
     
+    public File getDataFolder();   
+    
+    /**
+     * Retrieves the description file defining this game type
+     * @return game description file
+     */
     public GameDescriptionFile getDescription();
             
     public GameLoader getGameLoader();

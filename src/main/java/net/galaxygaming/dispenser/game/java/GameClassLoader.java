@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameDescriptionFile;
@@ -62,13 +63,13 @@ public class GameClassLoader extends URLClassLoader {
 
     }
     
-    Game newInstance(String name) throws InvalidGameException {
+    Game newInstance(String name, FileConfiguration config) throws InvalidGameException {
         Validate.notNull(name, "Name cannot be null");
         Validate.isTrue(!name.isEmpty(), "Name cannot be empty");
         
         try {
             JavaGame result = mainClass.newInstance();
-            result.initialize(name, loader, description, dataFolder, file, this);
+            result.initialize(name, config, loader, description, dataFolder, file, this);
             return result;
         } catch (Throwable e) {
             throw new InvalidGameException(e);

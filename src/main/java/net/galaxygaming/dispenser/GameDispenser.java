@@ -26,11 +26,13 @@ public class GameDispenser extends JavaPlugin {
         if (!this.getDataFolder().exists())
             this.getDataFolder().mkdir();
         
-        this.gameManager = new GameManager(this, this.getDataFolder());
         EventManager.getInstance().setup(this);
         MessagesResource.getInstance().setup(this);
         
-        logHelper.log("Loaded {0} games.", gameManager.loadGameTypes().length);
+        this.gameManager = new GameManager(this, this.getDataFolder());
+        
+        logHelper.log("Loaded {0} game types.", gameManager.loadGameTypes().length);
+        logHelper.log("Loaded {0} games.", gameManager.loadGames().length);
     }
     
     public LogUtil getLogHelper() {

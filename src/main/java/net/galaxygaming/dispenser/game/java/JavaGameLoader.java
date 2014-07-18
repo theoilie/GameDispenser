@@ -13,6 +13,8 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
@@ -27,8 +29,10 @@ import net.galaxygaming.dispenser.command.Command;
 import net.galaxygaming.dispenser.command.CommandManager;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.Game;
+import net.galaxygaming.dispenser.game.GameConfiguration;
 import net.galaxygaming.dispenser.game.GameDescriptionFile;
 import net.galaxygaming.dispenser.game.GameLoader;
+import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.GameType;
 import net.galaxygaming.dispenser.game.InvalidGameException;
 import net.galaxygaming.util.FormatUtil;
@@ -46,11 +50,32 @@ public class JavaGameLoader implements GameLoader {
         this.loaders = Maps.newHashMap();
     }
     
-    public Game loadGame(GameType type, String name) throws InvalidGameException {
+    public Game loadGame(File file) throws InvalidGameException {
+        Validate.notNull(file, "File cannot be null");
+        
+        String name = file.getName().replaceAll(
+                "\\" 
+                + GameManager.GAME_CONFIG_EXTENSION 
+                + "$", ""
+        );
+                
+        FileConfiguration config = new GameConfiguration();
+        
+        try {
+            config.load(file);
+        } catch (FileNotFoundException e) { // no
+        } catch (IOException e) {
+            throw new InvalidGameException("Cannot load " + file, e);
+        } catch (InvalidConfigurationException e) {
+            throw new InvalidGameException("Cannot load " + file, e);
+        }
+        
+        GameType type = new GameType(config.getString("type"));
+        
         GameClassLoader loader = loaders.get(type.toString());
         Validate.notNull(loader, "Game type '" + type.toString() + "' must be loaded first");
-        
-        return loader.newInstance(name);
+
+        return loader.newInstance(name, config);
     }
     
     public void loadGameType(File file, GameDescriptionFile description) throws InvalidGameException {

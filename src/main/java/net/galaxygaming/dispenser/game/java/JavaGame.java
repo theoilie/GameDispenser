@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.net.URL;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameDescriptionFile;
@@ -29,12 +30,18 @@ public abstract class JavaGame implements Game {
     
     private GameLoader loader;
     private GameDescriptionFile description;
+    private FileConfiguration config;
     private File dataFolder;
     private File file;
     private ClassLoader classLoader;
     
     protected final ClassLoader getClassLoader() {
         return classLoader;
+    }
+    
+    @Override
+    public final FileConfiguration getConfig() {
+        return this.config;
     }
     
     @Override
@@ -96,7 +103,7 @@ public abstract class JavaGame implements Game {
         }
     }
     
-    final void initialize(String name, GameLoader loader, GameDescriptionFile description, File dataFolder, File file, ClassLoader classLoader) {
+    final void initialize(String name, FileConfiguration config, GameLoader loader, GameDescriptionFile description, File dataFolder, File file, ClassLoader classLoader) {
         this.name = name;
         this.loader = loader;
         this.description = description;
@@ -106,5 +113,4 @@ public abstract class JavaGame implements Game {
         
         onLoad();
     }
-    
 }

@@ -30,6 +30,8 @@ import net.galaxygaming.dispenser.game.java.JavaGameLoader;
  */
 public class GameManager {
     
+    public static final String GAME_CONFIG_EXTENSION = ".game";
+    
     private final GameDispenser plugin;
     private final GameLoader gameLoader;
     private final File directory;
@@ -126,7 +128,7 @@ public class GameManager {
     }
     
     public Game[] loadGames() {
-        Pattern filter = Pattern.compile("\\.dat$");
+        Pattern filter = Pattern.compile("\\" + GAME_CONFIG_EXTENSION + "$");
         
         for (File file : directory.listFiles()) {
             Matcher match = filter.matcher(file.getName());
@@ -135,21 +137,13 @@ public class GameManager {
             }
             
             try {
-                games.add(loadGame(file));
+                games.add(gameLoader.loadGame(file));
             } catch (InvalidGameException e) {
                 plugin.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", e);
             }
         }
         
         return games.toArray(new Game[0]);
-    }
-    
-    Game loadGame(File file) throws InvalidGameException {
-        Validate.notNull(file, "File cannot be null");
-        
-        Game result = null;
-        
-        return result;
     }
     
     /**
@@ -173,14 +167,14 @@ public class GameManager {
     public Game newGame(GameType type) throws InvalidGameException {
         List<Integer> ids = Lists.newArrayList();
         Pattern filter = Pattern.compile("^" + type.toString());
-        
+
         for (Game game : games) {
             Matcher match = filter.matcher(game.getName());
             if (!match.find()) {
                 continue;
             }
             
-            String suffix = game.getName().substring(match.end());
+            String suffix = game.getName().replaceAll(filter.pattern(), "");
             
             try {
                 int id = Integer.valueOf(suffix);
