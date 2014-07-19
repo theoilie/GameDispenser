@@ -4,6 +4,7 @@
 package net.galaxygaming.dispenser.game;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.InvalidDescriptionException;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -178,7 +181,26 @@ public class GameManager {
      * @throws InvalidGameException
      */
     public Game newGame(GameType type, String name) throws InvalidGameException {
-        return null;
+        Validate.notNull(type, "Game type cannot be null");
+        
+        if (games.contains(name)) {
+            throw new InvalidGameException("A game with the name '" + name + "' already exists.");
+        }
+        
+        File configFile = new File(directory, name + GAME_CONFIG_EXTENSION);
+        try {
+            configFile.createNewFile();
+        } catch (IOException e) {
+            throw new InvalidGameException("Unable to create new config for " + name, e);
+        }
+        
+        FileConfiguration config = getConfig(configFile);
+        config.set(GameConfiguration.PATH_GAMETYPE, type.toString());
+        
+        Game result = gameLoader.loadGame(configFile, config);
+        games.add(result);
+        saveGame(result);       
+        return result;
     }
     
     /**
@@ -220,25 +242,45 @@ public class GameManager {
         return newGame(type, type.toString() + result);
     }
     
-    public Game[] saveGames(File directory) {
-        Validate.notNull(directory, "Directory cannot be null");
-        return null;
+    public void saveGames() {
+        for (Game game : games) {
+            saveGame(game);
+        }
     }
     
-    void saveGame(File file, Game game) {
+    public void saveGame(Game game) {
+        game.saveConfig();
+    }
+    
+    public Game getGame(String name) {
+        // Iterators are fastest for small sets but longest for large sets o.o
+        Iterator<Game> it = games.iterator();
+        while (it.hasNext()) {
+            Game game = it.next();
+            if (game.getName().equalsIgnoreCase(name)) {
+                return game;
+            }
+        }
         
-    }
-    
-    Game getGame(String name) {
         return null;
     }
     
-    Game[] getGames() {
-        return null;
+    /**
+     * Sets are very slow to iterate 
+     * over compared to arrays.
+     * @return array of game elements
+     */
+    public Game[] getGames() {
+        return games.toArray(new Game[0]);
     }
     
-    GameType[] getGameTypes() {
-        return null;
+    /**
+     * Sets are very slow to iterate 
+     * over compared to arrays.
+     * @return array of game types
+     */
+    public GameType[] getGameTypes() {
+        return loadedGameTypes.toArray(new GameType[0]);
     }
     
     public void launchFireworks(Game game) {
@@ -247,5 +289,17 @@ public class GameManager {
     
     public void announceWinner(String winner) {
     	// TODO: Broadcast victory message from file
+    }
+    
+    public FileConfiguration getConfig(File configFile) throws InvalidGameException {
+        FileConfiguration config = new GameConfiguration();
+        try {
+            config.load(configFile);
+        } catch(IOException e) {
+            throw new InvalidGameException("Cannot load " + configFile, e);
+        } catch (InvalidConfigurationException e) {
+            throw new InvalidGameException("Cannot load " + configFile, e);
+        }
+        return config;
     }
 }

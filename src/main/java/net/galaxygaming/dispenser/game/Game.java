@@ -3,6 +3,8 @@
  */
 package net.galaxygaming.dispenser.game;
 
+import java.util.logging.Logger;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -16,7 +18,14 @@ public interface Game {
      */
     public FileConfiguration getConfig();
     
+    /**
+     * Saves this game's configurations to its config file
+     */
+    public void saveConfig();
+    
     public GameLoader getGameLoader();
+    
+    public Logger getLogger();
     
     public GameState getState();
     

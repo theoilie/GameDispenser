@@ -8,12 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameLoader;
+import net.galaxygaming.dispenser.game.GameLogger;
 import net.galaxygaming.dispenser.game.GameState;
 import net.galaxygaming.dispenser.game.GameType;
 
@@ -31,8 +35,9 @@ public abstract class JavaGame implements Game {
     private GameType type;
     private GameLoader loader;
     private FileConfiguration config;
-    private File file;
+    private File configFile;
     private ClassLoader classLoader;
+    private Logger logger;
     
     protected final ClassLoader getClassLoader() {
         return classLoader;
@@ -43,17 +48,31 @@ public abstract class JavaGame implements Game {
         return this.config;
     }
     
+    @Override
+    public final void saveConfig() {
+        try {
+            this.config.save(configFile);
+        } catch (IOException e) {
+            getLogger().log(Level.WARNING, "Error ocurred while saving config", e);
+        }
+    }
+    
     /**
      * Gives the file associated with this game's config
      * @return config file
      */
-    protected final File getFile() {
-        return this.file;
+    protected final File getConfigFile() {
+        return this.configFile;
     }
     
     @Override
     public final GameLoader getGameLoader() {
         return this.loader;
+    }
+    
+    @Override
+    public final Logger getLogger() {
+        return this.logger;
     }
     
     @Override
@@ -132,8 +151,9 @@ public abstract class JavaGame implements Game {
         this.name = name;
         this.config = config;
         this.loader = loader;
-        this.file = file;
+        this.configFile = file;
         this.classLoader = classLoader;
+        this.logger = new GameLogger(this, GameDispenser.getInstance());
         
         onLoad();
     }

@@ -9,6 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author t7seven7t
  */
 public class GameConfiguration extends YamlConfiguration {
+    public static final String PATH_GAMETYPE = "type";
+    
     @Override
     public Object getDefault(String path) {
         Object result = super.getDefault(path);

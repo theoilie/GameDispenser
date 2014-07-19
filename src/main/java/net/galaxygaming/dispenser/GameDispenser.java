@@ -17,26 +17,23 @@ public class GameDispenser extends JavaPlugin {
 
     private static GameDispenser instance;
     
-    private LogUtil logHelper;
+    private LogUtil log;
         
     public void onEnable() {
         GameDispenser.instance = this;
-        this.logHelper = new LogUtil(this);
         if (!this.getDataFolder().exists())
             this.getDataFolder().mkdir();
         
         EventManager.getInstance().setup(this);
         MessagesResource.getInstance().setup(this);
+        LogUtil.getInstance().setup(this);
+        log = LogUtil.getInstance();
         
         GameManager gameManager = GameManager.getInstance();
         gameManager.setup(this, this.getDataFolder());
                 
-        logHelper.log("Loaded {0} game types.", gameManager.loadGameTypes().length);
-        logHelper.log("Loaded {0} games.", gameManager.loadGames().length);
-    }
-    
-    public LogUtil getLogHelper() {
-        return this.logHelper;
+        log.log("Loaded {0} game types.", gameManager.loadGameTypes().length);
+        log.log("Loaded {0} games.", gameManager.loadGames().length);
     }
     
     public static GameDispenser getInstance() {

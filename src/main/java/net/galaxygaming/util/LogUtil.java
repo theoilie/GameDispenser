@@ -13,16 +13,22 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class LogUtil {
     
-	private final JavaPlugin plugin;
-	private static boolean initialized;
+	/** Singleton instance */
+	private static final LogUtil instance = new LogUtil();
 	
-	public LogUtil(JavaPlugin plugin) {
-		if (initialized)
-			throw new AssertionError("Cannot instantiate utility class.");
-		else
-			this.plugin = plugin;
-		initialized = true;
-	}
+    private JavaPlugin plugin;
+    
+    private LogUtil() {
+        
+    }
+    
+    public void setup(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+    
+    public static LogUtil getInstance() {
+        return instance;
+    }
 
 	public final void log(Level level, String msg, Object... objects) {
 		plugin.getLogger().log(level, FormatUtil.format(msg, objects));		
