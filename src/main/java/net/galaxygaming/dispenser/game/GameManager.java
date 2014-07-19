@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidDescriptionException;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -33,23 +32,34 @@ public class GameManager {
     
     public static final String GAME_CONFIG_EXTENSION = ".game";
     
-    private final GameDispenser plugin;
+    /** Singleton instance */
+    private static final GameManager instance = new GameManager();
+    
     private final GameLoader gameLoader;
-    private final File directory;
     private final Set<Game> games;
     private final Set<GameType> loadedGameTypes;
     private final Map<String, GamePlayer> lookupGamePlayers;
     
-    public GameManager(GameDispenser plugin, File directory) {
+    private GameDispenser plugin;
+    private File directory;
+    
+    private GameManager() {
+        this.games = Sets.newHashSet();
+        this.loadedGameTypes = Sets.newHashSet();
+        this.lookupGamePlayers = Maps.newHashMap();
+        this.gameLoader = new JavaGameLoader();
+    }
+    
+    public static GameManager getInstance() {
+        return instance;
+    }
+    
+    public void setup(GameDispenser plugin, File directory) {
         Validate.notNull(directory, "Directory cannot be null");
         Validate.isTrue(directory.isDirectory(), "Directory must be a directory");
         
         this.plugin = plugin;
-        this.gameLoader = new JavaGameLoader();
         this.directory = directory;
-        this.games = Sets.newHashSet();
-        this.loadedGameTypes = Sets.newHashSet();
-        this.lookupGamePlayers = Maps.newHashMap();
     }
     
     public GameType[] loadGameTypes() {
