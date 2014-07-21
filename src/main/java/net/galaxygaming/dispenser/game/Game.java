@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
-import net.galaxygaming.metadata.GameMetadata;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -51,6 +50,13 @@ public interface Game {
      * @return game metadata
      */
     public GameMetadata getMetadata(Metadatable object, String key);
+    
+    /**
+     * Removes metadata from an object
+     * @param object object to remove metadata for
+     * @param key key to metadata
+     */
+    public void removeMetadata(Metadatable object, String key);
     
     /**
      * Gives the singleton instance of the GameDispenser plugin
@@ -167,9 +173,17 @@ public interface Game {
     public void tick();
     
     /**
-     * End the game
+     * End the game,
+     * removes all players from the game
      */
     public void end(); // After someone wins
     
-    public void returnToLobby(); // After ending state is over and fireworks finish
+    /**
+     * Override this method to check for ending conditions
+     * Every tick the game will check this method and end
+     * if it returns true. Alternatively just call 
+     * {@link #end()} yourself when ready.
+     * @return
+     */
+    public boolean isFinished();
 }

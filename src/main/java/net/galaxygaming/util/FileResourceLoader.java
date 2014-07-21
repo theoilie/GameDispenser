@@ -24,27 +24,31 @@ public class FileResourceLoader extends ClassLoader {
 	
 	@Override
 	public URL getResource(final String string) {
-		final File file = new File(directory, string);
-		if (file.exists()) {
-			try {
-				return file.toURI().toURL();
-			} catch (MalformedURLException ex) {
-				// Nothing...
-			}
-		}
+	    if (directory != null) {
+	        final File file = new File(directory, string);
+	        if (file.exists()) {
+	            try {
+	                return file.toURI().toURL();
+	            } catch (MalformedURLException ex) {
+	                // Nothing...
+	            }
+	        }
+	    }
 		return super.getResource(string);
 	}
 	
 	@Override
 	public InputStream getResourceAsStream(final String string) {
-		final File file = new File(directory, string);
-		if (file.exists()) {
-			try {
-				return new FileInputStream(file);
-			} catch (FileNotFoundException ex) {
-				// Do nothing...
-			}
-		}
+	    if (directory != null) {
+	        final File file = new File(directory, string);
+	        if (file.exists()) {
+	            try {
+	                return new FileInputStream(file);
+	            } catch (FileNotFoundException ex) {
+	                // Do nothing...
+	            }
+	        }
+	    }
 		return super.getResourceAsStream(string);
 	}
 }

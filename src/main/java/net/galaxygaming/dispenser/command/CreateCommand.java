@@ -23,7 +23,7 @@ class CreateCommand extends Command {
     public void perform() {
         GameType type = GameType.get(args[0]);
         if (type == null) {
-            error("Not a valid Game Type");
+            error(messages.getMessage(CommandMessage.UNKNOWN_GAME_TYPE), args[0]);
             return;
         }
         

@@ -1,41 +1,36 @@
 /**
  * Copyright (C) 2014 t7seven7t
  */
-package net.galaxygaming.dispenser.game.java;
+package net.galaxygaming.dispenser.game;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.plugin.Plugin;
 
 import com.google.common.collect.Lists;
 
 import net.galaxygaming.dispenser.GameDispenser;
-import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameLoader;
-import net.galaxygaming.dispenser.game.GameLogger;
-import net.galaxygaming.dispenser.game.GameManager;
-import net.galaxygaming.dispenser.game.GameState;
-import net.galaxygaming.dispenser.game.GameType;
-import net.galaxygaming.dispenser.task.GameRunnable;
-import net.galaxygaming.metadata.GameMetadata;
+import net.galaxygaming.dispenser.task.CountdownTask;
 import net.galaxygaming.util.FormatUtil;
 
 /**
  * @author t7seven7t
  */
-public abstract class JavaGame implements Game {
+public abstract class GameBase implements Game {
 
     /** The current game state */
     protected GameState state = GameState.INACTIVE;
@@ -45,10 +40,7 @@ public abstract class JavaGame implements Game {
     
     /** List of players in this game */
     private List<Player> players;
-    
-    /** Field used privately for counting ticks */
-    private int counter;
-    
+        
     /** 
      * The maximum number of players the game can have. 
      * A value of 0 will be interpreted as the maximum
@@ -59,8 +51,11 @@ public abstract class JavaGame implements Game {
     /** The minimum number of players before the game can start */
     protected int minimumPlayers;
     
-    /** The length of the countdown period */
+    /** The length of the countdown period in seconds */
     protected int countdownDuration;
+    
+    /** The length of the game in seconds, if -1 the game will never end */
+    protected int gameTime;
     
     private GameType type;
     private GameLoader loader;
@@ -69,9 +64,10 @@ public abstract class JavaGame implements Game {
     private ClassLoader classLoader;
     private Logger logger;
     private GameDispenser plugin;
+    Plugin fakePlugin;
     
     public void broadcast(String message, Object... objects) {
-        String formatted = FormatUtil.format(message, objects);
+        String formatted = FormatUtil.format("&6" + message, objects);
         for (Player player : players) {
             player.sendMessage(formatted);
         }
@@ -115,16 +111,20 @@ public abstract class JavaGame implements Game {
     
     @Override
     public final GameMetadata getMetadata(Metadatable object, String key) {
-        List<MetadataValue> listMetadata = object.getMetadata(key);
-        for (MetadataValue v : listMetadata) {
+        for (MetadataValue v : object.getMetadata(key)) {
             if (v instanceof GameMetadata) {
                 GameMetadata data = (GameMetadata) v;
-                if (data.getGame() == this) {
+                if (data.getOwningPlugin() == fakePlugin) {
                     return data;
                 }
             }
         }
         return null;
+    }
+    
+    @Override
+    public final void removeMetadata(Metadatable object, String key) {
+        object.removeMetadata(key, fakePlugin);
     }
     
     @Override
@@ -164,37 +164,38 @@ public abstract class JavaGame implements Game {
         }
         
         setState(GameState.STARTING);
-        new GameRunnable() {
-            int countdown = countdownDuration;
+        new CountdownTask(this, countdownDuration, 
+                type.getMessages().getMessage("game.countdown.start")) {
             @Override
-            public void run() {
-                if (countdown % 5 == 0 || countdown < 5) {
-                    broadcast("&6Game starts in {0}", countdown);
-                }
-                
-                countdown--;
-                
-                if (countdown <= 0) {
-                    new GameRunnable() {
-                        @Override
-                        public void run() {
-                            start();
-                        }
-                    }.runTaskLater(20L);
-                    this.cancel();
-                }
+            public void done() {
+                start();
             }
-        }.runTaskTimer(0L, 20L);
+        };
     }
     
     @Override
     public final void start() {
         setState(GameState.ACTIVE);
         onStart();
+        
+        if (gameTime > 0) {
+            new CountdownTask(this, gameTime,
+                    type.getMessages().getMessage("game.countdown.end")) {
+                @Override
+                public void done() {
+                    end();
+                }
+            };
+        }
     }
     
     @Override
     public final void tick() {
+        if (isFinished()) {
+            end();
+            return;
+        }
+        
         onTick();
     }
     
@@ -203,11 +204,8 @@ public abstract class JavaGame implements Game {
         onEnd();
         setState(GameState.INACTIVE);
         
-        Iterator<Player> it = players.iterator();
-        while (it.hasNext()) {
-            Player player = it.next();
-            GameManager.getInstance().removePlayerFromGame(player);
-            it.remove();
+        for (Player player : Lists.newArrayList(players.iterator())) {
+            removePlayer(player);
         }
     }
     
@@ -232,13 +230,13 @@ public abstract class JavaGame implements Game {
         
         players.add(player);
         GameManager.getInstance().addPlayerToGame(player, this);
+        player.setMetadata("gameLastLocation", new GameFixedMetadata(this, player.getLocation().clone()));
         
         if (players.size() >= minimumPlayers) {
             startCountdown();
         }
         
         onPlayerJoin(player);
-        
         return true;
     }
     
@@ -246,6 +244,8 @@ public abstract class JavaGame implements Game {
     public final void removePlayer(Player player) {
         GameManager.getInstance().removePlayerFromGame(player);
         players.remove(player);
+        player.teleport((Location) getMetadata(player, "gameLastLocation").value());
+        removeMetadata(player, "gameLastLocation");
     }
     
     @Override
@@ -263,6 +263,9 @@ public abstract class JavaGame implements Game {
     public void onStart() {}
     
     @Override
+    public void onTick() {}
+    
+    @Override
     public void onEnd() {}
     
     @Override
@@ -270,6 +273,11 @@ public abstract class JavaGame implements Game {
     
     @Override
     public void onPlayerLeave(Player player) {}
+    
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
     
     @Override
     public final boolean equals(Object o) {
@@ -282,7 +290,7 @@ public abstract class JavaGame implements Game {
         }
         
         if (getClass() == o.getClass()) {            
-            if (this.name.equalsIgnoreCase(((JavaGame) o).name)) {
+            if (this.name.equalsIgnoreCase(((GameBase) o).name)) {
                 return true;
             }
         } else if (o.getClass() == String.class) {
@@ -316,7 +324,7 @@ public abstract class JavaGame implements Game {
         }
     }
     
-    public JavaGame() {
+    public GameBase() {
         final ClassLoader classLoader = this.getClass().getClassLoader();
         if (!(classLoader instanceof GameClassLoader)) {
             throw new IllegalStateException("JavaGame requires " + GameClassLoader.class.getName());
@@ -332,10 +340,13 @@ public abstract class JavaGame implements Game {
         this.logger = new GameLogger(this, GameDispenser.getInstance());
         this.players = Lists.newArrayList();
         this.plugin = GameDispenser.getInstance();
+        this.fakePlugin = new FakePlugin();
+        this.type = GameType.get(config.getString("type"));
         
         this.minimumPlayers = getConfig().getInt("minimumPlayers", 2);
         this.maximumPlayers = getConfig().getInt("maximumPlayers", 0);
         this.countdownDuration = getConfig().getInt("countdownDuration", 30);
+        this.gameTime = getConfig().getInt("gameTime", -1);
         
         onLoad();
     }

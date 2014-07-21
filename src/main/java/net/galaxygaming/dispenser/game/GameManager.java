@@ -27,8 +27,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.galaxygaming.dispenser.GameDispenser;
-import net.galaxygaming.dispenser.game.java.JavaGameLoader;
-import net.galaxygaming.util.FormatUtil;
+import net.galaxygaming.dispenser.game.GameLoader;
 
 /**
  * @author t7seven7t
@@ -52,7 +51,7 @@ public class GameManager {
         this.games = Sets.newHashSet();
         this.loadedGameTypes = Sets.newHashSet();
         this.lookupPlayers = Maps.newHashMap();
-        this.gameLoader = new JavaGameLoader();
+        this.gameLoader = new GameLoader();
     }
     
     public static GameManager getInstance() {
@@ -137,21 +136,10 @@ public class GameManager {
                 if (!dependLoaded) {
                     continue;
                 }
-                
-                final File dataFolder = new File(file.getParentFile(), description.getName());
 
                 try {
-                    if (dataFolder.exists() && !dataFolder.isDirectory()) {
-                        throw new InvalidGameException(FormatUtil.format(
-                                "Projected datafolder: '{0}' for {1} ({2}) exists and is not a directory",
-                                dataFolder,
-                                description.getFullName(),
-                                file
-                        ));
-                    }
-                    
                     gameLoader.loadGameType(file, description, true);
-                    GameType type = new GameType(description.getName(), description, dataFolder);
+                    GameType type = GameType.get(description.getName());
                     gameLoader.loadEvents(type);
                     loadedGameTypes.add(type);
                 } catch (InvalidGameException e) {

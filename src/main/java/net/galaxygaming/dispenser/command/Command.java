@@ -79,7 +79,7 @@ public abstract class Command implements CommandExecutor {
     }
     
     protected final boolean argMatchesAlias(String arg, String... aliases) {
-        for (String s: aliases) {
+        for (String s : aliases) {
             if (arg.equalsIgnoreCase(s))
                 return true;
         }
@@ -153,6 +153,8 @@ public abstract class Command implements CommandExecutor {
             ERROR                        = "commands.error",
             INSUFFICIENT_PERMISSION      = "commands.insufficientPermission",
             TOO_FEW_ARGS                 = "commands.tooFewArgs",
-            MUST_BE_PLAYER               = "commands.mustBePlayer";
+            MUST_BE_PLAYER               = "commands.mustBePlayer",
+            UNKNOWN_GAME                 = "commands.unknownGame",
+            UNKNOWN_GAME_TYPE            = "commands.unknownGameType";
     }   
 }

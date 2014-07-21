@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2014 t7seven7t
  */
-package net.galaxygaming.dispenser.game.java;
+package net.galaxygaming.dispenser.game;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +19,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import net.galaxygaming.dispenser.game.Game;
-import net.galaxygaming.dispenser.game.GameDescriptionFile;
-import net.galaxygaming.dispenser.game.InvalidGameException;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -31,12 +28,12 @@ import com.google.common.collect.Sets;
  */
 public class GameClassLoader extends URLClassLoader {
 
-    private final JavaGameLoader loader;
+    private final GameLoader loader;
     private final Map<String, Class<?>> classes;
     private final File file;
-    private final Class<? extends JavaGame> mainClass;
+    private final Class<? extends GameBase> mainClass;
     
-    GameClassLoader(final JavaGameLoader loader, final File file, final ClassLoader parent, final GameDescriptionFile description) throws MalformedURLException, InvalidGameException {
+    GameClassLoader(final GameLoader loader, final File file, final ClassLoader parent, final GameDescriptionFile description) throws MalformedURLException, InvalidGameException {
         super(new URL[] {file.toURI().toURL()}, parent);
         Validate.notNull(loader, "Loader cannot be null");
         
@@ -52,7 +49,7 @@ public class GameClassLoader extends URLClassLoader {
         }
         
         try {
-            mainClass = jarClass.asSubclass(JavaGame.class);
+            mainClass = jarClass.asSubclass(GameBase.class);
         } catch (ClassCastException e) {
             throw new InvalidGameException("main class '" + description.getMain() + "' does not extend JavaGame", e);
         }
@@ -64,7 +61,7 @@ public class GameClassLoader extends URLClassLoader {
         Validate.isTrue(!name.isEmpty(), "Name cannot be empty");
         
         try {
-            JavaGame result = mainClass.newInstance();
+            GameBase result = mainClass.newInstance();
             result.initialize(name, config, loader, configFile, this);
             return result;
         } catch (Throwable e) {

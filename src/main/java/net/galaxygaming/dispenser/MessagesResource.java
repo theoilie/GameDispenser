@@ -4,9 +4,8 @@
 package net.galaxygaming.dispenser;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.ResourceBundle;
-
-import net.galaxygaming.util.I18n;
 
 /**
  * @author t7seven7t
@@ -16,7 +15,7 @@ public class MessagesResource {
     private final ResourceBundle messages;
 
     public MessagesResource(File folder, String name, ClassLoader classLoader) {
-        messages = I18n.getResourceBundle(folder, name, classLoader);
+        messages = ResourceBundle.getBundle(name, Locale.getDefault(), classLoader);
     }
     
     public MessagesResource(File folder, ClassLoader classLoader) {
@@ -24,7 +23,7 @@ public class MessagesResource {
     }
     
     public MessagesResource(ClassLoader classLoader) {
-        this(GameDispenser.getInstance().getDataFolder(), classLoader);
+        this(null, "messages", classLoader);
     }
     
     public MessagesResource(String name, ClassLoader classLoader) {

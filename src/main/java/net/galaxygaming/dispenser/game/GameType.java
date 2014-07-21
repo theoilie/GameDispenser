@@ -5,6 +5,9 @@ package net.galaxygaming.dispenser.game;
 
 import java.io.File;
 import java.util.Map;
+
+import net.galaxygaming.dispenser.MessagesResource;
+
 import com.google.common.collect.Maps;
 
 /**
@@ -16,7 +19,8 @@ public class GameType {
     private final String name;
     private final GameDescriptionFile description;
     private final File dataFolder;
-    GameType(String name, GameDescriptionFile description, File dataFolder) {
+    private final MessagesResource messages;
+    GameType(String name, GameDescriptionFile description, File dataFolder, ClassLoader classLoader) {
         if (lookup.containsKey(name)) {
             throw new IllegalStateException("A GameType with the name '" + name + "' already exists.");
         }
@@ -24,7 +28,12 @@ public class GameType {
         this.name = name;
         this.description = description;
         this.dataFolder = dataFolder;
+        this.messages = new MessagesResource(dataFolder, classLoader);
         lookup.put(name, this);
+    }
+    
+    public MessagesResource getMessages() {
+        return messages;
     }
     
     /**
@@ -71,16 +80,12 @@ public class GameType {
     }
     
     public static GameType get(String name) {
-        GameType result = lookup.get(name);
-        
-        if (result == null) {
-            throw new IllegalStateException("GameType '" + name + "' does not exist");
-        }
-        
-        return result;
+        return lookup.get(name);
     }
     
     static void remove(GameType type) {
-        lookup.remove(type.toString());
+        if (type != null) {
+            lookup.remove(type.toString());
+        }
     }
 }
