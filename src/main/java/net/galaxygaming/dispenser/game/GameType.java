@@ -11,7 +11,7 @@ import com.google.common.collect.Maps;
  * @author t7seven7t
  */
 public class GameType {
-    private static final Map<String, GameType> lookup = Maps.newHashMap();
+    private static final Map<String, GameType> lookup = Maps.newConcurrentMap();
     
     private final String name;
     private final GameDescriptionFile description;
@@ -74,7 +74,7 @@ public class GameType {
         GameType result = lookup.get(name);
         
         if (result == null) {
-            throw new IllegalStateException("No such GameType exists '" + name + "'");
+            throw new IllegalStateException("GameType '" + name + "' does not exist");
         }
         
         return result;
