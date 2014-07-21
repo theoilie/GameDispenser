@@ -40,7 +40,7 @@ public abstract class Command implements CommandExecutor {
     
     protected String prefix = "";
     
-    protected MessagesResource messages = MessagesResource.getInstance();
+    protected MessagesResource messages = new MessagesResource(getClass().getClassLoader());
     
     public abstract void perform();
     

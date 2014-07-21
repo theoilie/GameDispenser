@@ -21,7 +21,8 @@ public abstract class I18n {
         try {
             return ResourceBundle.getBundle(bundleName, locale, new FileResourceLoader(classLoader, directory));
         } catch (MissingResourceException e) {
-            throw new RuntimeException("Could not find resource bundle: " + bundleName + ".properties");
+            // Fail silently
+            return null;
         }
     }
     

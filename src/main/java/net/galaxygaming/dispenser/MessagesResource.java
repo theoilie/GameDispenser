@@ -3,6 +3,7 @@
  */
 package net.galaxygaming.dispenser;
 
+import java.io.File;
 import java.util.ResourceBundle;
 
 import net.galaxygaming.util.I18n;
@@ -12,31 +13,38 @@ import net.galaxygaming.util.I18n;
  */
 public class MessagesResource {
     
-    /** Singleton instance */
-    private static final MessagesResource instance = new MessagesResource();
-    private ResourceBundle messages;
+    private final ResourceBundle messages;
 
-    private MessagesResource() {}
-    
-    @Override
-    public MessagesResource clone() throws CloneNotSupportedException {
-        throw new CloneNotSupportedException();
+    public MessagesResource(File folder, String name, ClassLoader classLoader) {
+        messages = I18n.getResourceBundle(folder, name, classLoader);
     }
     
-    public void setup(GameDispenser plugin) {
-        messages = I18n.getResourceBundle(plugin.getDataFolder(), "messages", plugin.getClass().getClassLoader());
+    public MessagesResource(File folder, ClassLoader classLoader) {
+        this(folder, "messages", classLoader);
+    }
+    
+    public MessagesResource(ClassLoader classLoader) {
+        this(GameDispenser.getInstance().getDataFolder(), classLoader);
+    }
+    
+    public MessagesResource(String name, ClassLoader classLoader) {
+        this(GameDispenser.getInstance().getDataFolder(), name, classLoader);
     }
         
     public String getMessage(String key) {
-        if (messages == null) {
-            return "MessagesResource not setup.";
+        String result = null;
+        if (messages != null) {
+            result = messages.getString(key);
+        }
+
+        if (result == null && this != GameDispenser.getInstance().getMessages()) {
+            return GameDispenser.getInstance().getMessages().getMessage(key);
         }
         
-        return messages.getString(key);
+        if (result == null) {
+            throw new RuntimeException("Could not locate a message for key " + key);
+        }
+        
+        return result;
     }
-    
-    public static MessagesResource getInstance() {
-        return instance;
-    }
-    
 }

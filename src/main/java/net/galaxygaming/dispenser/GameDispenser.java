@@ -3,6 +3,7 @@
  */
 package net.galaxygaming.dispenser;
 
+import net.galaxygaming.dispenser.command.CommandManager;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.util.LogUtil;
@@ -18,6 +19,7 @@ public class GameDispenser extends JavaPlugin {
     private static GameDispenser instance;
     
     private LogUtil log;
+    private MessagesResource messages;
         
     public void onEnable() {
         GameDispenser.instance = this;
@@ -25,15 +27,20 @@ public class GameDispenser extends JavaPlugin {
             this.getDataFolder().mkdir();
         
         EventManager.getInstance().setup(this);
-        MessagesResource.getInstance().setup(this);
+        CommandManager.getInstance().setup(this);
         LogUtil.getInstance().setup(this);
         log = LogUtil.getInstance();
+        messages = new MessagesResource(getDataFolder(), getClassLoader());
         
         GameManager gameManager = GameManager.getInstance();
         gameManager.setup(this, this.getDataFolder());
                 
         log.log("Loaded {0} game types.", gameManager.loadGameTypes().length);
         log.log("Loaded {0} games.", gameManager.loadGames().length);
+    }
+    
+    public MessagesResource getMessages() {
+        return messages;
     }
     
     public static GameDispenser getInstance() {
