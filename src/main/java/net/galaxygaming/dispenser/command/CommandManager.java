@@ -10,6 +10,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 
+import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.GameType;
 
 import com.google.common.collect.Maps;
@@ -28,6 +29,12 @@ public class CommandManager {
     
     private CommandManager() {
         commands = Maps.newHashMap();
+    }
+    
+    public void setup(GameDispenser plugin) {
+        PrefixedReflectCommand root = new PrefixedReflectCommand("gd");
+        plugin.getCommand("gd").setExecutor(root);
+        root.addExecutor(new CreateCommand());
     }
     
     @Override

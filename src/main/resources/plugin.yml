@@ -3,3 +3,5 @@ version: "${project.version}"
 main: net.galaxygaming.dispenser.GameDispenser
 authors:
   - "t7seven7t"
+commands:
+  gd:
