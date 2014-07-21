@@ -3,14 +3,26 @@
  */
 package net.galaxygaming.dispenser.game;
 
+import java.util.List;
 import java.util.logging.Logger;
 
+import net.galaxygaming.dispenser.GameDispenser;
+import net.galaxygaming.metadata.GameMetadata;
+
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.metadata.Metadatable;
 
 /**
  * @author t7seven7t
  */
 public interface Game {
+    
+     /**
+      * Sends a message to every player in the game
+      * @param message
+      */
+    public void broadcast(String message, Object... objects);
     
     /**
      * Retrieves a config file unique to this game instance.
@@ -25,25 +37,139 @@ public interface Game {
     
     public GameLoader getGameLoader();
     
+    /**
+     * Gives a logger unique to this game instance
+     * @return logger
+     */
     public Logger getLogger();
     
+    /**
+     * Retrieves the metadata for a metadatable object using key
+     * and this game instance to ensure correct selection
+     * @param object metadatable object
+     * @param key metadata key
+     * @return game metadata
+     */
+    public GameMetadata getMetadata(Metadatable object, String key);
+    
+    /**
+     * Gives the singleton instance of the GameDispenser plugin
+     * @return GameDispenser plugin
+     */
+    public GameDispenser getPlugin();
+    
+    /**
+     * Gets the current GameState of this game
+     * @return GameState
+     */
     public GameState getState();
     
+    /**
+     * Sets the current GameState of this game
+     * @param state
+     */
+    public void setState(GameState state);
+    
+    /**
+     * Gets the GameType of this game
+     * @return GameType
+     */
     public GameType getType(); 
     
+    /**
+     * Gives the name of this game instance
+     * @return name
+     */
     public String getName();
     
+    /**
+     * Sets the name of this game instance
+     * @param name
+     */
     public void setName(String name);
     
+    /**
+     * Adds a player to this game
+     * @param player
+     * @return false if cannot add player
+     */
+    public boolean addPlayer(Player player);
+    
+    /**
+     * Adds a player to the game optionally bypassing
+     * restrictions on full games or games already in
+     * play
+     * @param player
+     * @param bypassRestrictions
+     * @return false if cannot add player
+     */
+    public boolean addPlayer(Player player, boolean bypassRestrictions);
+    
+    /**
+     * Removes a player from the game
+     * @param player
+     */
+    public void removePlayer(Player player);
+    
+    /**
+     * Returns a list of all players in this game
+     * @return
+     */
+    public List<Player> getPlayers();
+
+    /**
+     * Do stuff when this game is first initialized
+     */
     public void onLoad();
-    	
+    
+    /**
+     * Do stuff when game starts
+     */
+    public void onStart();
+    
+    /**
+     * Do stuff when game ends
+     */
+    public void onEnd();
+    
+    /**
+     * Do stuff every minecraft game tick when
+     * the game state ordinal is greater than
+     * GameState.STARTING ordinal
+     */
     public void onTick();
     
-    public void startCountdown(); // After enough players have joined
+    /**
+     * Do stuff whenever a player joins
+     * @param player
+     */
+    public void onPlayerJoin(Player player);
     
-    public void startGame(); // After countdown is over
+    /**
+     * Do stuff whenever a player leaves
+     * @param player
+     */
+    public void onPlayerLeave(Player player);
     
-    public void endGame(); // After someone wins
+    /**
+     * Begins the countdown process before this game starts
+     */
+    public void startCountdown();
+    
+    /**
+     * Start the game
+     */
+    public void start(); // After countdown is over
+    
+    /**
+     * Ticks the game, do not call this method.
+     */
+    public void tick();
+    
+    /**
+     * End the game
+     */
+    public void end(); // After someone wins
     
     public void returnToLobby(); // After ending state is over and fireworks finish
 }

@@ -14,6 +14,7 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
@@ -28,7 +29,6 @@ import net.galaxygaming.dispenser.command.Command;
 import net.galaxygaming.dispenser.command.CommandManager;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.Game;
-import net.galaxygaming.dispenser.game.GameConfiguration;
 import net.galaxygaming.dispenser.game.GameDescriptionFile;
 import net.galaxygaming.dispenser.game.GameLoader;
 import net.galaxygaming.dispenser.game.GameManager;
@@ -49,7 +49,7 @@ public class JavaGameLoader implements GameLoader {
     }
     
     public Game loadGame(File configFile) throws InvalidGameException {
-        return loadGame(configFile, GameManager.getInstance().getConfig(configFile));
+        return loadGame(configFile, YamlConfiguration.loadConfiguration(configFile));
     }
     
     public Game loadGame(File configFile, FileConfiguration config) throws InvalidGameException {
@@ -61,9 +61,8 @@ public class JavaGameLoader implements GameLoader {
                 + GameManager.GAME_CONFIG_EXTENSION 
                 + "$", ""
         );
-                        
-        GameType type = GameType.get(config.getString(GameConfiguration.PATH_GAMETYPE));
         
+        GameType type = GameType.get(config.getString("type"));        
         GameClassLoader loader = loaders.get(type.toString());
         Validate.notNull(loader, "Game type '" + type.toString() + "' must be loaded first");
 

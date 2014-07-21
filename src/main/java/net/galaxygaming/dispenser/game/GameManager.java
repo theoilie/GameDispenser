@@ -16,15 +16,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.galaxygaming.dispenser.GameDispenser;
-import net.galaxygaming.dispenser.entity.GamePlayer;
 import net.galaxygaming.dispenser.game.java.JavaGameLoader;
 import net.galaxygaming.util.FormatUtil;
 
@@ -41,15 +43,15 @@ public class GameManager {
     private final GameLoader gameLoader;
     private final Set<Game> games;
     private final Set<GameType> loadedGameTypes;
-    private final Map<String, GamePlayer> lookupGamePlayers;
-    
+    private final Map<String, Game> lookupPlayers;
+        
     private GameDispenser plugin;
     private File directory;
     
     private GameManager() {
         this.games = Sets.newHashSet();
         this.loadedGameTypes = Sets.newHashSet();
-        this.lookupGamePlayers = Maps.newHashMap();
+        this.lookupPlayers = Maps.newHashMap();
         this.gameLoader = new JavaGameLoader();
     }
     
@@ -63,6 +65,19 @@ public class GameManager {
         
         this.plugin = plugin;
         this.directory = directory;
+        
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Iterator<Game> it = games.iterator();
+                while(it.hasNext()) {
+                    Game game = it.next();
+                    if (game.getState().ordinal() > GameState.STARTING.ordinal()) {
+                        game.tick();
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
     }
     
     public GameType[] loadGameTypes() {
@@ -194,8 +209,8 @@ public class GameManager {
             throw new InvalidGameException("Unable to create new config for " + name, e);
         }
         
-        FileConfiguration config = getConfig(configFile);
-        config.set(GameConfiguration.PATH_GAMETYPE, type.toString());
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("type", type.toString());
         
         Game result = gameLoader.loadGame(configFile, config);
         games.add(result);
@@ -283,23 +298,56 @@ public class GameManager {
         return loadedGameTypes.toArray(new GameType[0]);
     }
     
-    public void launchFireworks(Game game) {
-		// TODO
+    /**
+     * Adds a player to the game lookup listing
+     * @param player
+     * @param game
+     */
+    public void addPlayerToGame(Player player, Game game) {
+        lookupPlayers.put(player.getName(), game);
     }
     
-    public void announceWinner(String winner) {
-    	// TODO: Broadcast victory message from file
+    /**
+     * Removes a player from the lookup listing
+     * @param player
+     */
+    public void removePlayerFromGame(Player player) {
+        lookupPlayers.remove(player.getName());
     }
     
-    public FileConfiguration getConfig(File configFile) throws InvalidGameException {
-        FileConfiguration config = new GameConfiguration();
-        try {
-            config.load(configFile);
-        } catch(IOException e) {
-            throw new InvalidGameException("Cannot load " + configFile, e);
-        } catch (InvalidConfigurationException e) {
-            throw new InvalidGameException("Cannot load " + configFile, e);
+    /**
+     * Gives the game a player is currently in otherwise null
+     * @param player
+     * @return game this player is in, or null if none
+     */
+    public Game getGameForPlayer(Player player) {
+        return lookupPlayers.get(player.getName());
+    }
+    
+    /**
+     * Gives the game a player is currently in
+     * only if the game class matches the class
+     * parameter otherwise null
+     * @param player
+     * @param clazz
+     * @return game the player is in, or null if not
+     * an instance of clazz
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getGameForPlayer(Player player, Class<T> clazz) {
+        Game result = getGameForPlayer(player);
+        if (result != null && result.getClass().isAssignableFrom(clazz)) {
+            return (T) result;
         }
-        return config;
+        return null;
+    }
+    
+    public void launchFireworks(Game game) {
+		// TODO What is this supposed to do?
+    }
+    
+    @Override
+    public GameManager clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
     }
 }
