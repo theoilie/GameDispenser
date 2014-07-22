@@ -20,6 +20,7 @@ public class GameDispenser extends JavaPlugin {
     
     private LogUtil log;
     private MessagesResource messages;
+    private String[] blacklistedCommands;
         
     public void onEnable() {
         GameDispenser.instance = this;
@@ -27,6 +28,7 @@ public class GameDispenser extends JavaPlugin {
             this.getDataFolder().mkdir();
         
         messages = new MessagesResource(getDataFolder(), getClassLoader());
+        blacklistedCommands = getConfig().getStringList("blacklistedCommands").toArray(new String[0]);
         
         EventManager.getInstance().setup(this);
         CommandManager.getInstance().setup(this);
@@ -42,6 +44,10 @@ public class GameDispenser extends JavaPlugin {
     
     public MessagesResource getMessages() {
         return messages;
+    }
+    
+    public String[] getBlacklistedCommands() {
+        return blacklistedCommands.clone();
     }
     
     public static GameDispenser getInstance() {

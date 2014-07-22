@@ -159,12 +159,13 @@ public abstract class GameBase implements Game {
     
     @Override
     public final void startCountdown() {
-        if (getState() == GameState.STARTING) {
+        if (getState().ordinal() >= GameState.STARTING.ordinal()) {
             return;
         }
         
         setState(GameState.STARTING);
-        new CountdownTask(this, countdownDuration, 
+        // TODO: countdown task is a poor way to do this, create a new method for this perhaps on tick()
+        new CountdownTask(this, countdownDuration,
                 type.getMessages().getMessage("game.countdown.start")) {
             @Override
             public void done() {
@@ -222,13 +223,19 @@ public abstract class GameBase implements Game {
             return false;
         }
         
+        if (players.contains(player)) {
+            return false;
+        }
+        
         if (players.size() >= maximumPlayers && maximumPlayers > 0 && !bypassRestrictions) {
             return false;
         }
         
-        setState(GameState.LOBBY);
+        if (getState().ordinal() <= GameState.STARTING.ordinal()) {
+            setState(GameState.LOBBY);
+        }
         
-        players.add(player);
+        players.add(player);        
         GameManager.getInstance().addPlayerToGame(player, this);
         player.setMetadata("gameLastLocation", new GameFixedMetadata(this, player.getLocation().clone()));
         
@@ -249,8 +256,8 @@ public abstract class GameBase implements Game {
     }
     
     @Override
-    public final List<Player> getPlayers() {
-        return players;
+    public final Player[] getPlayers() {
+        return players.toArray(new Player[players.size()]);
     }
     
     /* Override the following methods and let

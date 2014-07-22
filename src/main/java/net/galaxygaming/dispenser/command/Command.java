@@ -90,6 +90,14 @@ public abstract class Command implements CommandExecutor {
         sendMessage(messages.getMessage(CommandMessage.ERROR), FormatUtil.format(message, args));
     }
     
+    protected final void error(String message, Throwable t) {
+        error(message);
+        if (t.getStackTrace() != null && t.getStackTrace().length != 0) {
+            sendMessage(messages.getMessage(CommandMessage.SEE_CONSOLE));
+            t.printStackTrace();
+        }
+    }
+    
     protected final void sendMessage(String message, Object... args) {
         sender.sendMessage(ChatColor.YELLOW + FormatUtil.format(message, args));
     }
@@ -155,6 +163,10 @@ public abstract class Command implements CommandExecutor {
             TOO_FEW_ARGS                 = "commands.tooFewArgs",
             MUST_BE_PLAYER               = "commands.mustBePlayer",
             UNKNOWN_GAME                 = "commands.unknownGame",
-            UNKNOWN_GAME_TYPE            = "commands.unknownGameType";
+            UNKNOWN_GAME_TYPE            = "commands.unknownGameType",
+            ALREADY_IN_GAME              = "commands.alreadyInGame",
+            SEE_CONSOLE                  = "commands.seeConsole",
+            NOT_IN_GAME                  = "commands.notInGame",
+            GAME_DELETED                 = "commands.gameDeleted";
     }   
 }

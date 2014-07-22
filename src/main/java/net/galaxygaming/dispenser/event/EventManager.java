@@ -46,6 +46,7 @@ public class EventManager {
     
     public void setup(GameDispenser plugin) {
         this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(new Events(), plugin);
     }
     
     @Override

@@ -35,6 +35,13 @@ public class CommandManager {
         PrefixedReflectCommand root = new PrefixedReflectCommand("gd");
         plugin.getCommand("gd").setExecutor(root);
         root.addExecutor(new CreateCommand());
+        root.addExecutor(new JoinCommand());
+        root.addExecutor(new LeaveCommand());
+        root.addExecutor(new LoadCommand());
+        root.addExecutor(new UnloadCommand());
+        root.addExecutor(new StartCommand());
+        root.addExecutor(new EndCommand());
+        root.addExecutor(new RemoveCommand());
     }
     
     @Override

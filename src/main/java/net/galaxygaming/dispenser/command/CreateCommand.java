@@ -3,6 +3,8 @@
  */
 package net.galaxygaming.dispenser.command;
 
+import org.bukkit.permissions.Permission;
+
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.GameType;
 import net.galaxygaming.dispenser.game.InvalidGameException;
@@ -17,6 +19,8 @@ class CreateCommand extends Command {
         this.name = "create";
         this.requiredArgs.add("type");
         this.optionalArgs.add("name");
+        this.description = "Create a game";
+        this.permission = new Permission("gamedispenser.command.create");
     }
     
     @Override

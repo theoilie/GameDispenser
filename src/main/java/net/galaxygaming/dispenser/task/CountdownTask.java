@@ -16,7 +16,9 @@ public abstract class CountdownTask extends GameRunnable {
     private final Game game;
     /**
      * Create a new countdown task
+     * @param game game
      * @param duration in seconds
+     * @param message message to broadcast during countdown
      */
     public CountdownTask(Game game, int duration, String message) {
         this.countdown = duration;

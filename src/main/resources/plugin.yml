@@ -5,3 +5,5 @@ authors:
   - "t7seven7t"
 commands:
   gd:
+    description: base command for GameDispenser
+    aliases: [gamedispenser, game]

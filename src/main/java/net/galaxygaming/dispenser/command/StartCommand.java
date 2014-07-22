@@ -3,32 +3,32 @@
  */
 package net.galaxygaming.dispenser.command;
 
+import org.bukkit.permissions.Permission;
+
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
 
 /**
  * @author t7seven7t
- * 
- * Extend this class to setup a join command
- * No permission set for the command by default
  */
-public class JoinCommandBase extends Command {
+class StartCommand extends Command {
 
-    public JoinCommandBase(String prefix) {
-        this.name = "join";
+    public StartCommand() {
+        this.prefix = "gd";
+        this.name = "start";
         this.requiredArgs.add("name");
-        this.mustBePlayer = true;
-        this.prefix = prefix;
+        this.description = "Force start a game";
+        this.permission = new Permission("gamedispenser.command.start");
     }
     
     @Override
-    public void perform() {
+    public void perform() {        
         Game game = GameManager.getInstance().getGame(args[0]);
         if (game == null) {
             error(messages.getMessage(CommandMessage.UNKNOWN_GAME), args[0]);
             return;
         }
         
-        game.addPlayer(player);
+        game.start();
     }
 }

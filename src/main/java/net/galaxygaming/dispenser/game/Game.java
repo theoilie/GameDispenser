@@ -3,7 +3,6 @@
  */
 package net.galaxygaming.dispenser.game;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
@@ -121,7 +120,7 @@ public interface Game {
      * Returns a list of all players in this game
      * @return
      */
-    public List<Player> getPlayers();
+    public Player[] getPlayers();
 
     /**
      * Do stuff when this game is first initialized
