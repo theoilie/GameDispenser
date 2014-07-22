@@ -7,6 +7,7 @@ import net.galaxygaming.dispenser.command.CommandManager;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.util.LogUtil;
+import net.galaxygaming.util.SelectionUtil;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,6 +38,8 @@ public class GameDispenser extends JavaPlugin {
         
         GameManager gameManager = GameManager.getInstance();
         gameManager.setup(this, this.getDataFolder());
+        
+        SelectionUtil.getInstance().setWand(getConfig().getString("wand"));
                 
         log.log("Loaded {0} game types.", gameManager.loadGameTypes().length);
         log.log("Loaded {0} games.", gameManager.loadGames().length);

@@ -7,12 +7,16 @@ import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.util.FormatUtil;
+import net.galaxygaming.util.SelectionUtil;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  * @author t7seven7t
@@ -49,4 +53,26 @@ class Events implements Listener {
             }
         }
     }
+    
+    /*
+     * Selecting blocks for arena creation
+     */
+	@EventHandler
+	private void onPlayerInteractEvent(final PlayerInteractEvent event) {
+		final Player player = event.getPlayer();
+		if ((player.getItemInHand().getType() == SelectionUtil.getInstance()
+				.getWand())) {
+			if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+				// TODO: Send message from messages.properties saying point one was set
+				SelectionUtil.getInstance().getSelection(player)
+						.setPointOne(event.getClickedBlock().getLocation());
+				event.setCancelled(true);
+			} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				// TODO: Send message from messages.properties saying point two was set
+				SelectionUtil.getInstance().getSelection(player)
+						.setPointTwo(event.getClickedBlock().getLocation());
+				event.setCancelled(true);
+			}
+		}
+	}
 }
