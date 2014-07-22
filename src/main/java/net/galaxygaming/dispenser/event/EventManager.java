@@ -11,13 +11,19 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import net.galaxygaming.dispenser.GameDispenser;
+import net.galaxygaming.dispenser.game.Game;
+import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.GameType;
 
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityEvent;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.EventExecutor;
 
 import com.google.common.collect.Maps;
@@ -67,12 +73,17 @@ public class EventManager {
         for (final Method method : methods) {
             final EventHandler eh = method.getAnnotation(EventHandler.class);
             if (eh == null) continue;
-            final Class<?> checkClass;
-            if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass = method.getParameterTypes()[0])) {
+            final Class<?> checkClass = method.getParameterTypes()[0];
+            final Class<? extends Game> gameClass;
+            if (method.getParameterTypes().length == 2 && Game.class.isAssignableFrom(method.getParameterTypes()[1]) && (EntityEvent.class.isAssignableFrom(checkClass) || PlayerEvent.class.isAssignableFrom(checkClass))) {
+                gameClass = method.getParameterTypes()[1].asSubclass(Game.class);
+            } else if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass)) {
                 plugin.getLogger().severe(type.toString() + " attempted to register an invalid EventHandler method signature '" + method.toGenericString() + "' in " + listener.getClass());
                 continue;
+            } else {
+                gameClass = null;
             }
-            
+
             final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
             method.setAccessible(true);
             
@@ -82,7 +93,30 @@ public class EventManager {
                         if (!eventClass.isAssignableFrom(event.getClass())) {
                             return;
                         }
-                        method.invoke(listener, event);
+                        
+                        if (gameClass != null) {
+                            Player player = null;
+                            if (event instanceof PlayerEvent) {
+                                player = ((PlayerEvent) event).getPlayer();
+                            } else if (event instanceof EntityEvent) {
+                                Entity entity = ((EntityEvent) event).getEntity();
+                                if (entity instanceof Player) {
+                                    player = (Player) entity;
+                                }
+                            }
+                            
+                            if (player == null) {
+                                return;
+                            }
+                            
+                            Game game = GameManager.getInstance().getGameForPlayer(player, gameClass);
+                            if (game == null)
+                                return;
+                            
+                            method.invoke(listener, event, gameClass.cast(game));
+                        } else {
+                            method.invoke(listener, event);
+                        }
                     } catch (InvocationTargetException e) {
                         throw new EventException(e.getCause());
                     } catch (Throwable e) {
