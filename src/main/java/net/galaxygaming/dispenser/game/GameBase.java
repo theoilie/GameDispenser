@@ -231,7 +231,7 @@ public abstract class GameBase implements Game {
             return false;
         }
         
-        if (getState().ordinal() <= GameState.STARTING.ordinal()) {
+        if (getState().ordinal() < GameState.STARTING.ordinal()) {
             setState(GameState.LOBBY);
         }
         
