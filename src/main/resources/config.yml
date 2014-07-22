@@ -1,2 +1,2 @@
 debug: true
-blacklistedCommands = [spawn]
+blacklistedCommands: [spawn]
