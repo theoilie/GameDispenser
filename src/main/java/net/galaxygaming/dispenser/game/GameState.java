@@ -11,9 +11,9 @@ public class GameState {
     public static final GameState   
         EDITING     = new GameState(-10),
         INACTIVE    = new GameState(0), 
-        LOBBY       = new GameState(10), 
-        STARTING    = new GameState(20),
-        ACTIVE      = new GameState(30);
+        LOBBY       = new GameState(1), 
+        STARTING    = new GameState(2),
+        ACTIVE      = new GameState(10);
     
     private final int ordinal;
     public GameState(int ordinal) {
