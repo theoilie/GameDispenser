@@ -167,6 +167,9 @@ public abstract class Command implements CommandExecutor {
             ALREADY_IN_GAME              = "commands.alreadyInGame",
             SEE_CONSOLE                  = "commands.seeConsole",
             NOT_IN_GAME                  = "commands.notInGame",
-            GAME_DELETED                 = "commands.gameDeleted";
+            GAME_DELETED                 = "commands.gameDeleted",
+            GAME_NOT_SETUP               = "commands.gameNotSetup",
+            GAME_ALREADY_ACTIVE          = "commands.gameAlreadyActive",
+            GAME_IS_FULL                 = "commands.gameIsFull";
     }   
 }

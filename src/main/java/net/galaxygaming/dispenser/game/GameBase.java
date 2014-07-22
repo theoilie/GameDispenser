@@ -211,23 +211,8 @@ public abstract class GameBase implements Game {
     }
     
     @Override
-    public final boolean addPlayer(Player player) {
-        return addPlayer(player, false);
-    }
-    
-    @Override
-    public final boolean addPlayer(Player player, boolean bypassRestrictions) {
-        if (getState().ordinal() < GameState.INACTIVE.ordinal() 
-                && getState().ordinal() >= GameState.ACTIVE.ordinal()
-                && !bypassRestrictions) {
-            return false;
-        }
-        
-        if (players.contains(player)) {
-            return false;
-        }
-        
-        if (players.size() >= maximumPlayers && maximumPlayers > 0 && !bypassRestrictions) {
+    public final boolean addPlayer(Player player) {        
+        if (players.size() >= maximumPlayers && maximumPlayers > 0) {
             return false;
         }
         

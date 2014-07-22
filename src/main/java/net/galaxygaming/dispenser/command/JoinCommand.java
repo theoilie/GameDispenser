@@ -7,6 +7,7 @@ import org.bukkit.permissions.Permission;
 
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
+import net.galaxygaming.dispenser.game.GameState;
 
 /**
  * @author t7seven7t
@@ -38,6 +39,16 @@ class JoinCommand extends Command {
             return;
         }
         
-        game.addPlayer(player);
+        if (game.getState().ordinal() < GameState.INACTIVE.ordinal()) {
+            error(messages.getMessage(CommandMessage.GAME_NOT_SETUP));
+            return;
+        } else if (game.getState().ordinal() > GameState.STARTING.ordinal()) {
+            error(messages.getMessage(CommandMessage.GAME_ALREADY_ACTIVE));
+            return;
+        }
+        
+        if (!game.addPlayer(player)) {
+            error(messages.getMessage(CommandMessage.GAME_IS_FULL));
+        }
     }
 }

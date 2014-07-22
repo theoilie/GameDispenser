@@ -101,16 +101,6 @@ public interface Game {
     public boolean addPlayer(Player player);
     
     /**
-     * Adds a player to the game optionally bypassing
-     * restrictions on full games or games already in
-     * play
-     * @param player
-     * @param bypassRestrictions
-     * @return false if cannot add player
-     */
-    public boolean addPlayer(Player player, boolean bypassRestrictions);
-    
-    /**
      * Removes a player from the game
      * @param player
      */
