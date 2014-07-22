@@ -59,7 +59,9 @@ public class GameLoader {
         
         GameType type = GameType.get(config.getString("type"));        
         GameClassLoader loader = loaders.get(type.toString());
-        Validate.notNull(loader, "Game type '" + type.toString() + "' must be loaded first");
+        if (loader == null) {
+            throw new InvalidGameException("Game type '" + type.toString() + "' must be loaded first");
+        }
 
         return loader.newInstance(name, config, configFile);
     }
@@ -111,6 +113,11 @@ public class GameLoader {
         } catch (Throwable e) {
             throw new InvalidGameException(e);
         }
+    }
+    
+    public void unloadGameType(GameType type) {
+        loaders.remove(type.toString());
+        GameType.remove(type);
     }
     
     public void loadEvents(GameType type) {

@@ -157,6 +157,45 @@ public class GameManager {
         return loadedGameTypes.toArray(new GameType[0]);
     }
     
+    boolean isDependLoaded(List<String> depend) {
+        for (String game : depend) {
+            if (!loadedGameTypes.contains(game)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Loads a game type by name
+     * @param name name of game type
+     * @return game type object
+     * @throws InvalidGameException if could not load
+     */
+    public GameType loadGameType(String name) throws InvalidGameException {
+        File file = new File(directory, name + ".jar");
+        if (!file.exists()) {
+            throw new InvalidGameException("Game jar does not exist");
+        }
+        
+        GameDescriptionFile description = null;
+        try {
+            description = gameLoader.getGameDescription(file);
+        } catch (InvalidDescriptionException e) {
+            throw new InvalidGameException(e);
+        }
+        
+        if (!isDependLoaded(description.getDepend())) {
+            throw new InvalidGameException("One or more dependencies are not yet loaded");
+        }
+        
+        gameLoader.loadGameType(file, description, true);
+        GameType type = GameType.get(description.getName());
+        gameLoader.loadEvents(type);
+        loadedGameTypes.add(type);
+        return type;
+    }
+    
     public Game[] loadGames() {
         Pattern filter = Pattern.compile("\\" + GAME_CONFIG_EXTENSION + "$");
         
@@ -174,6 +213,74 @@ public class GameManager {
         }
         
         return games.toArray(new Game[0]);
+    }
+    
+    /**
+     * Loads a game by name
+     * @param name name of game
+     * @return loaded game
+     * @throws InvalidGameException if could not load
+     */
+    public Game loadGame(String name) throws InvalidGameException {
+        File file = new File(directory, name + GAME_CONFIG_EXTENSION);
+        if (!file.exists()) {
+            throw new InvalidGameException("Game config does not exist");
+        }
+        
+        Game game = gameLoader.loadGame(file);
+        games.add(game);
+        return game;
+    }
+    
+    /**
+     * Unloads all classes of a game type from the server
+     * @param type type to unload
+     * @throws InvalidGameException if cannot unload
+     */
+    public void unloadGameType(GameType type) throws InvalidGameException {
+        for (GameType other : loadedGameTypes) {
+            if (other.getDescription().getDepend().contains(type.toString())) {
+                throw new InvalidGameException("Cannot unload game type as another game type depends on it: " + other.toString());
+            }
+        }
+        
+        Set<Game> removeGames = Sets.newHashSet();
+        for (Game game : games) {
+            if (game.getType() == type) {
+                removeGames.add(game);
+            }
+        }
+        
+        for (Game game : removeGames) {
+            unloadGame(game);
+        }
+        
+        gameLoader.unloadGameType(type);
+        loadedGameTypes.remove(type);
+    }
+    
+    /**
+     * Unloads a game from the server
+     * @param game game to unload
+     */
+    public void unloadGame(Game game) {
+        if (game.getState().ordinal() > GameState.ACTIVE.ordinal()) {
+            game.end();
+        }
+        
+        games.remove(game);
+    }
+    
+    /**
+     * Unloads a game and deletes its config file
+     * @param game game to delete
+     */
+    public void deleteGame(Game game) {
+        unloadGame(game);
+        
+        if (game instanceof GameBase) {
+            ((GameBase) game).getConfigFile().delete();
+        }
     }
     
     /**
@@ -245,16 +352,28 @@ public class GameManager {
         return newGame(type, type.toString() + result);
     }
     
+    /**
+     * Saves all games
+     */
     public void saveGames() {
         for (Game game : games) {
             saveGame(game);
         }
     }
     
+    /**
+     * Saves a game config
+     * @param game game to save
+     */
     public void saveGame(Game game) {
         game.saveConfig();
     }
     
+    /**
+     * Retrieves a game matching the name specified otherwise null
+     * @param name name of game
+     * @return game
+     */
     public Game getGame(String name) {
         // Iterators are fastest for small sets but longest for large sets o.o
         Iterator<Game> it = games.iterator();
@@ -328,10 +447,6 @@ public class GameManager {
             return (T) result;
         }
         return null;
-    }
-    
-    public void launchFireworks(Game game) {
-		// TODO What is this supposed to do?
     }
     
     @Override
