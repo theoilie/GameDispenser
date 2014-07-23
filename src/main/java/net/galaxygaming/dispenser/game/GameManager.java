@@ -34,7 +34,7 @@ import net.galaxygaming.dispenser.game.GameLoader;
  */
 public class GameManager {
     
-    public static final String GAME_CONFIG_EXTENSION = ".game";
+    public static final String GAME_CONFIG_EXTENSION = ".yml";
     
     /** Singleton instance */
     private static final GameManager instance = new GameManager();
