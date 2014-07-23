@@ -264,6 +264,8 @@ public class GameManager {
      * @param game game to unload
      */
     public void unloadGame(Game game) {
+        saveGame(game);
+        
         if (game.getState().ordinal() > GameState.ACTIVE.ordinal()) {
             game.end();
         }
