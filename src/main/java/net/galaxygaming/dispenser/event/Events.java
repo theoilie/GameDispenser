@@ -18,6 +18,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * @author t7seven7t
@@ -79,5 +81,24 @@ class Events implements Listener {
 				event.setCancelled(true);
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+	    onDisconnect(event.getPlayer());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerKick(PlayerKickEvent event) {
+	    onDisconnect(event.getPlayer());
+	}
+	
+	public void onDisconnect(Player player) {
+	    Game game = GameManager.getInstance().getGameForPlayer(player);
+	    if (game == null) {
+	        return;
+	    }
+	    
+	    game.removePlayer(player);
 	}
 }
