@@ -6,10 +6,12 @@ package net.galaxygaming.dispenser.event;
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
+import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
 import net.galaxygaming.util.LocationUtil;
 import net.galaxygaming.util.SelectionUtil;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -62,22 +64,31 @@ class Events implements Listener {
      */
 	@EventHandler
 	private void onPlayerInteractEvent(final PlayerInteractEvent event) {
-		final Player player = event.getPlayer();
-		if ((player.getItemInHand().getType() == SelectionUtil.getInstance()
-				.getWand())) {
+		Player player = event.getPlayer();
+		if ((player.getItemInHand().getType() == SelectionUtil.getInstance().getWand())) {
+			Selection selection = SelectionUtil.getInstance().getSelection(player);
+			
 			if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-			    player.sendMessage(FormatUtil.format(GameDispenser.getInstance()
-			            .getMessages().getMessage("selection.pointSelected"), 
-			            "1", LocationUtil.serializeLocation(event.getClickedBlock().getLocation())));
-				SelectionUtil.getInstance().getSelection(player)
-						.setPointOne(event.getClickedBlock().getLocation());
+				if (selection == null)
+					selection = new Selection(player);
+				Location loc = event.getClickedBlock().getLocation();
+				
+				player.sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages()
+					.getMessage("selection.pointSelected"), "1",
+						LocationUtil.serializeLocation(loc)));
+				
+				selection.setPointOne(loc);
 				event.setCancelled(true);
 			} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                player.sendMessage(FormatUtil.format(GameDispenser.getInstance()
-                        .getMessages().getMessage("selection.pointSelected"), 
-                        "2", LocationUtil.serializeLocation(event.getClickedBlock().getLocation())));
-				SelectionUtil.getInstance().getSelection(player)
-						.setPointTwo(event.getClickedBlock().getLocation());
+				if (selection == null)
+					selection = new Selection(player);
+				Location loc = event.getClickedBlock().getLocation();
+				
+				player.sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages()
+					.getMessage("selection.pointSelected"), "2",
+						LocationUtil.serializeLocation(loc)));
+				
+				selection.setPointTwo(loc);
 				event.setCancelled(true);
 			}
 		}
