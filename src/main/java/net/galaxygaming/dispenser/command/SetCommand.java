@@ -65,10 +65,10 @@ class SetCommand extends Command {
             }
         }
         
-        if (!result) {
-            error(messages.getMessage(CommandMessage.NO_COMPONENT));
+        if (result) {
+        		sendMessage(messages.getMessage(CommandMessage.SET_COMPONENT_SUCCESS), args[1], args[0]);
         } else {
-            game.saveConfig();
+            error(messages.getMessage(CommandMessage.NO_COMPONENT));
         }
     }
 }

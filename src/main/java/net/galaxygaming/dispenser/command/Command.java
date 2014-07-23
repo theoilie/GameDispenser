@@ -191,6 +191,8 @@ public abstract class Command implements CommandExecutor {
             NO_SELECTION                 = "commands.noSelection",
             NO_COMPONENT                 = "commands.noComponent",
             NO_PAGE                      = "commands.noPage",
-            NOT_A_NUMBER                 = "commands.notANumber";
+            NOT_A_NUMBER                 = "commands.notANumber",
+            SET_COMPONENT_SUCCESS		= "commands.setComponentSuccess",
+            GAME_CREATE_SUCCESS			= "commands.gameCreated";
     }   
 }
