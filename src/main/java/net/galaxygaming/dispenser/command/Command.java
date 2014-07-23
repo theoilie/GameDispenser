@@ -102,6 +102,23 @@ public abstract class Command implements CommandExecutor {
         sender.sendMessage(ChatColor.YELLOW + FormatUtil.format(message, args));
     }
     
+    protected final void printList(int page, String... strings) {
+        int total = strings.length;
+        int pages = total / 30;
+        
+        if (page < 1 || page > pages) {
+            error(messages.getMessage(CommandMessage.NO_PAGE));
+            return;
+        }
+        
+        StringBuilder result = new StringBuilder();
+        for (int i = (page - 1) * 30; i < page * 30 && i < strings.length; i++) {
+            result.append(strings[i]);
+        }
+        
+        sendMessage(result.toString());
+    }
+    
     public final String getName() {
         return name;
     }
@@ -172,6 +189,8 @@ public abstract class Command implements CommandExecutor {
             GAME_ALREADY_ACTIVE          = "commands.gameAlreadyActive",
             GAME_IS_FULL                 = "commands.gameIsFull",
             NO_SELECTION                 = "commands.noSelection",
-            NO_COMPONENT                 = "commands.noComponent";
+            NO_COMPONENT                 = "commands.noComponent",
+            NO_PAGE                      = "commands.noPage",
+            NOT_A_NUMBER                 = "commands.notANumber";
     }   
 }
