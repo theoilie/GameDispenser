@@ -6,10 +6,12 @@ package net.galaxygaming.dispenser;
 import net.galaxygaming.dispenser.command.CommandManager;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.GameManager;
+import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.LogUtil;
 import net.galaxygaming.util.SelectionUtil;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -27,6 +29,8 @@ public class GameDispenser extends JavaPlugin {
         GameDispenser.instance = this;
         if (!this.getDataFolder().exists())
             this.getDataFolder().mkdir();
+        
+        ConfigurationSerialization.registerClass(Selection.class);
         
         messages = new MessagesResource(getDataFolder(), getClassLoader());
         blacklistedCommands = getConfig().getStringList("blacklistedCommands").toArray(new String[0]);

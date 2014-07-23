@@ -1,16 +1,18 @@
 package net.galaxygaming.selection;
 
-import java.util.HashMap;
+import java.util.Map;
+
+import net.galaxygaming.util.LocationUtil;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
-
 import com.google.common.collect.Maps;
 
-public class Selection {
-	private Player player;
+public class Selection implements ConfigurationSerializable {
+	private transient Player player;
 	private Location pointOne, pointTwo;
 
 	public Selection(Player player) {
@@ -56,8 +58,8 @@ public class Selection {
 				.equals(pointTwo.getWorld());
 	}
 	
-	public HashMap<Location, Block> getBlocks() {
-		HashMap<Location, Block> blocks = Maps.newHashMap();
+	public Map<Location, Block> getBlocks() {
+		Map<Location, Block> blocks = Maps.newHashMap();
 		
 		World world = pointOne.getWorld();
 		int x1 = pointOne.getBlockX(), y1 = pointOne.getBlockY(), z1 = pointOne.getBlockZ();
@@ -77,4 +79,18 @@ public class Selection {
 		}
 		return blocks;
 	}
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> result = Maps.newHashMap();
+        result.put("min", LocationUtil.serializeLocation(pointOne));
+        result.put("max", LocationUtil.serializeLocation(pointTwo));
+        return result;
+    }
+    
+    public Selection deserialize(Map<String, Object> map) {
+        Location pointOne = LocationUtil.deserializeLocation((String) map.get("min"));
+        Location pointTwo = LocationUtil.deserializeLocation((String) map.get("max"));
+        return new Selection(null, pointOne, pointTwo);
+    }
 }
