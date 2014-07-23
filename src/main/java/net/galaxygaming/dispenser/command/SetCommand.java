@@ -47,12 +47,12 @@ class SetCommand extends Command {
                 return;
             }
             if (!selection.arePointsSet()) {
-            		// TODO: Error message
-            		return;
+                error(messages.getMessage("selection.noSelection"));
+                return;
             }
             if (!selection.arePointsInSameWorld()) {
-            		// TODO: Error message
-            		return;
+                error(messages.getMessage("selection.pointsDifferentWorlds"));
+        		return;
             }
             
             result = game.setComponent(args[1], selection);
