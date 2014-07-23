@@ -220,9 +220,9 @@ public abstract class GameBase implements Game {
     
     @Override
     public final void end() {
-        onEnd();
         setState(GameState.INACTIVE);
-        
+        onEnd();
+
         for (Player player : Lists.newArrayList(players.iterator())) {
             removePlayer(player);
         }
