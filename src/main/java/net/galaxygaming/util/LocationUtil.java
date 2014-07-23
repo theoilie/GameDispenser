@@ -29,6 +29,10 @@ public class LocationUtil {
 	}
 	
 	public static Location deserializeLocation(String string) {
+	    if (string == null) {
+	        return null;
+	    }
+	    
 		String[] args = string.split(",");
 		
 		if (args.length < 4)
