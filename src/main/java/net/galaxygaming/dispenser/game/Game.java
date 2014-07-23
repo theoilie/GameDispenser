@@ -205,4 +205,9 @@ public interface Game {
      * @return
      */
     public boolean isFinished();
+    
+    /**
+     * @return true if the game is setup correctly
+     */
+    public boolean isSetup();
 }

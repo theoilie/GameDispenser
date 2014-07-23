@@ -39,7 +39,7 @@ class JoinCommand extends Command {
             return;
         }
         
-        if (game.getState().ordinal() < GameState.INACTIVE.ordinal()) {
+        if (game.getState().ordinal() < GameState.INACTIVE.ordinal() || !game.isSetup()) {
             error(messages.getMessage(CommandMessage.GAME_NOT_SETUP));
             return;
         } else if (game.getState().ordinal() > GameState.STARTING.ordinal()) {
