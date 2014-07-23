@@ -7,6 +7,7 @@ import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.util.FormatUtil;
+import net.galaxygaming.util.LocationUtil;
 import net.galaxygaming.util.SelectionUtil;
 
 import org.bukkit.entity.Player;
@@ -63,12 +64,16 @@ class Events implements Listener {
 		if ((player.getItemInHand().getType() == SelectionUtil.getInstance()
 				.getWand())) {
 			if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-				// TODO: Send message from messages.properties saying point one was set
+			    player.sendMessage(FormatUtil.format(GameDispenser.getInstance()
+			            .getMessages().getMessage("selection.pointSelected"), 
+			            "1", LocationUtil.serializeLocation(event.getClickedBlock().getLocation())));
 				SelectionUtil.getInstance().getSelection(player)
 						.setPointOne(event.getClickedBlock().getLocation());
 				event.setCancelled(true);
 			} else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				// TODO: Send message from messages.properties saying point two was set
+                player.sendMessage(FormatUtil.format(GameDispenser.getInstance()
+                        .getMessages().getMessage("selection.pointSelected"), 
+                        "2", LocationUtil.serializeLocation(event.getClickedBlock().getLocation())));
 				SelectionUtil.getInstance().getSelection(player)
 						.setPointTwo(event.getClickedBlock().getLocation());
 				event.setCancelled(true);
