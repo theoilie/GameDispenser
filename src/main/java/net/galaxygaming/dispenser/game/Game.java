@@ -121,11 +121,6 @@ public interface Game {
     public void onLoad();
     
     /**
-     * Do stuff when this game is saving
-     */
-    public void onSave();
-    
-    /**
      * Do stuff when game starts
      */
     public void onStart();

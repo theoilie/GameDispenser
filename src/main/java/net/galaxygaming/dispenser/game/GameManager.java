@@ -384,7 +384,6 @@ public class GameManager {
      * @param game game to save
      */
     public void saveGame(Game game) {
-        game.onSave();
         game.saveConfig();
     }
     
