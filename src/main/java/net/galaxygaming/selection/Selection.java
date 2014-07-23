@@ -3,12 +3,14 @@ package net.galaxygaming.selection;
 import java.util.Map;
 
 import net.galaxygaming.util.LocationUtil;
+import net.galaxygaming.util.SelectionUtil;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+
 import com.google.common.collect.Maps;
 
 public class Selection implements ConfigurationSerializable {
@@ -17,10 +19,22 @@ public class Selection implements ConfigurationSerializable {
 
 	public Selection(Player player) {
 		this.player = player;
+		SelectionUtil.getInstance().addSelection(this);
 	}
 	
 	public Selection(Player player, Location pointOne, Location pointTwo) {
 		this.player = player;
+		this.pointOne = pointOne;
+		this.pointTwo = pointTwo;
+		SelectionUtil.getInstance().addSelection(this);
+	}
+	
+	/*
+	 * This is for creating a Selection from 
+	 * a config that does not belong to any 
+	 * specific player, but rather to the server.
+	 */
+	public Selection(Location pointOne, Location pointTwo) {
 		this.pointOne = pointOne;
 		this.pointTwo = pointTwo;
 	}

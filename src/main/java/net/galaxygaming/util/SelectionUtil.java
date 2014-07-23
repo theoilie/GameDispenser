@@ -56,4 +56,22 @@ public class SelectionUtil {
 	public boolean hasSelection(UUID uuid) {
 		return getSelection(uuid) != null;
 	}
+	
+	public void addSelection(Selection selection) {
+		selections.put(selection.getPlayer().getUniqueId(), selection);
+	}
+	
+	public String makeSerializableSelection(Selection in) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(LocationUtil.serializeLocation(in.getPointOne()));
+		builder.append(":");
+		builder.append(LocationUtil.serializeLocation(in.getPointTwo()));
+		return builder.toString();
+	}
+	
+	public Selection constructSelection(String in) {
+		String[] selection = in.split(":");
+		return new Selection(LocationUtil.deserializeLocation(selection[0]),
+				LocationUtil.deserializeLocation(selection[1]));
+	}
 }
