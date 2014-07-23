@@ -154,21 +154,21 @@ public interface Game {
      * @param componentName
      * @param location
      */
-    public void setComponent(String componentName, Location location);
+    public boolean setComponent(String componentName, Location location);
     
     /**
      * Sets a component in this game with a {@link Selection}
      * @param componentName
      * @param selection
      */
-    public void setComponent(String componentName, Selection selection);
+    public boolean setComponent(String componentName, Selection selection);
     
     /**
      * Sets a component in this game with a String array
      * @param componentName
      * @param args
      */
-    public void setComponent(String componentName, String[] args);
+    public boolean setComponent(String componentName, String[] args);
     
     /**
      * Gives a list of components that have been registered for this game

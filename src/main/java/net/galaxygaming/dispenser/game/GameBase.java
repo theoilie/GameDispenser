@@ -286,13 +286,19 @@ public abstract class GameBase implements Game {
     }
     
     @Override
-    public void setComponent(String componentName, Location location) {}
+    public boolean setComponent(String componentName, Location location) {
+        return false;
+    }
     
     @Override
-    public void setComponent(String componentName, Selection selection) {}
+    public boolean setComponent(String componentName, Selection selection) {
+        return false;
+    }
     
     @Override
-    public void setComponent(String componentName, String[] args) {}
+    public boolean setComponent(String componentName, String[] args) {
+        return false;
+    }
     
     @Override
     public final boolean equals(Object o) {
