@@ -7,6 +7,7 @@ import net.galaxygaming.dispenser.game.Game;
 
 /**
  * @author t7seven7t
+ * @deprecated
  */
 public abstract class CountdownTask extends GameRunnable {
 

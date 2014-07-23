@@ -47,21 +47,28 @@ class SetCommand extends Command {
                 return;
             }
             if (!selection.arePointsSet()) {
-            		// TODO: Error message
-            		return;
+                error(messages.getMessage("selection.noSelection"));
+                return;
             }
             if (!selection.arePointsInSameWorld()) {
-            		// TODO: Error message
-            		return;
+                error(messages.getMessage("selection.pointsDifferentWorlds"));
+        		return;
             }
             
             result = game.setComponent(args[1], selection);
         } else {
-            result = game.setComponent(args[1], Arrays.copyOfRange(args, 2, args.length));
+            if (args[1].equalsIgnoreCase("description")) {
+                 result = true;
+                 game.getConfig().set("description", Arrays.copyOfRange(args, 2, args.length));
+            } else {
+                result = game.setComponent(args[1], Arrays.copyOfRange(args, 2, args.length));
+            }
         }
         
         if (!result) {
             error(messages.getMessage(CommandMessage.NO_COMPONENT));
+        } else {
+            game.saveConfig();
         }
     }
 }

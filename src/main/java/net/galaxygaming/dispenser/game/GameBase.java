@@ -190,6 +190,10 @@ public abstract class GameBase implements Game {
     
     @Override
     public final void start() {
+        if (!isSetup()) {
+            return;
+        }
+        
         setState(GameState.ACTIVE);
         onStart();
         
@@ -225,7 +229,7 @@ public abstract class GameBase implements Game {
     }
     
     @Override
-    public final boolean addPlayer(Player player) {        
+    public final boolean addPlayer(Player player) {
         if (players.size() >= maximumPlayers && maximumPlayers > 0) {
             return false;
         }
@@ -263,9 +267,6 @@ public abstract class GameBase implements Game {
      * devs choose whether to use them
      */
     @Override
-    public void onLoad() {}
-    
-    @Override
     public void onStart() {}
     
     @Override
@@ -273,6 +274,10 @@ public abstract class GameBase implements Game {
     
     @Override
     public void onEnd() {}
+    
+    public void onLoad() {}
+
+    public void onSave() {}
     
     @Override
     public void onPlayerJoin(Player player) {}
