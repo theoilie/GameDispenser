@@ -170,6 +170,8 @@ public abstract class Command implements CommandExecutor {
             GAME_DELETED                 = "commands.gameDeleted",
             GAME_NOT_SETUP               = "commands.gameNotSetup",
             GAME_ALREADY_ACTIVE          = "commands.gameAlreadyActive",
-            GAME_IS_FULL                 = "commands.gameIsFull";
+            GAME_IS_FULL                 = "commands.gameIsFull",
+            NO_SELECTION                 = "commands.noSelection",
+            NO_COMPONENT                 = "commands.noComponent";
     }   
 }

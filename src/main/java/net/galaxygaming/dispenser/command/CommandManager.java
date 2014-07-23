@@ -42,6 +42,8 @@ public class CommandManager {
         root.addExecutor(new StartCommand());
         root.addExecutor(new EndCommand());
         root.addExecutor(new RemoveCommand());
+        root.addExecutor(new WandCommand());
+        root.addExecutor(new SetCommand());
     }
     
     @Override
