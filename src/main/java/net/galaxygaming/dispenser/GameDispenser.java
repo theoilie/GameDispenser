@@ -49,6 +49,10 @@ public class GameDispenser extends JavaPlugin {
         log.log("Loaded {0} games.", gameManager.loadGames().length);
     }
     
+    public void onDisable() {
+        GameManager.getInstance().unloadAll();
+    }
+    
     public MessagesResource getMessages() {
         return messages;
     }

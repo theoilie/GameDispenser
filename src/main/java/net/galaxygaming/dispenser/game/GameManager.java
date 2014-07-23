@@ -274,6 +274,22 @@ public class GameManager {
     }
     
     /**
+     * Unloads all games and game types
+     */
+    public void unloadAll() {
+        Set<Game> removeGames = Sets.newHashSet(games);
+        for (Game game : removeGames) {
+            unloadGame(game);
+        }
+        
+        Iterator<GameType> it = loadedGameTypes.iterator();
+        while (it.hasNext()) {
+            gameLoader.unloadGameType(it.next());
+            it.remove();
+        }
+    }
+    
+    /**
      * Unloads a game and deletes its config file
      * @param game game to delete
      */
