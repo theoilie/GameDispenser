@@ -25,6 +25,7 @@ import com.google.common.collect.Lists;
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.GameLoader;
 import net.galaxygaming.dispenser.task.CountdownTask;
+import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
 
 /**
@@ -40,6 +41,9 @@ public abstract class GameBase implements Game {
     
     /** List of players in this game */
     private List<Player> players;
+    
+    /** List of component names for this game */
+    private List<String> components;
         
     /** 
      * The maximum number of players the game can have. 
@@ -66,6 +70,16 @@ public abstract class GameBase implements Game {
     private GameDispenser plugin;
     Plugin fakePlugin;
     
+    protected final void addComponent(String componentName) {
+        components.add(componentName);
+    }
+    
+    @Override
+    public final List<String> getComponents() {
+        return Lists.newArrayList(components);
+    }
+    
+    @Override
     public void broadcast(String message, Object... objects) {
         String formatted = FormatUtil.format("&6" + message, objects);
         for (Player player : players) {
@@ -272,6 +286,15 @@ public abstract class GameBase implements Game {
     }
     
     @Override
+    public void setComponent(String componentName, Location location) {}
+    
+    @Override
+    public void setComponent(String componentName, Selection selection) {}
+    
+    @Override
+    public void setComponent(String componentName, String[] args) {}
+    
+    @Override
     public final boolean equals(Object o) {
         if (o == null) {
             return false;
@@ -334,6 +357,7 @@ public abstract class GameBase implements Game {
         this.plugin = GameDispenser.getInstance();
         this.fakePlugin = new FakePlugin();
         this.type = GameType.get(config.getString("type"));
+        this.components = Lists.newArrayList();
         
         this.minimumPlayers = getConfig().getInt("minimumPlayers", 2);
         this.maximumPlayers = getConfig().getInt("maximumPlayers", 0);

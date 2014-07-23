@@ -3,10 +3,13 @@
  */
 package net.galaxygaming.dispenser.game;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
+import net.galaxygaming.selection.Selection;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.Metadatable;
@@ -145,6 +148,33 @@ public interface Game {
      * @param player
      */
     public void onPlayerLeave(Player player);
+    
+    /**
+     * Sets a component in this game with a {@link Location}
+     * @param componentName
+     * @param location
+     */
+    public void setComponent(String componentName, Location location);
+    
+    /**
+     * Sets a component in this game with a {@link Selection}
+     * @param componentName
+     * @param selection
+     */
+    public void setComponent(String componentName, Selection selection);
+    
+    /**
+     * Sets a component in this game with a String array
+     * @param componentName
+     * @param args
+     */
+    public void setComponent(String componentName, String[] args);
+    
+    /**
+     * Gives a list of components that have been registered for this game
+     * @return list of component names
+     */
+    public List<String> getComponents();
     
     /**
      * Begins the countdown process before this game starts
