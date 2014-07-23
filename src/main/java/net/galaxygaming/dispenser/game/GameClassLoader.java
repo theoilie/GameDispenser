@@ -53,7 +53,6 @@ public class GameClassLoader extends URLClassLoader {
         } catch (ClassCastException e) {
             throw new InvalidGameException("main class '" + description.getMain() + "' does not extend JavaGame", e);
         }
-
     }
     
     Game newInstance(String name, FileConfiguration config, File configFile) throws InvalidGameException {
@@ -141,4 +140,11 @@ public class GameClassLoader extends URLClassLoader {
         return result;
     }
     
+    public void unloadJar() throws InvalidGameException {
+        try {
+            this.close();
+        } catch (IOException e) {
+            throw new InvalidGameException("Couldn't unload class loader", e);
+        }
+    }
 }

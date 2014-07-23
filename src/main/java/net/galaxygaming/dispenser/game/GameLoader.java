@@ -44,10 +44,14 @@ public class GameLoader {
     }
     
     public Game loadGame(File configFile) throws InvalidGameException {
-        return loadGame(configFile, YamlConfiguration.loadConfiguration(configFile));
+        return loadGame(configFile, null);
     }
     
-    public Game loadGame(File configFile, FileConfiguration config) throws InvalidGameException {
+    public Game loadGame(File configFile, GameType type) throws InvalidGameException {
+        return loadGame(configFile, YamlConfiguration.loadConfiguration(configFile), type);
+    }
+    
+    public Game loadGame(File configFile, FileConfiguration config, GameType type) throws InvalidGameException {
         Validate.notNull(configFile, "File cannot be null");
         Validate.notNull(config, "Config cannot be null");
         
@@ -57,7 +61,12 @@ public class GameLoader {
                 + "$", ""
         );
         
-        GameType type = GameType.get(config.getString("type"));        
+        if (type == null) {
+            type = GameType.get(config.getString("type"));        
+        } else if (type != GameType.get(config.getString("type"))) {
+            return null;
+        }
+        
         GameClassLoader loader = loaders.get(type.toString());
         if (loader == null) {
             throw new InvalidGameException("Game type '" + type.toString() + "' must be loaded first");
@@ -115,8 +124,11 @@ public class GameLoader {
         }
     }
     
-    public void unloadGameType(GameType type) {
-        loaders.remove(type.toString());
+    public void unloadGameType(GameType type) throws InvalidGameException {
+        GameClassLoader loader = loaders.remove(type.toString());
+        if (loader != null) {
+            loader.unloadJar();
+        }
         GameType.remove(type);
     }
     

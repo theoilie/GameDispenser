@@ -193,10 +193,15 @@ public class GameManager {
         GameType type = GameType.get(description.getName());
         gameLoader.loadEvents(type);
         loadedGameTypes.add(type);
+        loadGames(type);
         return type;
     }
     
     public Game[] loadGames() {
+        return loadGames(null);
+    }
+    
+    public Game[] loadGames(GameType type) {
         Pattern filter = Pattern.compile("\\" + GAME_CONFIG_EXTENSION + "$");
         
         for (File file : directory.listFiles()) {
@@ -206,7 +211,12 @@ public class GameManager {
             }
             
             try {
-                games.add(gameLoader.loadGame(file));
+                Game game = gameLoader.loadGame(file, type);
+                if (game == null) {
+                    continue;
+                }
+                
+                games.add(game);
             } catch (InvalidGameException e) {
                 plugin.getLogger().log(Level.SEVERE, "Could not load '" + file.getPath() + "' in folder '" + directory.getPath() + "'", e);
             }
@@ -284,7 +294,12 @@ public class GameManager {
         
         Iterator<GameType> it = loadedGameTypes.iterator();
         while (it.hasNext()) {
-            gameLoader.unloadGameType(it.next());
+            try {
+                gameLoader.unloadGameType(it.next());
+            } catch (InvalidGameException e) {
+                e.printStackTrace();
+            }
+            
             it.remove();
         }
     }
@@ -325,7 +340,7 @@ public class GameManager {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         config.set("type", type.toString());
         
-        Game result = gameLoader.loadGame(configFile, config);
+        Game result = gameLoader.loadGame(configFile, config, type);
         games.add(result);
         saveGame(result);       
         return result;
