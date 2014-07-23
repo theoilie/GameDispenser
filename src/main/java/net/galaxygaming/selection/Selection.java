@@ -102,9 +102,9 @@ public class Selection implements ConfigurationSerializable {
         return result;
     }
     
-    public Selection deserialize(Map<String, Object> map) {
+    public static Selection deserialize(Map<String, Object> map) {
         Location pointOne = LocationUtil.deserializeLocation((String) map.get("min"));
         Location pointTwo = LocationUtil.deserializeLocation((String) map.get("max"));
-        return new Selection(null, pointOne, pointTwo);
+        return new Selection(pointOne, pointTwo);
     }
 }
