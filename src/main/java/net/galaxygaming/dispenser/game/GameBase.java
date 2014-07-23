@@ -267,9 +267,6 @@ public abstract class GameBase implements Game {
      * devs choose whether to use them
      */
     @Override
-    public void onLoad() {}
-    
-    @Override
     public void onStart() {}
     
     @Override
@@ -277,6 +274,10 @@ public abstract class GameBase implements Game {
     
     @Override
     public void onEnd() {}
+    
+    public void onLoad() {}
+
+    public void onSave() {}
     
     @Override
     public void onPlayerJoin(Player player) {}
