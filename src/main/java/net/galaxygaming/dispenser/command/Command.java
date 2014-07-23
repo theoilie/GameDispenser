@@ -102,8 +102,8 @@ public abstract class Command implements CommandExecutor {
         sender.sendMessage(ChatColor.YELLOW + FormatUtil.format(message, args));
     }
     
-    protected final void printList(int page, String... strings) {
-        int total = strings.length;
+    protected final void printList(int page, Object[] objects) {
+        int total = objects.length;
         int pages = total / 30;
         
         if (page < 1 || page > pages) {
@@ -112,8 +112,8 @@ public abstract class Command implements CommandExecutor {
         }
         
         StringBuilder result = new StringBuilder();
-        for (int i = (page - 1) * 30; i < page * 30 && i < strings.length; i++) {
-            result.append(strings[i]);
+        for (int i = (page - 1) * 30; i < page * 30 && i < objects.length; i++) {
+            result.append(objects[i].toString());
         }
         
         sendMessage(result.toString());
