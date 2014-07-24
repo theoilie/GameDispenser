@@ -14,7 +14,7 @@ public class TeamBase implements Team {
 	
 	@Override
 	public void add(Player player) {
-		add(player);
+	    members.add(player);
 	}
 
 	/*
@@ -22,7 +22,7 @@ public class TeamBase implements Team {
 	 */
 	@Override
 	public void remove(Player player) {
-		remove(player);
+	    members.remove(player);
 	}
 	
 	@Override
