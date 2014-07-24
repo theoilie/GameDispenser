@@ -521,28 +521,28 @@ public abstract class GameBase implements Game {
     }
     
     protected void updateScoreboard() {
-    		if (!useScoreboard)
-    			return;
-    		if (playerTagScore > 0) {
-    			Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&6&lPlayers"));
-    			if (score.getScore() != playerTagScore)
-    				score.setScore(playerTagScore);
-    		}
-    		if (playerCounterScore > 0) {
-    			board.resetScores(lastPlayerCount + "");
-    			lastPlayerCount = getPlayers().length;
-    			objective.getScore(lastPlayerCount + "").setScore(playerCounterScore);
-    		}
-    		if (this.timeTagScore > 0) {
-    			Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&6&lTime"));
-    			if (score.getScore() != timeTagScore)
-    				score.setScore(timeTagScore);
-    		}
-    		if (timeCounterScore > 0) {
-    			board.resetScores(lastTimeRemaining + "");
-    			lastTimeRemaining = counter;
-    			objective.getScore(lastTimeRemaining + "").setScore(timeCounterScore);
-    		}
+		if (!useScoreboard)
+			return;
+		if (playerTagScore > 0) {
+			Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&6&lPlayers"));
+			if (score.getScore() != playerTagScore)
+				score.setScore(playerTagScore);
+		}
+		if (playerCounterScore > 0) {
+			board.resetScores(lastPlayerCount + "");
+			lastPlayerCount = getPlayers().length;
+			objective.getScore(lastPlayerCount + "").setScore(playerCounterScore);
+		}
+		if (this.timeTagScore > 0) {
+			Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&6&lTime"));
+			if (score.getScore() != timeTagScore)
+				score.setScore(timeTagScore);
+		}
+		if (timeCounterScore > 0) {
+			board.resetScores(lastTimeRemaining + "");
+			lastTimeRemaining = counter;
+			objective.getScore(lastTimeRemaining + "").setScore(timeCounterScore);
+		}
     }
     
     protected void setBoardForAll() {
