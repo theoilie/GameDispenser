@@ -211,6 +211,11 @@ public interface Game {
     public void start(); // After countdown is over
     
     /**
+     * Ticks the game, do not call this method.
+     */
+    public void tick();
+    
+    /**
      * End the game,
      * removes all players from the game
      */

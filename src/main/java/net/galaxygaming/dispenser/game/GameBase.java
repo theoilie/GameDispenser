@@ -283,7 +283,8 @@ public abstract class GameBase implements Game {
         updateSigns();
     }
     
-    final void tick() {
+    @Override
+    public final void tick() {
         if (getState().ordinal() > GameState.STARTING.ordinal() && isFinished()) {
             end();
             return;
