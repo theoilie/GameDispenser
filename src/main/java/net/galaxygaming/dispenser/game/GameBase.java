@@ -291,6 +291,7 @@ public abstract class GameBase implements Game {
         }
         
         if (tick % 20 == 0 && counter > 0) {
+            updateScoreboard();
             if (counter % 60 == 0 
                     || (counter < 60 && counter % 30 == 0)
                     || (counter <= 5 && counter > 0)) {
@@ -318,7 +319,6 @@ public abstract class GameBase implements Game {
         if (tick >= 20)
             tick = 0;
         
-        updateScoreboard();
         onTick();
     }
     
