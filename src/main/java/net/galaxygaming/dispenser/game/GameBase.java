@@ -6,6 +6,7 @@ package net.galaxygaming.dispenser.game;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.URLConnection;
 import java.net.URL;
 import java.util.List;
@@ -31,6 +32,7 @@ import net.galaxygaming.util.FormatUtil;
 /**
  * @author t7seven7t
  */
+@SuppressWarnings("deprecation")
 public abstract class GameBase implements Game {
 
     /** The current game state */
@@ -369,11 +371,48 @@ public abstract class GameBase implements Game {
         this.type = GameType.get(config.getString("type"));
         this.components = Lists.newArrayList();
         
-        this.minimumPlayers = getConfig().getInt("minimumPlayers", 2);
-        this.maximumPlayers = getConfig().getInt("maximumPlayers", 0);
-        this.countdownDuration = getConfig().getInt("countdownDuration", 30);
+        try {
+			checkConfig(getClass().getField("minimumPlayers"), "minimum players", "2", "int");
+			checkConfig(getClass().getField("maximumPlayers"), "maximum players", "0", "int");
+			checkConfig(getClass().getField("countdownDuration"), "countdown duration", "30", "int");
+			checkConfig(getClass().getField("gameTime"), "game time", "-1", "int");
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
         this.gameTime = getConfig().getInt("gameTime", -1);
         
         onLoad();
     }
+    
+	private void checkConfig(Field item, String itemName, String itemValue,
+			String itemType) {
+		try {
+			switch (itemType) {
+			case "int":
+				if (!getConfig().isSet(itemName))
+					getConfig().set(itemName, itemValue);
+				item.setInt(this, getConfig().getInt(itemName));
+				break;
+			case "double":
+				if (!getConfig().isSet(itemName))
+					getConfig().set(itemName, itemValue);
+				item.setDouble(this, getConfig().getDouble(itemName));
+				break;
+			case "boolean":
+				if (!getConfig().isSet(itemName))
+					getConfig().set(itemName, itemValue);
+				item.setBoolean(this, getConfig().getBoolean(itemName));
+				break;
+			}
+			saveConfig();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
 }
