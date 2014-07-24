@@ -318,6 +318,7 @@ public abstract class GameBase implements Game {
         if (tick >= 20)
             tick = 0;
         
+        updateScoreboard();
         onTick();
     }
     
@@ -352,6 +353,7 @@ public abstract class GameBase implements Game {
         
         onPlayerJoin(player);
         updateSigns();
+        updateScoreboard();
         return true;
     }
     
@@ -362,6 +364,7 @@ public abstract class GameBase implements Game {
         player.teleport((Location) getMetadata(player, "gameLastLocation").value());
         removeMetadata(player, "gameLastLocation");
         updateSigns();
+        updateScoreboard();
     }
     
     @Override
@@ -490,7 +493,7 @@ public abstract class GameBase implements Game {
         useScoreboard = getConfig().getBoolean("use scoreboard");
         graceDuration = getConfig().getInt("grace duration");
 
-        this.lastTimeRemaining = gameTime;
+        this.lastTimeRemaining = counter;
         		
         if (getConfig().isList("signs")) {
             for (String location : getConfig().getStringList("signs")) {
@@ -537,7 +540,7 @@ public abstract class GameBase implements Game {
     		}
     		if (timeCounterScore > 0) {
     			board.resetScores(lastTimeRemaining + "");
-    			lastTimeRemaining = getPlayers().length;
+    			lastTimeRemaining = counter;
     			objective.getScore(lastTimeRemaining + "").setScore(timeCounterScore);
     		}
     }
