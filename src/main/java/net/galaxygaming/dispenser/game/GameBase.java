@@ -37,7 +37,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.google.common.collect.Lists;
 
 import net.galaxygaming.dispenser.game.GameLoader;
-import net.galaxygaming.dispenser.task.CountdownTask;
 import net.galaxygaming.dispenser.task.GameRunnable;
 import net.galaxygaming.util.LocationUtil;
 
@@ -93,6 +92,9 @@ public abstract class GameBase implements Game {
     Plugin fakePlugin;
     
     private Set<Location> signs;
+    
+    private int counter;
+    private int tick;
     
     public final void addSign(Location location) {
         Validate.notNull(location, "Location cannot be null");
@@ -245,14 +247,7 @@ public abstract class GameBase implements Game {
         
         setState(GameState.STARTING);
         updateSigns();
-        // TODO: countdown task is a poor way to do this, create a new method for this perhaps on tick()
-        new CountdownTask(this, countdownDuration,
-                type.getMessages().getMessage("game.countdown.start")) {
-            @Override
-            public void done() {
-                start();
-            }
-        };
+        counter = countdownDuration;
     }
     
     @Override
@@ -264,24 +259,41 @@ public abstract class GameBase implements Game {
         setState(GameState.ACTIVE);
         onStart();
         updateSigns();
-        
-        if (gameTime > 0) {
-            new CountdownTask(this, gameTime,
-                    type.getMessages().getMessage("game.countdown.end")) {
-                @Override
-                public void done() {
-                    end();
-                }
-            };
-        }
+        counter = gameTime;
     }
     
     @Override
     public final void tick() {
-        if (isFinished()) {
+        if (getState().ordinal() > GameState.STARTING.ordinal() && isFinished()) {
             end();
             return;
         }
+        
+        if (tick % 20 == 0 && counter > 0) {
+            if (counter % 60 == 0 
+                    || (counter < 60 && counter % 30 == 0)
+                    || (counter <= 5 && counter > 0)) {
+                if (getState().ordinal() == GameState.STARTING.ordinal()) {
+                    broadcast(type.getMessages().getMessage("game.countdown.start"));
+                } else if (getState().ordinal() > GameState.STARTING.ordinal()) {
+                    broadcast(type.getMessages().getMessage("game.countdown.end"));
+                }
+            }
+            
+            counter--;
+            
+            if (counter <= 0) {
+                if (getState().ordinal() == GameState.STARTING.ordinal()) {
+                    start();
+                } else if (getState().ordinal() > GameState.STARTING.ordinal()) {
+                    end();
+                }
+            }
+        }
+        
+        tick++;
+        if (tick >= 20)
+            tick = 0;
         
         onTick();
     }
