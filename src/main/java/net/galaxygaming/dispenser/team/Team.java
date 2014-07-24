@@ -1,46 +1,37 @@
 package net.galaxygaming.dispenser.team;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 import org.bukkit.entity.Player;
 
-public abstract class Team implements BaseTeam {
-	private ArrayList<UUID> members = new ArrayList<UUID>();
+public interface Team {
 
-	@Override
-	public void add(Player player) {
-		add(player.getUniqueId());
-	}
-
-	@Override
-	public void add(UUID uuid) {
-		members.add(uuid);
-	}
-
-	@Override
-	public void remove(Player player) {
-		remove(player.getUniqueId());
-	}
-
-	@Override
-	public void remove(UUID uuid) {
-		if (members.contains(uuid))
-			members.remove(uuid);
-	}
-
-	@Override
-	public boolean isOnTeam(Player player) {
-		return isOnTeam(player.getUniqueId());
-	}
-
-	@Override
-	public boolean isOnTeam(UUID uuid) {
-		return members.contains(uuid);
-	}
+    /**
+     * Gives the name of this team
+     * @return
+     */
+	public String getName();
 	
-	@Override
-	public int getSize() {
-		return members.size();
-	}
+	/**
+	 * Adds a player to this team
+	 * @param player
+	 */
+	public void add(Player player);
+		
+	/**
+	 * Removes a player from this team
+	 * @param player
+	 */
+	public void remove(Player player);
+		
+	/**
+	 * Checks whether a player is on this team
+	 * @param player
+	 * @return true if player is on the team
+	 */
+	public boolean isOnTeam(Player player);
+		
+	/**
+	 * Gives the number of players on the team
+	 * @return
+	 */
+	public int getSize();
 }
