@@ -6,8 +6,8 @@ package net.galaxygaming.dispenser.game;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -16,8 +16,10 @@ import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.task.CountdownTask;
+import net.galaxygaming.dispenser.task.GameRunnable;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
+import net.galaxygaming.util.LocationUtil;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -32,14 +34,10 @@ import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.collect.Lists;
-
-import net.galaxygaming.dispenser.game.GameLoader;
-import net.galaxygaming.dispenser.task.CountdownTask;
-import net.galaxygaming.dispenser.task.GameRunnable;
-import net.galaxygaming.util.LocationUtil;
 
 /**
  * @author t7seven7t
@@ -82,6 +80,18 @@ public abstract class GameBase implements Game {
     
     /** The board's objective */
     protected Objective objective;
+    
+    /** The scores to be set for player. Set to less than 1 to leave out of scoreboard */
+    protected int playerTagScore, playerCounterScore = 0;
+    
+    /** The scores to be set for the time remaining. Set to less than 1 to leave out of scoreboard */
+    protected int timeTagScore, timeCounterScore = 0;
+    
+    /** The last recorded amount of players in the game */
+    protected int lastPlayerCount;
+    
+    /** The last recorded time remaining */
+    protected int lastTimeRemaining;
     
     private GameType type;
     private GameLoader loader;
@@ -439,6 +449,7 @@ public abstract class GameBase implements Game {
         this.fakePlugin = new FakePlugin();
         this.type = GameType.get(config.getString("type"));
         this.components = Lists.newArrayList();
+        this.lastPlayerCount = getPlayers().length;
         
         getConfig().addDefault("minimum players", 2);
         getConfig().addDefault("maximum players", 0);
@@ -452,6 +463,8 @@ public abstract class GameBase implements Game {
         gameTime = getConfig().getInt("game time");
         useScoreboard = getConfig().getBoolean("use scoreboard");
 
+        this.lastTimeRemaining = gameTime;
+        		
         if (getConfig().isList("signs")) {
             for (String location : getConfig().getStringList("signs")) {
                 signs.add(LocationUtil.deserializeLocation(location));
@@ -461,33 +474,49 @@ public abstract class GameBase implements Game {
         if (useScoreboard) {
         		board = Bukkit.getScoreboardManager().getNewScoreboard();
         		objective = board.registerNewObjective
-        			(ChatColor.translateAlternateColorCodes('&', "&4&l" + getType().toString()), "dummy");
+        			(ChatColor.translateAlternateColorCodes('&', "&6&l" + getType().toString()), "dummy");
         		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        		for (Player player : getPlayers()) {
-        			player.setScoreboard(board);
-        		}
+        		updateScoreboard();
         }
         
         onLoad();
+        
+        for (String key : getConfig().getDefaults().getKeys(false)) {
+            if (getConfig().get(key, null) == null) {
+                getConfig().set(key, getConfig().getDefaults().get(key));
+            }
+        }
     }
-
-	@Override
-	public Scoreboard getBoard() {
-		return board;
-	}
-
-	@Override
-	public void setBoard(Scoreboard board) {
-		this.board = board;
-	}
-
-	@Override
-	public Objective getObjective() {
-		return objective;
-	}
-
-	@Override
-	public void setObjective(Objective objective) {
-		this.objective = objective;
-	}
+    
+    protected void updateScoreboard() {
+    		if (!useScoreboard)
+    			return;
+    		if (playerTagScore > 0) {
+    			Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&6&lPlayers"));
+    			if (score.getScore() != playerTagScore)
+    				score.setScore(playerTagScore);
+    		}
+    		if (playerCounterScore > 0) {
+    			board.resetScores(lastPlayerCount + "");
+    			lastPlayerCount = getPlayers().length;
+    			objective.getScore(lastPlayerCount + "").setScore(playerCounterScore);
+    		}
+    		if (this.timeTagScore > 0) {
+    			Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&6&lTime"));
+    			if (score.getScore() != timeTagScore)
+    				score.setScore(timeTagScore);
+    		}
+    		if (timeCounterScore > 0) {
+    			board.resetScores(lastTimeRemaining + "");
+    			lastTimeRemaining = getPlayers().length;
+    			objective.getScore(lastTimeRemaining + "").setScore(timeCounterScore);
+    		}
+    }
+    
+    protected void setBoardForAll() {
+		for (Player player : getPlayers()) {
+			if (player.getScoreboard() != board)
+				player.setScoreboard(board);
+		}
+    }
 }
