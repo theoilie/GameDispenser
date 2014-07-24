@@ -1,9 +1,8 @@
 package net.galaxygaming.dispenser.team;
 
-public class Spectator extends Team {
+public class Spectator extends TeamBase {
 
-	@Override
-	public String getName() {
-		return "spectator";
+	public Spectator() {
+	    super("spectator");
 	}
 }
