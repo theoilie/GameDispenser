@@ -381,7 +381,6 @@ public abstract class GameBase implements Game {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
-        this.gameTime = getConfig().getInt("gameTime", -1);
         
         onLoad();
     }
