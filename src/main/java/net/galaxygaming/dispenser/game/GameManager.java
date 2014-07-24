@@ -71,7 +71,7 @@ public class GameManager {
                 Iterator<Game> it = games.iterator();
                 while(it.hasNext()) {
                     Game game = it.next();
-                    if (game.getState().ordinal() > GameState.STARTING.ordinal()) {
+                    if (game.getState().ordinal() >= GameState.STARTING.ordinal()) {
                         game.tick();
                     }
                 }
