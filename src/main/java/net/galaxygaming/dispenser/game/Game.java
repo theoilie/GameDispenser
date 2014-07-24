@@ -13,6 +13,8 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.Metadatable;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 /**
  * @author t7seven7t
@@ -232,4 +234,26 @@ public interface Game {
      * @return true if the game is setup correctly
      */
     public boolean isSetup();
+    
+    /**
+     * @return The game's scoreboard
+     */
+    public Scoreboard getBoard();
+    
+    /**
+     * Set the scoreboard
+     * @param Scoreboard to set
+     */
+    public void setBoard(Scoreboard board);
+    
+    /**
+     * @return The game's objective
+     */
+    public Objective getObjective();
+    
+    /**
+     * Set the objective
+     * @param Objective to set
+     */
+    public void setObjective(Objective objective);
 }

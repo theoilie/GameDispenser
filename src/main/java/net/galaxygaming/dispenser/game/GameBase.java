@@ -470,4 +470,24 @@ public abstract class GameBase implements Game {
         
         onLoad();
     }
+
+	@Override
+	public Scoreboard getBoard() {
+		return board;
+	}
+
+	@Override
+	public void setBoard(Scoreboard board) {
+		this.board = board;
+	}
+
+	@Override
+	public Objective getObjective() {
+		return objective;
+	}
+
+	@Override
+	public void setObjective(Objective objective) {
+		this.objective = objective;
+	}
 }
