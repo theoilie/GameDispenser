@@ -37,6 +37,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import net.galaxygaming.dispenser.game.GameLoader;
 
@@ -180,6 +181,8 @@ public abstract class GameBase implements Game {
             signLocations.add(LocationUtil.serializeLocation(location));
         }
         config.set("signs", signLocations);
+        
+        onSave();
         
         try {
             this.config.save(configFile);
@@ -481,6 +484,7 @@ public abstract class GameBase implements Game {
         this.type = GameType.get(config.getString("type"));
         this.components = Lists.newArrayList();
         this.lastPlayerCount = getPlayers().length;
+        this.signs = Sets.newHashSet();
         
         getConfig().addDefault("minimum players", 2);
         getConfig().addDefault("maximum players", 0);
