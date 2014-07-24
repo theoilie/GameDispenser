@@ -7,27 +7,30 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.net.URLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.galaxygaming.dispenser.GameDispenser;
+import net.galaxygaming.dispenser.task.CountdownTask;
+import net.galaxygaming.selection.Selection;
+import net.galaxygaming.util.FormatUtil;
+
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.collect.Lists;
-
-import net.galaxygaming.dispenser.GameDispenser;
-import net.galaxygaming.dispenser.game.GameLoader;
-import net.galaxygaming.dispenser.task.CountdownTask;
-import net.galaxygaming.selection.Selection;
-import net.galaxygaming.util.FormatUtil;
 
 /**
  * @author t7seven7t
@@ -62,6 +65,15 @@ public abstract class GameBase implements Game {
     
     /** The length of the game in seconds, if -1 the game will never end */
     protected int gameTime;
+    
+    /** The option to use a built-in scoreboard */
+    protected boolean useScoreboard;
+    
+    /** The game's scoreboard */
+    protected Scoreboard board;
+    
+    /** The board's objective */
+    protected Objective objective;
     
     private GameType type;
     private GameLoader loader;
@@ -371,47 +383,12 @@ public abstract class GameBase implements Game {
         this.type = GameType.get(config.getString("type"));
         this.components = Lists.newArrayList();
         
-        try {
-			checkConfig(getClass().getField("minimumPlayers"), "minimum players", "2", "int");
-			checkConfig(getClass().getField("maximumPlayers"), "maximum players", "0", "int");
-			checkConfig(getClass().getField("countdownDuration"), "countdown duration", "30", "int");
-			checkConfig(getClass().getField("gameTime"), "game time", "-1", "int");
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		}
+        if (useScoreboard) {
+        		board = Bukkit.getScoreboardManager().getNewScoreboard();
+        		objective = board.registerNewObjective
+        			(ChatColor.translateAlternateColorCodes('&', "&4&l" + name), "dummy");
+        }
         
         onLoad();
     }
-    
-	private void checkConfig(Field item, String itemName, String itemValue,
-			String itemType) {
-		try {
-			switch (itemType) {
-			case "int":
-				if (!getConfig().isSet(itemName))
-					getConfig().set(itemName, itemValue);
-				item.setInt(this, getConfig().getInt(itemName));
-				break;
-			case "double":
-				if (!getConfig().isSet(itemName))
-					getConfig().set(itemName, itemValue);
-				item.setDouble(this, getConfig().getDouble(itemName));
-				break;
-			case "boolean":
-				if (!getConfig().isSet(itemName))
-					getConfig().set(itemName, itemValue);
-				item.setBoolean(this, getConfig().getBoolean(itemName));
-				break;
-			}
-			saveConfig();
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-	}
 }
