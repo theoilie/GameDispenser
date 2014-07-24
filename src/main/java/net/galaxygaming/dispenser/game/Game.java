@@ -19,6 +19,23 @@ import org.bukkit.metadata.Metadatable;
  */
 public interface Game {
     
+    /**
+     * Adds a sign showing information about this game.
+     * @param location
+     */
+    public void addSign(Location location);
+    
+    /**
+     * Updates all signs belonging to this game
+     */
+    public void updateSigns();
+    
+    /**
+     * Remove a sign to stop the game monitoring this location
+     * @param location
+     */
+    public void removeSign(Location location);
+    
      /**
       * Sends a message to every player in the game
       * @param message
@@ -34,7 +51,7 @@ public interface Game {
     /**
      * Saves this game's configurations to its config file
      */
-    public void saveConfig();
+    public void save();
     
     public GameLoader getGameLoader();
     
@@ -115,6 +132,11 @@ public interface Game {
      */
     public Player[] getPlayers();
 
+    /**
+     * Do stuff when save() is called.
+     */
+    public void onSave();
+    
     /**
      * Do stuff when this game is first initialized
      */

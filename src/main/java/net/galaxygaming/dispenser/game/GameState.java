@@ -3,21 +3,25 @@
  */
 package net.galaxygaming.dispenser.game;
 
+import org.bukkit.ChatColor;
+
 /**
  * @author t7seven7t
  */
 public class GameState {
     
     public static final GameState   
-        EDITING     = new GameState(-10),
-        INACTIVE    = new GameState(0), 
-        LOBBY       = new GameState(1), 
-        STARTING    = new GameState(2),
-        ACTIVE      = new GameState(10);
+        EDITING     = new GameState(-10, ChatColor.DARK_RED + "In Construction"),
+        INACTIVE    = new GameState(0, ChatColor.YELLOW + "Idle"), 
+        LOBBY       = new GameState(1, ChatColor.GREEN + "Open"), 
+        STARTING    = new GameState(2, ChatColor.GREEN + "Open"),
+        ACTIVE      = new GameState(10, ChatColor.BLUE + "In Game");
     
     private final int ordinal;
-    public GameState(int ordinal) {
+    private final String name;
+    public GameState(int ordinal, String name) {
         this.ordinal = ordinal;
+        this.name = name;
     }
     
     /**
@@ -27,5 +31,9 @@ public class GameState {
      */
     public int ordinal() {
         return this.ordinal;
+    }
+    
+    public String getFancyName() {
+        return name;
     }
 }
