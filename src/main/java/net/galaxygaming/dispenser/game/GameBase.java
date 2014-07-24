@@ -375,5 +375,6 @@ public abstract class GameBase implements Game {
         this.gameTime = getConfig().getInt("gameTime", -1);
         
         onLoad();
+        
     }
 }
