@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
-import net.galaxygaming.dispenser.task.CountdownTask;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
 
@@ -81,6 +80,9 @@ public abstract class GameBase implements Game {
     
     /** The board's objective */
     protected Objective objective;
+    
+    /** The length of the grace period in seconds */
+    protected int graceDuration;
     
     private GameType type;
     private GameLoader loader;
@@ -457,12 +459,14 @@ public abstract class GameBase implements Game {
         getConfig().addDefault("countdown duration", 30);
         getConfig().addDefault("game time", -1);
         getConfig().addDefault("use scoreboard", true);
+        getConfig().addDefault("grace duration", 5);
         
         minimumPlayers = getConfig().getInt("minimum players");
         maximumPlayers = getConfig().getInt("maximum players");
         countdownDuration = getConfig().getInt("countdown duration");
         gameTime = getConfig().getInt("game time");
         useScoreboard = getConfig().getBoolean("use scoreboard");
+        graceDuration = getConfig().getInt("grace duration");
 
         if (getConfig().isList("signs")) {
             for (String location : getConfig().getStringList("signs")) {
@@ -481,6 +485,12 @@ public abstract class GameBase implements Game {
         }
         
         onLoad();
+        
+        for (String key : getConfig().getDefaults().getKeys(false)) {
+            if (getConfig().get(key, null) == null) {
+                getConfig().set(key, getConfig().getDefaults().get(key));
+            }
+        }
     }
 
 	@Override
