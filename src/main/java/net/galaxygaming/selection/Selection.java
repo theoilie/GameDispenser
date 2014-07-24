@@ -93,12 +93,30 @@ public class Selection implements ConfigurationSerializable {
 		}
 		return blocks;
 	}
+	
+	Location getMin() {
+	    return new Location(pointOne.getWorld(), 
+                Math.min(pointOne.getBlockX(), pointTwo.getBlockX()), 
+                Math.min(pointOne.getBlockY(), pointTwo.getBlockY()),
+                Math.min(pointOne.getBlockZ(), pointTwo.getBlockZ()));
+	}
+	
+	Location getMax() {
+        return new Location(pointOne.getWorld(), 
+                Math.max(pointOne.getBlockX(), pointTwo.getBlockX()), 
+                Math.max(pointOne.getBlockY(), pointTwo.getBlockY()),
+                Math.max(pointOne.getBlockZ(), pointTwo.getBlockZ()));
+	}
 
+	public boolean isIn(Location loc) {
+	    return loc.toVector().isInAABB(getMin().toVector(), getMax().toVector());
+	}
+	
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = Maps.newHashMap();
-        result.put("min", LocationUtil.serializeLocation(pointOne));
-        result.put("max", LocationUtil.serializeLocation(pointTwo));
+        result.put("min", LocationUtil.serializeLocation(getMin()));
+        result.put("max", LocationUtil.serializeLocation(getMax()));
         return result;
     }
     
