@@ -481,18 +481,18 @@ public abstract class GameBase implements Game {
                 signs.add(LocationUtil.deserializeLocation(location));
             }
         }
+
+        onLoad();
         
         if (useScoreboard) {
-        		board = Bukkit.getScoreboardManager().getNewScoreboard();
-        		objective = board.registerNewObjective
-        			(ChatColor.translateAlternateColorCodes('&', "&4&l" + getType().toString()), "dummy");
-        		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        		for (Player player : getPlayers()) {
-        			player.setScoreboard(board);
-        		}
+            board = Bukkit.getScoreboardManager().getNewScoreboard();
+            objective = board.registerNewObjective
+                (ChatColor.translateAlternateColorCodes('&', "&4&l" + getType().toString()), "dummy");
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            for (Player player : getPlayers()) {
+                player.setScoreboard(board);
+            }
         }
-        
-        onLoad();
         
         for (String key : getConfig().getDefaults().getKeys(false)) {
             if (getConfig().get(key, null) == null) {
