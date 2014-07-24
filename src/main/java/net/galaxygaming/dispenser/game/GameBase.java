@@ -6,7 +6,6 @@ package net.galaxygaming.dispenser.game;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.URLConnection;
 import java.net.URL;
 import java.util.Iterator;
@@ -21,7 +20,7 @@ import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
 
 import org.apache.commons.lang.Validate;
-
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -31,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -456,6 +456,16 @@ public abstract class GameBase implements Game {
             for (String location : getConfig().getStringList("signs")) {
                 signs.add(LocationUtil.deserializeLocation(location));
             }
+        }
+        
+        if (useScoreboard) {
+        		board = Bukkit.getScoreboardManager().getNewScoreboard();
+        		objective = board.registerNewObjective
+        			(ChatColor.translateAlternateColorCodes('&', "&4&l" + getType().toString()), "dummy");
+        		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        		for (Player player : getPlayers()) {
+        			player.setScoreboard(board);
+        		}
         }
         
         onLoad();
