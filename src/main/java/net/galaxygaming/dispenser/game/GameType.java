@@ -14,7 +14,7 @@ import com.google.common.collect.Maps;
  * @author t7seven7t
  */
 public class GameType {
-    private static final Map<GameType, GameType> lookup = Maps.newConcurrentMap();
+    private static final Map<String, GameType> lookup = Maps.newConcurrentMap();
     
     private final String name;
     private final GameDescriptionFile description;
@@ -29,7 +29,7 @@ public class GameType {
         this.description = description;
         this.dataFolder = dataFolder;
         this.messages = new MessagesResource(dataFolder, classLoader);
-        lookup.put(this, this);
+        lookup.put(name, this);
     }
     
     public MessagesResource getMessages() {
