@@ -376,6 +376,9 @@ public abstract class GameBase implements Game {
      * devs choose whether to use them
      */
     @Override
+    public void onSave() {}
+    
+    @Override
     public void onLoad() {}
     
     @Override
