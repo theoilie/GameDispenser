@@ -12,11 +12,14 @@ import net.galaxygaming.util.LocationUtil;
 import net.galaxygaming.util.SelectionUtil;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -111,5 +114,30 @@ class Events implements Listener {
 	    }
 	    
 	    game.removePlayer(player);
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onSignChange(SignChangeEvent event) {
+	    if (event.getPlayer().hasPermission("gamedispenser.command.sign")) {
+	        if (event.getLine(0).equalsIgnoreCase("[game]")) {
+	            Game game = GameManager.getInstance().getGame(event.getLine(1));
+	            if (game == null) {
+	                event.setLine(1, "GAME NOT FOUND");
+	            }
+
+	            game.addSign(event.getBlock().getLocation());
+	        }
+	    }
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onBlockBreak(BlockBreakEvent event) {
+	    if (event.getBlock().getType().equals(Material.SIGN)
+	            || event.getBlock().getType().equals(Material.SIGN_POST)
+	            || event.getBlock().getType().equals(Material.WALL_SIGN)) {
+	        for (Game game : GameManager.getInstance().getGames()) {
+	            game.removeSign(event.getBlock().getLocation());
+	        }
+	    }
 	}
 }

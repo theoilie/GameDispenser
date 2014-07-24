@@ -9,12 +9,17 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URLConnection;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
@@ -26,8 +31,10 @@ import com.google.common.collect.Lists;
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.GameLoader;
 import net.galaxygaming.dispenser.task.CountdownTask;
+import net.galaxygaming.dispenser.task.GameRunnable;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
+import net.galaxygaming.util.LocationUtil;
 
 /**
  * @author t7seven7t
@@ -72,6 +79,44 @@ public abstract class GameBase implements Game {
     private GameDispenser plugin;
     Plugin fakePlugin;
     
+    private Set<Location> signs;
+    
+    public final void addSign(Location location) {
+        Validate.notNull(location, "Location cannot be null");
+        signs.add(location);
+        
+        new GameRunnable() {
+            @Override
+            public void run() {
+                updateSigns();
+            }
+        }.runTask();
+    }
+    
+    public final void removeSign(Location location) {
+        signs.remove(location);
+    }
+    
+    public final void updateSigns() {
+        Iterator<Location> it = signs.iterator();
+        
+        while (it.hasNext()) {
+            Location loc = it.next();
+            BlockState state = loc.getBlock().getState();
+            
+            if (!(state instanceof Sign)) {
+                it.remove();
+                continue;
+            }
+            
+            Sign sign = (Sign) state;
+            sign.setLine(0, "[" + getType().toString() + "]");
+            sign.setLine(1, getName());
+            sign.setLine(2, getState().getFancyName());
+            sign.setLine(3, FormatUtil.format("{2}{0}/{1}", getPlayers().length, maximumPlayers, ChatColor.YELLOW));
+        }
+    }
+    
     protected final void addComponent(String componentName) {
         components.add(componentName);
     }
@@ -99,7 +144,13 @@ public abstract class GameBase implements Game {
     }
     
     @Override
-    public final void saveConfig() {
+    public final void save() {
+        List<String> signLocations = Lists.newArrayList();
+        for (Location location : signs) {
+            signLocations.add(LocationUtil.serializeLocation(location));
+        }
+        config.set("signs", signLocations);
+        
         try {
             this.config.save(configFile);
         } catch (IOException e) {
@@ -180,6 +231,7 @@ public abstract class GameBase implements Game {
         }
         
         setState(GameState.STARTING);
+        updateSigns();
         // TODO: countdown task is a poor way to do this, create a new method for this perhaps on tick()
         new CountdownTask(this, countdownDuration,
                 type.getMessages().getMessage("game.countdown.start")) {
@@ -198,6 +250,7 @@ public abstract class GameBase implements Game {
         
         setState(GameState.ACTIVE);
         onStart();
+        updateSigns();
         
         if (gameTime > 0) {
             new CountdownTask(this, gameTime,
@@ -224,6 +277,7 @@ public abstract class GameBase implements Game {
     public final void end() {
         setState(GameState.INACTIVE);
         onEnd();
+        updateSigns();
 
         for (Player player : Lists.newArrayList(players.iterator())) {
             removePlayer(player);
@@ -249,6 +303,7 @@ public abstract class GameBase implements Game {
         }
         
         onPlayerJoin(player);
+        updateSigns();
         return true;
     }
     
@@ -258,6 +313,7 @@ public abstract class GameBase implements Game {
         players.remove(player);
         player.teleport((Location) getMetadata(player, "gameLastLocation").value());
         removeMetadata(player, "gameLastLocation");
+        updateSigns();
     }
     
     @Override
@@ -381,6 +437,12 @@ public abstract class GameBase implements Game {
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
+        
+        if (getConfig().isList("signs")) {
+            for (String location : getConfig().getStringList("signs")) {
+                signs.add(LocationUtil.deserializeLocation(location));
+            }
+        }
         
         onLoad();
     }
