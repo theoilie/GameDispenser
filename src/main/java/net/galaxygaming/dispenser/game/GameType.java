@@ -5,7 +5,6 @@ package net.galaxygaming.dispenser.game;
 
 import java.io.File;
 import java.util.Map;
-
 import net.galaxygaming.dispenser.MessagesResource;
 
 import com.google.common.collect.Maps;
@@ -52,6 +51,10 @@ public class GameType {
         return this.dataFolder;
     }
     
+    public String getName() {
+        return this.name;
+    }
+    
     @Override
     public String toString() {
         return this.name;
@@ -80,7 +83,16 @@ public class GameType {
     }
     
     public static GameType get(String name) {
-        return lookup.get(name);
+        GameType result = lookup.get(name);
+        if (result == null) {
+            for (GameType type : lookup.values()) {
+                if (type.name.equalsIgnoreCase(name)) {
+                    result = type;
+                    break;
+                }
+            }
+        }
+        return result;
     }
     
     static void remove(GameType type) {
