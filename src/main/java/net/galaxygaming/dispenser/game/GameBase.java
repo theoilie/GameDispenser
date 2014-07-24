@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
-import net.galaxygaming.dispenser.task.CountdownTask;
 import net.galaxygaming.dispenser.task.GameRunnable;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
@@ -38,6 +37,8 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.collect.Lists;
+
+import net.galaxygaming.dispenser.game.GameLoader;
 
 /**
  * @author t7seven7t
@@ -93,6 +94,9 @@ public abstract class GameBase implements Game {
     /** The last recorded time remaining */
     protected int lastTimeRemaining;
     
+    /** The length of the grace period in seconds */
+    protected int graceDuration;
+    
     private GameType type;
     private GameLoader loader;
     private FileConfiguration config;
@@ -103,6 +107,9 @@ public abstract class GameBase implements Game {
     Plugin fakePlugin;
     
     private Set<Location> signs;
+    
+    private int counter;
+    private int tick;
     
     public final void addSign(Location location) {
         Validate.notNull(location, "Location cannot be null");
@@ -255,14 +262,7 @@ public abstract class GameBase implements Game {
         
         setState(GameState.STARTING);
         updateSigns();
-        // TODO: countdown task is a poor way to do this, create a new method for this perhaps on tick()
-        new CountdownTask(this, countdownDuration,
-                type.getMessages().getMessage("game.countdown.start")) {
-            @Override
-            public void done() {
-                start();
-            }
-        };
+        counter = countdownDuration;
     }
     
     @Override
@@ -271,27 +271,52 @@ public abstract class GameBase implements Game {
             return;
         }
         
-        setState(GameState.ACTIVE);
+        if (graceDuration > 0) {
+            counter = graceDuration;
+            setState(GameState.GRACE);
+        } else {
+            counter = gameTime;
+            setState(GameState.ACTIVE);
+        }
+        
         onStart();
         updateSigns();
-        
-        if (gameTime > 0) {
-            new CountdownTask(this, gameTime,
-                    type.getMessages().getMessage("game.countdown.end")) {
-                @Override
-                public void done() {
-                    end();
-                }
-            };
-        }
     }
     
     @Override
     public final void tick() {
-        if (isFinished()) {
+        if (getState().ordinal() > GameState.STARTING.ordinal() && isFinished()) {
             end();
             return;
         }
+        
+        if (tick % 20 == 0 && counter > 0) {
+            if (counter % 60 == 0 
+                    || (counter < 60 && counter % 30 == 0)
+                    || (counter <= 5 && counter > 0)) {
+                if (getState().ordinal() == GameState.STARTING.ordinal()) {
+                    broadcast(type.getMessages().getMessage("game.countdown.start"));
+                } else if (getState().ordinal() > GameState.STARTING.ordinal()) {
+                    broadcast(type.getMessages().getMessage("game.countdown.end"));
+                }
+            }
+            
+            counter--;
+            
+            if (counter <= 0) {
+                if (getState().ordinal() == GameState.STARTING.ordinal()) {
+                    start();
+                } else if (getState().ordinal() == GameState.GRACE.ordinal()) {
+                    setState(GameState.ACTIVE);
+                } else if (getState().ordinal() > GameState.GRACE.ordinal()) {
+                    end();
+                }
+            }
+        }
+        
+        tick++;
+        if (tick >= 20)
+            tick = 0;
         
         onTick();
     }
@@ -456,12 +481,14 @@ public abstract class GameBase implements Game {
         getConfig().addDefault("countdown duration", 30);
         getConfig().addDefault("game time", -1);
         getConfig().addDefault("use scoreboard", true);
+        getConfig().addDefault("grace duration", 5);
         
         minimumPlayers = getConfig().getInt("minimum players");
         maximumPlayers = getConfig().getInt("maximum players");
         countdownDuration = getConfig().getInt("countdown duration");
         gameTime = getConfig().getInt("game time");
         useScoreboard = getConfig().getBoolean("use scoreboard");
+        graceDuration = getConfig().getInt("grace duration");
 
         this.lastTimeRemaining = gameTime;
         		
@@ -470,6 +497,8 @@ public abstract class GameBase implements Game {
                 signs.add(LocationUtil.deserializeLocation(location));
             }
         }
+
+        onLoad();
         
         if (useScoreboard) {
         		board = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -478,7 +507,7 @@ public abstract class GameBase implements Game {
         		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         		updateScoreboard();
         }
-        
+
         onLoad();
         
         for (String key : getConfig().getDefaults().getKeys(false)) {

@@ -15,6 +15,7 @@ public class GameState {
         INACTIVE    = new GameState(0, ChatColor.YELLOW + "Idle"), 
         LOBBY       = new GameState(1, ChatColor.GREEN + "Open"), 
         STARTING    = new GameState(2, ChatColor.GREEN + "Open"),
+        GRACE       = new GameState(3, ChatColor.BLUE + "In Game"),
         ACTIVE      = new GameState(10, ChatColor.BLUE + "In Game");
     
     private final int ordinal;
