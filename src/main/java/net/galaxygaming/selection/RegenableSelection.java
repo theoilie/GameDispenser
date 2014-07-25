@@ -97,8 +97,7 @@ public class RegenableSelection {
                     int z = k + min.getBlockZ();
                     int index = i + j * Lx + k * Lx * Ly;
                     Block b = new Location(min.getWorld(), x, y, z).getBlock();
-                    b.setTypeId(blocks[index]);
-                    b.setData((byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))));
+                    b.setTypeIdAndData(blocks[index], (byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))), false);
                 }
             }
         }
