@@ -27,14 +27,14 @@ class UnloadCommand extends Command {
     @Override
     public void perform() {
         try {
-            if (this.argMatchesAlias(args[0], "type", "t")) {
+            if (argMatchesAlias(args[0], "type", "t")) {
                 GameType type = GameType.get(args[1]);
                 if (type == null) {
                     error(messages.getMessage(CommandMessage.UNKNOWN_GAME_TYPE), args[1]);
                     return;
                 }
                 GameManager.getInstance().unloadGameType(type);
-            } else if (this.argMatchesAlias(args[0], "game", "g")) {
+            } else if (argMatchesAlias(args[0], "game", "g")) {
                 Game game = GameManager.getInstance().getGame(args[1]);
                 if (game == null) {
                     error(messages.getMessage(CommandMessage.UNKNOWN_GAME), args[1]);
@@ -45,6 +45,7 @@ class UnloadCommand extends Command {
                 error("Please specify either 'game' or 'type'");
                 return;
             }
+            sendMessage(messages.getMessage(CommandMessage.GAME_UNLOADED), args[0]);
         } catch (InvalidGameException e) {
             error(e.getMessage(), e);
         }

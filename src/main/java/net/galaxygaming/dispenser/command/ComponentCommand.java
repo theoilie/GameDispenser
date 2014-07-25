@@ -36,7 +36,6 @@ class ComponentCommand extends Command {
                 return;
             }
         }
-        
         printList(page, game.getComponents().toArray(new String[0]));
     }
 }

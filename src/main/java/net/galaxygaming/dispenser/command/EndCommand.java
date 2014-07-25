@@ -29,6 +29,7 @@ class EndCommand extends Command {
             return;
         }
         
+		sendMessage(messages.getMessage(CommandMessage.GAME_END_ATTEMPT), game.getName());
         game.end();
     }
 }

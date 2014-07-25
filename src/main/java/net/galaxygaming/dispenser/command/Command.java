@@ -193,6 +193,11 @@ public abstract class Command implements CommandExecutor {
             NO_PAGE                      = "commands.noPage",
             NOT_A_NUMBER                 = "commands.notANumber",
             SET_COMPONENT_SUCCESS		= "commands.setComponentSuccess",
-            GAME_CREATE_SUCCESS			= "commands.gameCreated";
+            GAME_CREATE_SUCCESS			= "commands.gameCreated",
+            GAME_END_ATTEMPT				= "commands.attemptGameEnd",
+            GAME_START_ATTEMPT			= "commands.attemptGameStart",
+            GAME_LOADED					= "commands.gameLoaded",
+            GAME_UNLOADED				= "commands.gameUnloaded",
+        		WAND_MESSAGE					= "selection.wandMessage";
     }   
 }

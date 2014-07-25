@@ -65,10 +65,9 @@ class SetCommand extends Command {
             }
         }
         
-        if (result) {
+        if (result)
         		sendMessage(messages.getMessage(CommandMessage.SET_COMPONENT_SUCCESS), args[1], args[0]);
-        } else {
+        else
             error(messages.getMessage(CommandMessage.NO_COMPONENT));
-        }
     }
 }

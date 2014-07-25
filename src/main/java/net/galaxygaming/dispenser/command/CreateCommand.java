@@ -3,11 +3,12 @@
  */
 package net.galaxygaming.dispenser.command;
 
-import org.bukkit.permissions.Permission;
-
+import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.GameType;
 import net.galaxygaming.dispenser.game.InvalidGameException;
+
+import org.bukkit.permissions.Permission;
 
 /**
  * @author t7seven7t
@@ -32,11 +33,13 @@ class CreateCommand extends Command {
         }
         
         try {
+        		Game game = null;
             if (args.length == 2) {
-                GameManager.getInstance().newGame(type, args[1]);
+                game = GameManager.getInstance().newGame(type, args[1]);
             } else {
-                GameManager.getInstance().newGame(type);
+                game = GameManager.getInstance().newGame(type);
             }
+    			sendMessage(messages.getMessage(CommandMessage.GAME_CREATE_SUCCESS), game.getName(), game.getType().toString());
         } catch (InvalidGameException e) {
             error(e.getMessage());
         }

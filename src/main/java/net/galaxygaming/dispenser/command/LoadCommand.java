@@ -25,14 +25,15 @@ class LoadCommand extends Command {
     @Override
     public void perform() {
         try {
-            if (this.argMatchesAlias(args[0], "type", "t")) {
+            if (argMatchesAlias(args[0], "type", "t")) {
                 GameManager.getInstance().loadGameType(args[1]);
-            } else if (this.argMatchesAlias(args[0], "game", "g")) {
+            } else if (argMatchesAlias(args[0], "game", "g")) {
                 GameManager.getInstance().loadGame(args[1]);
             } else {
-                error("Please specify either 'game' or 'type'");
+                error("Please specify either 'game' or 'type'.");
                 return;
             }
+            sendMessage(messages.getMessage(CommandMessage.GAME_LOADED), args[0]);
         } catch (InvalidGameException e) {
             error(e.getMessage(), e);
         }

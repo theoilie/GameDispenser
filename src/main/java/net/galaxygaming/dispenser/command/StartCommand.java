@@ -29,6 +29,7 @@ class StartCommand extends Command {
             return;
         }
         
+		sendMessage(messages.getMessage(CommandMessage.GAME_START_ATTEMPT), game.getName());
         game.start();
     }
 }

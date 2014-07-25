@@ -20,5 +20,6 @@ class WandCommand extends Command {
     @Override
     public void perform() {
         player.getInventory().addItem(new ItemStack(SelectionUtil.getInstance().getWand(), 1));
+        sendMessage(messages.getMessage(CommandMessage.WAND_MESSAGE));
     }
 }
