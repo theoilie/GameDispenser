@@ -145,6 +145,7 @@ public abstract class GameBase implements Game {
             sign.setLine(1, getName());
             sign.setLine(2, getState().getFancyName());
             sign.setLine(3, FormatUtil.format("{2}{0}/{1}", getPlayers().length, maximumPlayers, ChatColor.YELLOW));
+            sign.update(false, false);
         }
     }
     

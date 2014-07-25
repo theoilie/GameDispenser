@@ -116,13 +116,14 @@ class Events implements Listener {
 	    game.removePlayer(player);
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 	    if (event.getPlayer().hasPermission("gamedispenser.command.sign")) {
 	        if (event.getLine(0).equalsIgnoreCase("[game]")) {
 	            Game game = GameManager.getInstance().getGame(event.getLine(1));
 	            if (game == null) {
 	                event.setLine(1, "GAME NOT FOUND");
+	                return;
 	            }
 
 	            game.addSign(event.getBlock().getLocation());
