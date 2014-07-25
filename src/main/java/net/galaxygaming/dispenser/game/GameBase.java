@@ -300,7 +300,7 @@ public abstract class GameBase implements Game {
                     || (counter <= 5 && counter > 0)) {
                 if (getState().ordinal() == GameState.STARTING.ordinal()) {
                     broadcast(type.getMessages().getMessage("game.countdown.start"), counter);
-                } else if (getState().ordinal() > GameState.STARTING.ordinal()) {
+                } else if (getState().ordinal() > GameState.GRACE.ordinal()) {
                     broadcast(type.getMessages().getMessage("game.countdown.end"), counter);
                 }
             }
