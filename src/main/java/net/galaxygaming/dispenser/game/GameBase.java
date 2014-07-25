@@ -144,7 +144,7 @@ public abstract class GameBase implements Game {
             sign.setLine(0, "[" + getType().toString() + "]");
             sign.setLine(1, getName());
             sign.setLine(2, getState().getFancyName());
-            sign.setLine(3, FormatUtil.format("{2}{0}/{1}", getPlayers().length, maximumPlayers, ChatColor.YELLOW));
+            sign.setLine(3, FormatUtil.format("{2}{0}/{1}", getPlayers().length, maximumPlayers > 0 ? maximumPlayers : "\u221e", ChatColor.YELLOW));
             sign.update(false, false);
         }
     }
@@ -355,6 +355,10 @@ public abstract class GameBase implements Game {
             startCountdown();
         }
         
+        broadcast(type.getMessages().getMessage("game.broadcastPlayerJoin"),
+                player.getName(), players.size(), 
+                maximumPlayers > 0 ? maximumPlayers : "\u221e");
+        
         onPlayerJoin(player);
         updateSigns();
         updateScoreboard();
@@ -363,6 +367,17 @@ public abstract class GameBase implements Game {
     
     @Override
     public final void removePlayer(Player player) {
+        removePlayer(player, false);
+    }
+    
+    @Override
+    public final void removePlayer(Player player, boolean broadcast) {
+        if (broadcast) {
+            broadcast(type.getMessages().getMessage("game.broadcastPlayerLeave"),
+                    player.getName(), players.size(), 
+                    maximumPlayers > 0 ? maximumPlayers : "\u221e");
+        }
+        
         GameManager.getInstance().removePlayerFromGame(player);
         players.remove(player);
         player.teleport((Location) getMetadata(player, "gameLastLocation").value());

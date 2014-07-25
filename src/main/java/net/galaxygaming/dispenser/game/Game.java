@@ -122,9 +122,17 @@ public interface Game {
     
     /**
      * Removes a player from the game
+     * Same as calling {@link removePlayer(Player, false)}
      * @param player
      */
     public void removePlayer(Player player);
+    
+    /**
+     * Removes a player
+     * @param player
+     * @param broadcast whether to broadcast the player left
+     */
+    public void removePlayer(Player player, boolean broadcast);
     
     /**
      * Returns a list of all players in this game
