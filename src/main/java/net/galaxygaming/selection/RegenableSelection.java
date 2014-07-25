@@ -9,15 +9,15 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
-import net.galaxygaming.dispenser.GameDispenser;
+
 import net.galaxygaming.dispenser.game.Game;
 
 /**
  * 
  */
-public class RegenableSelection {
-
+public class RegenableSelection {    
     private final Selection selection;
     private final Game game;
     private final String regionName;
@@ -79,6 +79,7 @@ public class RegenableSelection {
     public void regen() {
         Location min = selection.getMin();
         Location max = selection.getMax();
+        World world = min.getWorld();
         
         int Lx = max.getBlockX() - min.getBlockX() + 1;
         int Ly = max.getBlockY() - min.getBlockY() + 1;
@@ -88,7 +89,7 @@ public class RegenableSelection {
             game.getLogger().log(Level.WARNING, "Tried to regen but block data is wrong length: " + regionName);
             return;
         }
-
+        
         for (int i = 0; i < Lx; i++) {
             int x = i + min.getBlockX();
             for (int j = 0; j < Ly; j++) {
@@ -96,15 +97,18 @@ public class RegenableSelection {
                 for (int k = 0; k < Lz; k++) {
                     int z = k + min.getBlockZ();
                     int index = i + j * Lx + k * Lx * Ly;
-                    Block b = new Location(min.getWorld(), x, y, z).getBlock();
-                    b.setTypeIdAndData(blocks[index], (byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))), false);
+                    world.getBlockAt(x, y, z).setTypeIdAndData(blocks[index], (byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))), false);
                 }
             }
         }
     }
     
     public void save() {
-        File file = new File(GameDispenser.getInstance().getDataFolder(), game.getName() + "_" + regionName);
+        if (!game.getType().getDataFolder().exists()) {
+            game.getType().getDataFolder().mkdir();
+        }
+        
+        File file = new File(game.getType().getDataFolder(), game.getName() + "_" + regionName);
         
         if (!file.exists()) {
             try {
@@ -150,7 +154,7 @@ public class RegenableSelection {
             return null;
         }
         
-        File file = new File(GameDispenser.getInstance().getDataFolder(), game.getName() + "_" + regionName);
+        File file = new File(game.getType().getDataFolder(), game.getName() + "_" + regionName);
         
         if (!file.exists()) {
             game.getLogger().log(Level.WARNING, "Someone tried to load a region file that doesn't exist: " + regionName);
