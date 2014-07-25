@@ -142,6 +142,7 @@ public class RegenableSelection {
         }
         
         game.getConfig().set(regionName, selection);
+        game.save();
     }
     
     public static RegenableSelection load(Game game, String regionName) {
