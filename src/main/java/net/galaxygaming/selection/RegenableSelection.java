@@ -6,18 +6,25 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 
+import com.google.common.collect.Lists;
 import net.galaxygaming.dispenser.game.Game;
+import net.galaxygaming.dispenser.task.GameRunnable;
 
 /**
  * 
  */
 public class RegenableSelection {    
+    private static final int MAX_BLOCKS_PER_INTERVAL = 250;
+    private static final long INTERVAL_LENGTH = 20;
+    
     private final Selection selection;
     private final Game game;
     private final String regionName;
@@ -90,16 +97,40 @@ public class RegenableSelection {
             return;
         }
         
+        List<List<BlockState>> blockUpdates = Lists.newArrayList();
+        
+        for (int i = 0; i < Math.ceil(((double) blocks.length) / MAX_BLOCKS_PER_INTERVAL); i++) {
+            blockUpdates.add(Lists.<BlockState>newArrayList());
+        }
+        
+        int blockCount = 0;
         for (int i = 0; i < Lx; i++) {
             int x = i + min.getBlockX();
             for (int j = 0; j < Ly; j++) {
                 int y = j + min.getBlockY();
                 for (int k = 0; k < Lz; k++) {
+                    int updateIndex = (int) Math.floor(blockCount / MAX_BLOCKS_PER_INTERVAL);
                     int z = k + min.getBlockZ();
                     int index = i + j * Lx + k * Lx * Ly;
-                    world.getBlockAt(x, y, z).setTypeIdAndData(blocks[index], (byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))), false);
+                    BlockState state = world.getBlockAt(x, y, z).getState();
+                    state.setTypeId(blocks[index]);
+                    state.setRawData((byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))));
+                    blockUpdates.get(updateIndex).add(state);
+                    blockCount++;
                 }
             }
+        }
+        
+        for (int i = 0; i < blockUpdates.size(); i++) {
+            final List<BlockState> states = blockUpdates.get(i);
+            new GameRunnable() {
+                @Override
+                public void run() {
+                    for (BlockState state : states) {
+                        state.update(true, false);
+                    }
+                }
+            }.runTaskLater(i * INTERVAL_LENGTH);
         }
     }
     
