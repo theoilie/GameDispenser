@@ -45,7 +45,7 @@ class UnloadCommand extends Command {
                 error("Please specify either 'game' or 'type'");
                 return;
             }
-            sendMessage(messages.getMessage(CommandMessage.GAME_UNLOADED), args[0]);
+            sendMessage(messages.getMessage(CommandMessage.GAME_UNLOADED), args[1]);
         } catch (InvalidGameException e) {
             error(e.getMessage(), e);
         }

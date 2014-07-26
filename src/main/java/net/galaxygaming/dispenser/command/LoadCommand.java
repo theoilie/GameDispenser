@@ -33,7 +33,7 @@ class LoadCommand extends Command {
                 error("Please specify either 'game' or 'type'.");
                 return;
             }
-            sendMessage(messages.getMessage(CommandMessage.GAME_LOADED), args[0]);
+            sendMessage(messages.getMessage(CommandMessage.GAME_LOADED), args[1]);
         } catch (InvalidGameException e) {
             error(e.getMessage(), e);
         }
