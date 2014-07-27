@@ -6,6 +6,7 @@ package net.galaxygaming.dispenser.event;
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
+import net.galaxygaming.dispenser.game.GameState;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
 import net.galaxygaming.util.LocationUtil;
@@ -138,6 +139,46 @@ class Events implements Listener {
 	            || event.getBlock().getType().equals(Material.WALL_SIGN)) {
 	        for (Game game : GameManager.getInstance().getGames()) {
 	            game.removeSign(event.getBlock().getLocation());
+	        }
+	    }
+	}
+	
+	@EventHandler(priority = EventPriority.LOW)
+	public void onPlayerInteract(PlayerInteractEvent event) {
+	    if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+	        if (event.getClickedBlock() == null 
+	                || (!event.getClickedBlock().getType().equals(Material.SIGN) 
+	                && !event.getClickedBlock().getType().equals(Material.SIGN_POST) 
+	                && !event.getClickedBlock().getType().equals(Material.WALL_SIGN))) {
+	            return;
+	        }
+	        
+	        if (!event.getPlayer().hasPermission("gamedispenser.command.join")) {
+	            event.getPlayer().sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages().getMessage("game.noPermission")));
+	            return;
+	        }
+	        
+	        if (GameManager.getInstance().getGameForPlayer(event.getPlayer()) != null) {
+                event.getPlayer().sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages().getMessage("commands.alreadyInGame")));
+	            return;
+	        }
+	        
+	        for (Game game : GameManager.getInstance().getGames()) {
+	            if (game.getSigns().contains(event.getClickedBlock().getLocation())) {
+	                if (game.getState().ordinal() < GameState.INACTIVE.ordinal() || !game.isSetup()) {
+	                    event.getPlayer().sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages().getMessage("commands.gameNotSetup")));
+	                    return;
+	                } else if (game.getState().ordinal() > GameState.STARTING.ordinal()) {
+	                    event.getPlayer().sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages().getMessage("commands.gameAlreadyActive")));
+	                    return;
+	                }
+	                
+	                if (!game.addPlayer(event.getPlayer())) {
+	                    event.getPlayer().sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages().getMessage("commands.gameIsFull")));
+	                }
+	                event.setCancelled(true);
+	                return;
+	            }
 	        }
 	    }
 	}

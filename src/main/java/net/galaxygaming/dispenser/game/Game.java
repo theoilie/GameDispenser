@@ -4,6 +4,7 @@
 package net.galaxygaming.dispenser.game;
 
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
@@ -35,6 +36,12 @@ public interface Game {
      * @param location
      */
     public void removeSign(Location location);
+    
+    /**
+     * Gives a set of sign locations for this game
+     * @return
+     */
+    public Set<Location> getSigns();
     
      /**
       * Sends a message to every player in the game

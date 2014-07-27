@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -126,6 +127,10 @@ public abstract class GameBase implements Game {
     
     public final void removeSign(Location location) {
         signs.remove(location);
+    }
+    
+    public final Set<Location> getSigns() {
+        return Collections.unmodifiableSet(signs);
     }
     
     public final void updateSigns() {
@@ -283,6 +288,10 @@ public abstract class GameBase implements Game {
             setState(GameState.ACTIVE);
         }
         
+        for (Player player : players) {
+            player.setMetadata("gameLastLocation", new GameFixedMetadata(this, player.getLocation().clone()));
+        }
+        
         onStart();
         updateSigns();
     }
@@ -330,11 +339,11 @@ public abstract class GameBase implements Game {
     public final void end() {
         setState(GameState.INACTIVE);
         onEnd();
-        updateSigns();
 
         for (Player player : Lists.newArrayList(players.iterator())) {
             removePlayer(player);
         }
+        updateSigns();
     }
     
     @Override
@@ -349,7 +358,6 @@ public abstract class GameBase implements Game {
         
         players.add(player);        
         GameManager.getInstance().addPlayerToGame(player, this);
-        player.setMetadata("gameLastLocation", new GameFixedMetadata(this, player.getLocation().clone()));
         
         if (players.size() >= minimumPlayers) {
             startCountdown();
@@ -380,8 +388,10 @@ public abstract class GameBase implements Game {
         
         GameManager.getInstance().removePlayerFromGame(player);
         players.remove(player);
-        player.teleport((Location) getMetadata(player, "gameLastLocation").value());
-        removeMetadata(player, "gameLastLocation");
+        if (getMetadata(player, "gameLastLocation") != null) {
+            player.teleport((Location) getMetadata(player, "gameLastLocation").value());
+            removeMetadata(player, "gameLastLocation");
+        }
         updateSigns();
         updateScoreboard();
     }
