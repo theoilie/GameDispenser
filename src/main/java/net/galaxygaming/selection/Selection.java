@@ -29,6 +29,14 @@ public class Selection implements ConfigurationSerializable {
 		SelectionUtil.getInstance().addSelection(this);
 	}
 	
+	/**
+	 * clones a selection so its unmodifiable
+	 * @param selection
+	 */
+	public Selection(Selection selection) {
+	    this(selection.pointOne, selection.pointTwo);
+	}
+	
 	/*
 	 * This is for creating a Selection from 
 	 * a config that does not belong to any 
@@ -118,6 +126,11 @@ public class Selection implements ConfigurationSerializable {
         result.put("min", LocationUtil.serializeLocation(getMin()));
         result.put("max", LocationUtil.serializeLocation(getMax()));
         return result;
+    }
+    
+    @Override
+    public Selection clone() throws CloneNotSupportedException {
+        return new Selection(this);
     }
     
     public static Selection deserialize(Map<String, Object> map) {
