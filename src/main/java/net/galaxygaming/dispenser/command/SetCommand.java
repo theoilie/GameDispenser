@@ -55,7 +55,7 @@ class SetCommand extends Command {
         		return;
             }
             
-            result = game.setComponent(args[1], selection);
+            result = game.setComponent(args[1], selection.clone());
         } else {
             if (args[1].equalsIgnoreCase("description")) {
                  result = true;
