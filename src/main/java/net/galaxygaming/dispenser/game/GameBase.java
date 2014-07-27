@@ -326,6 +326,11 @@ public abstract class GameBase implements Game {
                     end();
                 }
             }
+            
+            if (players.size() == 0) {
+                end();
+                counter = 0;
+            }
         }
         
         tick++;
