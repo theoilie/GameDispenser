@@ -129,7 +129,7 @@ public class Selection implements ConfigurationSerializable {
     }
     
     @Override
-    public Selection clone() throws CloneNotSupportedException {
+    public Selection clone() {
         return new Selection(this);
     }
     
