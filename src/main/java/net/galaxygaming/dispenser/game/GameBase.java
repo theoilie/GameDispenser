@@ -322,6 +322,7 @@ public abstract class GameBase implements Game {
                     start();
                 } else if (getState().ordinal() == GameState.GRACE.ordinal()) {
                     setState(GameState.ACTIVE);
+                    counter = gameTime;
                 } else if (getState().ordinal() > GameState.GRACE.ordinal()) {
                     end();
                 }
