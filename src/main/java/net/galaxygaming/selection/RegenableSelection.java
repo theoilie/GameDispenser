@@ -84,54 +84,59 @@ public class RegenableSelection {
     
     @SuppressWarnings("deprecation")
     public void regen() {
-        Location min = selection.getMin();
-        Location max = selection.getMax();
-        World world = min.getWorld();
-        
-        int Lx = max.getBlockX() - min.getBlockX() + 1;
-        int Ly = max.getBlockY() - min.getBlockY() + 1;
-        int Lz = max.getBlockZ() - min.getBlockZ() + 1;
-        
-        if (blocks == null || data == null || blocks.length != Lx*Ly*Lz || data.length != Lx*Ly*Lz/2) {
-            game.getLogger().log(Level.WARNING, "Tried to regen but block data is wrong length: " + regionName);
-            return;
-        }
-        
-        List<List<BlockState>> blockUpdates = Lists.newArrayList();
-        
-        for (int i = 0; i < Math.ceil(((double) blocks.length) / MAX_BLOCKS_PER_INTERVAL); i++) {
-            blockUpdates.add(Lists.<BlockState>newArrayList());
-        }
-        
-        int blockCount = 0;
-        for (int i = 0; i < Lx; i++) {
-            int x = i + min.getBlockX();
-            for (int j = 0; j < Ly; j++) {
-                int y = j + min.getBlockY();
-                for (int k = 0; k < Lz; k++) {
-                    int updateIndex = (int) Math.floor(blockCount / MAX_BLOCKS_PER_INTERVAL);
-                    int z = k + min.getBlockZ();
-                    int index = i + j * Lx + k * Lx * Ly;
-                    BlockState state = world.getBlockAt(x, y, z).getState();
-                    state.setTypeId(blocks[index]);
-                    state.setRawData((byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))));
-                    blockUpdates.get(updateIndex).add(state);
-                    blockCount++;
+        new GameRunnable() {
+            @Override
+            public void run() {
+                Location min = selection.getMin();
+                Location max = selection.getMax();
+                World world = min.getWorld();
+                
+                int Lx = max.getBlockX() - min.getBlockX() + 1;
+                int Ly = max.getBlockY() - min.getBlockY() + 1;
+                int Lz = max.getBlockZ() - min.getBlockZ() + 1;
+                
+                if (blocks == null || data == null || blocks.length != Lx*Ly*Lz || data.length != Lx*Ly*Lz/2) {
+                    game.getLogger().log(Level.WARNING, "Tried to regen but block data is wrong length: " + regionName);
+                    return;
                 }
-            }
-        }
-        
-        for (int i = 0; i < blockUpdates.size(); i++) {
-            final List<BlockState> states = blockUpdates.get(i);
-            new GameRunnable() {
-                @Override
-                public void run() {
-                    for (BlockState state : states) {
-                        state.update(true, false);
+                
+                List<List<BlockState>> blockUpdates = Lists.newArrayList();
+                
+                for (int i = 0; i < Math.ceil(((double) blocks.length) / MAX_BLOCKS_PER_INTERVAL); i++) {
+                    blockUpdates.add(Lists.<BlockState>newArrayList());
+                }
+                
+                int blockCount = 0;
+                for (int i = 0; i < Lx; i++) {
+                    int x = i + min.getBlockX();
+                    for (int j = 0; j < Ly; j++) {
+                        int y = j + min.getBlockY();
+                        for (int k = 0; k < Lz; k++) {
+                            int updateIndex = (int) Math.floor(blockCount / MAX_BLOCKS_PER_INTERVAL);
+                            int z = k + min.getBlockZ();
+                            int index = i + j * Lx + k * Lx * Ly;
+                            BlockState state = world.getBlockAt(x, y, z).getState();
+                            state.setTypeId(blocks[index]);
+                            state.setRawData((byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))));
+                            blockUpdates.get(updateIndex).add(state);
+                            blockCount++;
+                        }
                     }
                 }
-            }.runTaskLater(i * INTERVAL_LENGTH);
-        }
+                
+                for (int i = 0; i < blockUpdates.size(); i++) {
+                    final List<BlockState> states = blockUpdates.get(i);
+                    new GameRunnable() {
+                        @Override
+                        public void run() {
+                            for (BlockState state : states) {
+                                state.update(true, false);
+                            }
+                        }
+                    }.runTaskLater(i * INTERVAL_LENGTH);
+                }
+            }
+        }.runTaskAsynchronously();
     }
     
     public void save() {
