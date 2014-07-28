@@ -540,13 +540,11 @@ public abstract class GameBase implements Game {
         useScoreboard = getConfig().getBoolean("use scoreboard");
         graceDuration = getConfig().getInt("grace duration");
         
-        if (useScoreboard) {
         		board = Bukkit.getScoreboardManager().getNewScoreboard();
         		objective = board.registerNewObjective
         			(ChatColor.translateAlternateColorCodes('&', "&6&l" + getType().toString()), "dummy");
         		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         		updateScoreboard();
-        }
 
         for (String key : getConfig().getDefaults().getKeys(false)) {
             if (getConfig().get(key, null) == null) {
