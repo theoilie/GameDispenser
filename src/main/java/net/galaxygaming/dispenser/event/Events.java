@@ -49,7 +49,7 @@ class Events implements Listener {
      * Prevent players from using blacklisted commands while in game
      */
     @EventHandler(ignoreCancelled = true)
-    public void onPlayerCommandPreproces(PlayerCommandPreprocessEvent event) {
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         if (GameManager.getInstance().getGameForPlayer(event.getPlayer()) == null) {
             return;
         }
