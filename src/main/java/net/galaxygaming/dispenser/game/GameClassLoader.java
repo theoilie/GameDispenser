@@ -95,6 +95,17 @@ public class GameClassLoader extends URLClassLoader {
         return result;
     }
     
+    @Override
+    public URL getResource(String name) {
+        URL result = super.findResource(name);
+        
+        if (result == null) {
+            result = super.getResource(name);
+        }
+        
+        return result;
+    }
+    
     Set<String> getClasses() {
         return classes.keySet();
     }
