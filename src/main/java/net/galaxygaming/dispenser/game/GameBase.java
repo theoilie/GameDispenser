@@ -76,7 +76,7 @@ public abstract class GameBase implements Game {
     protected int gameTime;
     
     /** The option to use a built-in scoreboard */
-    protected boolean useScoreboard;
+    protected boolean useScoreboardPlayers, useScoreboardTime;
     
     /** The game's scoreboard */
     protected Scoreboard board;
@@ -522,7 +522,8 @@ public abstract class GameBase implements Game {
         getConfig().addDefault("maximum players", 0);
         getConfig().addDefault("countdown duration", 30);
         getConfig().addDefault("game time", -1);
-        getConfig().addDefault("use scoreboard", true);
+        getConfig().addDefault("use scoreboard players", false);
+        getConfig().addDefault("use scoreboard time", false);
         getConfig().addDefault("grace duration", 5);
                 		
         if (getConfig().isList("signs")) {
@@ -537,7 +538,8 @@ public abstract class GameBase implements Game {
         maximumPlayers = getConfig().getInt("maximum players");
         countdownDuration = getConfig().getInt("countdown duration");
         gameTime = getConfig().getInt("game time");
-        useScoreboard = getConfig().getBoolean("use scoreboard");
+        useScoreboardPlayers = getConfig().getBoolean("use scoreboard players");
+        useScoreboardTime = getConfig().getBoolean("use scoreboard time");
         graceDuration = getConfig().getInt("grace duration");
         
         		board = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -553,30 +555,37 @@ public abstract class GameBase implements Game {
         }
     }
     
-    protected void updateScoreboard() {
-		if (!useScoreboard)
-			return;
-		if (playerTagScore > 0) {
-			Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&6&lPlayers"));
-			if (score.getScore() != playerTagScore)
-				score.setScore(playerTagScore);
+	protected void updateScoreboard() {
+		if (useScoreboardPlayers) {
+			if (playerTagScore > 0) {
+				Score score = objective.getScore(ChatColor
+						.translateAlternateColorCodes('&', "&6&lPlayers"));
+				if (score.getScore() != playerTagScore)
+					score.setScore(playerTagScore);
+			}
+
+			if (playerCounterScore > 0) {
+				board.resetScores(lastPlayerCount + "");
+				lastPlayerCount = getPlayers().length;
+				objective.getScore(lastPlayerCount + "").setScore(
+						playerCounterScore);
+			}
 		}
-		if (playerCounterScore > 0) {
-			board.resetScores(lastPlayerCount + "");
-			lastPlayerCount = getPlayers().length;
-			objective.getScore(lastPlayerCount + "").setScore(playerCounterScore);
+		if (useScoreboardTime) {
+			if (this.timeTagScore > 0) {
+				Score score = objective.getScore(ChatColor
+						.translateAlternateColorCodes('&', "&6&lTime"));
+				if (score.getScore() != timeTagScore)
+					score.setScore(timeTagScore);
+			}
+			if (timeCounterScore > 0) {
+				board.resetScores(lastTimeRemaining + "");
+				lastTimeRemaining = counter;
+				objective.getScore(lastTimeRemaining + "").setScore(
+						timeCounterScore);
+			}
 		}
-		if (this.timeTagScore > 0) {
-			Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&6&lTime"));
-			if (score.getScore() != timeTagScore)
-				score.setScore(timeTagScore);
-		}
-		if (timeCounterScore > 0) {
-			board.resetScores(lastTimeRemaining + "");
-			lastTimeRemaining = counter;
-			objective.getScore(lastTimeRemaining + "").setScore(timeCounterScore);
-		}
-    }
+	}
     
     protected void setBoardForAll() {
 		for (Player player : getPlayers()) {
