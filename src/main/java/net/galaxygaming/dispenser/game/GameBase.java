@@ -304,6 +304,7 @@ public abstract class GameBase implements Game {
         }
         
         if (tick % 20 == 0 && counter > 0) {
+        		onSecond();
             updateScoreboard();
             if (counter % 60 == 0 
                     || (counter < 60 && counter % 30 == 0)
@@ -408,7 +409,7 @@ public abstract class GameBase implements Game {
     }
     
     /* Override the following methods and let
-     * devs choose whether to use them
+     * devs choose whether to use them or not
      */
     @Override
     public void onSave() {}
@@ -421,6 +422,9 @@ public abstract class GameBase implements Game {
     
     @Override
     public void onTick() {}
+    
+    @Override
+    public void onSecond() {}
     
     @Override
     public void onEnd() {}

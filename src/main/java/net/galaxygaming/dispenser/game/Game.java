@@ -175,6 +175,11 @@ public interface Game {
     public void onTick();
     
     /**
+     * Do stuff every 20 ticks (1 second)
+     */
+    public void onSecond();
+    
+    /**
      * Do stuff whenever a player joins
      * @param player
      */
