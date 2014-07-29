@@ -41,7 +41,7 @@ class Events implements Listener {
         if (game == null)
             return;
         
-        game.broadcast(event.getFormat(), event.getPlayer(), event.getMessage());
+        game.broadcast(String.format(event.getFormat(), event.getPlayer(), event.getMessage()));
         event.setCancelled(true);
     }
     
