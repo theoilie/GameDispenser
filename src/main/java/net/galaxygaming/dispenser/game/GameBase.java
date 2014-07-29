@@ -568,7 +568,7 @@ public abstract class GameBase implements Game {
 	}
     
 	/** 
-	 * Counts players for scoreboard. override to count differently. 
+	 * Counts players for scoreboard. Override to count differently. 
 	 */
 	protected void updatePlayerBoard() {
 		if (playerTagScore > 0) {
