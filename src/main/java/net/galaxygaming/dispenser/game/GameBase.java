@@ -556,37 +556,53 @@ public abstract class GameBase implements Game {
     }
     
 	protected void updateScoreboard() {
-		if (useScoreboardPlayers) {
-			if (playerTagScore > 0) {
-				Score score = objective.getScore(ChatColor
-						.translateAlternateColorCodes('&', "&6&lPlayers"));
-				if (score.getScore() != playerTagScore)
-					score.setScore(playerTagScore);
-			}
-
-			if (playerCounterScore > 0) {
-				board.resetScores(lastPlayerCount + "");
-				lastPlayerCount = getPlayers().length;
-				objective.getScore(lastPlayerCount + "").setScore(
-						playerCounterScore);
-			}
-		}
-		if (useScoreboardTime) {
-			if (this.timeTagScore > 0) {
-				Score score = objective.getScore(ChatColor
-						.translateAlternateColorCodes('&', "&6&lTime"));
-				if (score.getScore() != timeTagScore)
-					score.setScore(timeTagScore);
-			}
-			if (timeCounterScore > 0) {
-				board.resetScores(lastTimeRemaining + "");
-				lastTimeRemaining = counter;
-				objective.getScore(lastTimeRemaining + "").setScore(
-						timeCounterScore);
-			}
-		}
+		if (useScoreboardPlayers)
+			updatePlayerBoard();
+		
+		if (useScoreboardTime)
+			updateTimeBoard();
 	}
     
+	/** 
+	 * Counts players for scoreboard. override to count differently. 
+	 */
+	protected void updatePlayerBoard() {
+		if (playerTagScore > 0) {
+			Score score = objective.getScore(ChatColor
+					.translateAlternateColorCodes('&', "&6&lPlayers"));
+			if (score.getScore() != playerTagScore)
+				score.setScore(playerTagScore);
+		}
+
+		if (playerCounterScore > 0) {
+			board.resetScores(lastPlayerCount + "");
+			lastPlayerCount = getPlayers().length;
+			objective.getScore(lastPlayerCount + "").setScore(
+					playerCounterScore);
+		}
+	}
+	
+	/**
+	 *  Decrements time. Override to change up the countdown.
+	 */
+	protected void updateTimeBoard() {
+		if (this.timeTagScore > 0) {
+			Score score = objective.getScore(ChatColor
+					.translateAlternateColorCodes('&', "&6&lTime"));
+			if (score.getScore() != timeTagScore)
+				score.setScore(timeTagScore);
+		}
+		if (timeCounterScore > 0) {
+			board.resetScores(lastTimeRemaining + "");
+			lastTimeRemaining = counter;
+			objective.getScore(lastTimeRemaining + "").setScore(
+					timeCounterScore);
+		}
+	}
+	
+	/**
+	 * Sets the scoreboard for all players
+	 */
     protected void setBoardForAll() {
 		for (Player player : getPlayers()) {
 			if (player.getScoreboard() != board)
