@@ -32,7 +32,7 @@ public class MessagesResource {
         
     public String getMessage(String key) {
         String result = null;
-        if (messages != null) {
+        if (messages != null && messages.containsKey(key)) {
             result = messages.getString(key);
         }
 
