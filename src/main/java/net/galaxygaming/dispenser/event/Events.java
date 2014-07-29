@@ -50,6 +50,10 @@ class Events implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onPlayerCommandPreproces(PlayerCommandPreprocessEvent event) {
+        if (GameManager.getInstance().getGameForPlayer(event.getPlayer()) == null) {
+            return;
+        }
+        
         String command = event.getMessage()
                 .replaceAll("^/*", "") // Remove forward slash if exists
                 .replaceAll(" .*", ""); // Remove anything after first word
