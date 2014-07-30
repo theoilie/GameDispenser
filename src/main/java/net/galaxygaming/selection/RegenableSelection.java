@@ -58,7 +58,7 @@ public class RegenableSelection {
         int Lz = max.getBlockZ() - min.getBlockZ() + 1;
         
         blocks = new byte[Lx*Ly*Lz];
-        data = new byte[(int) Math.ceil(blocks.length / 2)];
+        data = new byte[(int) Math.ceil((double) blocks.length / 2)];
         
         for (int i = 0; i < Lx; i++) {
             int x = i + min.getBlockX();
@@ -69,8 +69,8 @@ public class RegenableSelection {
                     int index = i + j * Lx + k * Lx * Ly;
                     Block b = new Location(min.getWorld(), x, y, z).getBlock();
                     blocks[index] = (byte) b.getTypeId();
-                    byte d = data[(int) Math.floor(index / 2)];                    
-                    data[(int) Math.floor(index / 2)] = (byte) (d + (b.getData() << (4 * (index % 2))));
+                    byte d = data[index / 2];                    
+                    data[index / 2] = (byte) (d + (b.getData() << (4 * (index % 2))));
                 }
             }
         }
