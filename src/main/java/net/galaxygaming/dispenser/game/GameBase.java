@@ -397,11 +397,16 @@ public abstract class GameBase implements Game {
                     player.getName(), players.size(), 
                     maximumPlayers > 0 ? maximumPlayers : "\u221e");
         }
-        
+
         GameManager.getInstance().removePlayerFromGame(player);
         players.remove(player);
         if (getMetadata(player, "gameLastLocation") != null) {
-            player.teleport((Location) getMetadata(player, "gameLastLocation").value());
+            Location loc = (Location) getMetadata(player, "gameLastLocation").value();
+            if (player.isDead()) {
+                player.setBedSpawnLocation(loc, true);
+            } else {
+                player.teleport(loc);
+            }
             removeMetadata(player, "gameLastLocation");
         }
         updateSigns();
