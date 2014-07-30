@@ -3,6 +3,8 @@
  */
 package net.galaxygaming.dispenser.event;
 
+import java.util.List;
+
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
@@ -26,6 +28,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.metadata.MetadataValue;
 
 /**
  * @author t7seven7t
@@ -64,6 +68,22 @@ class Events implements Listener {
                 event.setCancelled(true);
                 return;
             }
+        }
+    }
+    
+    /*
+     * Respawn dead players where they were before joining a game
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        if (GameManager.getInstance().getGameForPlayer(event.getPlayer()) != null) {
+            return;
+        }
+        
+        // Hopefully no one else registers metadata with this name lol
+        List<MetadataValue> metadata = event.getPlayer().getMetadata("gameLastLocation");
+        if (metadata != null && !metadata.isEmpty()) {
+            event.setRespawnLocation((Location) metadata.get(0).value());
         }
     }
     

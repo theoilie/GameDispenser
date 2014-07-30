@@ -402,12 +402,10 @@ public abstract class GameBase implements Game {
         players.remove(player);
         if (getMetadata(player, "gameLastLocation") != null) {
             Location loc = (Location) getMetadata(player, "gameLastLocation").value();
-            if (player.isDead()) {
-                player.setBedSpawnLocation(loc, true);
-            } else {
+            if (!player.isDead()) {
                 player.teleport(loc);
+                removeMetadata(player, "gameLastLocation");
             }
-            removeMetadata(player, "gameLastLocation");
         }
         updateSigns();
         updateScoreboard();
