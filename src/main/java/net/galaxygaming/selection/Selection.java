@@ -6,7 +6,6 @@ import net.galaxygaming.util.LocationUtil;
 import net.galaxygaming.util.SelectionUtil;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
@@ -80,25 +79,26 @@ public class Selection implements ConfigurationSerializable {
 				.equals(pointTwo.getWorld());
 	}
 	
-	public Map<Location, Block> getBlocks() {
-		Map<Location, Block> blocks = Maps.newHashMap();
-		
-		World world = pointOne.getWorld();
-		int x1 = pointOne.getBlockX(), y1 = pointOne.getBlockY(), z1 = pointOne.getBlockZ();
-		int x2 = pointTwo.getBlockX(), y2 = pointTwo.getBlockY(), z2 = pointTwo.getBlockZ();
-		
-		int maxX = Math.max(x1, x2);
-		int maxY = Math.max(y1, y2);
-		int maxZ = Math.max(z1, z2);
-		
-		for (int minX = Math.min(x1, x2); minX < maxX; minX++) {
-			for (int minY = Math.min(y1, y2); minY < maxY; minY++) {
-				for (int minZ = Math.min(z1, z2); minZ < maxZ; minZ++) {
-					Location loc = new Location(world, minX, minY, minZ);
-					blocks.put(loc, world.getBlockAt(loc));
-				}
-			}
-		}
+	public Block[] getBlocks() {
+        Location min = getMin();
+        Location max = getMax();
+        
+        int Lx = max.getBlockX() - min.getBlockX() + 1;
+        int Ly = max.getBlockY() - min.getBlockY() + 1;
+        int Lz = max.getBlockZ() - min.getBlockZ() + 1;
+        
+        Block[] blocks = new Block[Lx*Ly*Lz];
+
+	    for (int i = 0; i < Lx; i++) {
+	        int x = i + min.getBlockX();
+	        for (int j = 0; j < Ly; j++) {
+	            int y = j + min.getBlockY();
+	            for (int k = 0; k < Lz; k++) {
+	                int z = k + min.getBlockZ();
+	                blocks[i + j * Lx + k * Lx * Ly] = min.getWorld().getBlockAt(x, y, z);
+	            }
+	        }
+	    }
 		return blocks;
 	}
 	
