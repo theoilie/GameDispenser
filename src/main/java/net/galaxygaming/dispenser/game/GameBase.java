@@ -302,38 +302,43 @@ public abstract class GameBase implements Game {
             end();
             return;
         }
-        
-        if (tick % 20 == 0 && counter > 0) {
-        		onSecond();
-            updateScoreboard();
-            if (counter % 60 == 0 
-                    || (counter < 60 && counter % 30 == 0)
-                    || (counter <= 5 && counter > 0)) {
-                if (getState().ordinal() == GameState.STARTING.ordinal()) {
-                    broadcast(type.getMessages().getMessage("game.countdown.start"), counter);
-                } else if (getState().ordinal() > GameState.GRACE.ordinal()) {
-                    broadcast(type.getMessages().getMessage("game.countdown.end"), counter);
-                }
-            }
-            
-            counter--;
-            
-            if (counter <= 0) {
-                if (getState().ordinal() == GameState.STARTING.ordinal()) {
-                    start();
-                } else if (getState().ordinal() == GameState.GRACE.ordinal()) {
-                    setState(GameState.ACTIVE);
-                    counter = gameTime;
-                } else if (getState().ordinal() > GameState.GRACE.ordinal()) {
-                    end();
-                }
-            }
-            
-            if (players.size() == 0) {
-                end();
-                counter = 0;
-            }
-        }
+		if (tick % 20 == 0) {
+			onSecond();
+			if (counter > 0) {
+				updateScoreboard();
+				if (counter % 60 == 0 || (counter < 60 && counter % 30 == 0)
+						|| (counter <= 5 && counter > 0)) {
+					if (getState().ordinal() == GameState.STARTING.ordinal()) {
+						broadcast(
+								type.getMessages().getMessage(
+										"game.countdown.start"), counter);
+					} else if (getState().ordinal() > GameState.GRACE.ordinal()) {
+						broadcast(
+								type.getMessages().getMessage(
+										"game.countdown.end"), counter);
+					}
+				}
+
+				counter--;
+
+				if (counter <= 0) {
+					if (getState().ordinal() == GameState.STARTING.ordinal()) {
+						start();
+					} else if (getState().ordinal() == GameState.GRACE
+							.ordinal()) {
+						setState(GameState.ACTIVE);
+						counter = gameTime;
+					} else if (getState().ordinal() > GameState.GRACE.ordinal()) {
+						end();
+					}
+				}
+
+				if (players.size() == 0) {
+					end();
+					counter = 0;
+				}
+			}
+		}
         
         tick++;
         if (tick >= 20)
