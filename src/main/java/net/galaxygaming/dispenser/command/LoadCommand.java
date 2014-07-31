@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import org.bukkit.permissions.Permission;
@@ -8,9 +5,6 @@ import org.bukkit.permissions.Permission;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.InvalidGameException;
 
-/**
- * @author t7seven7t
- */
 class LoadCommand extends Command {
 
     public LoadCommand() {

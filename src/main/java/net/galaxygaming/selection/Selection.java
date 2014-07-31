@@ -12,6 +12,12 @@ import org.bukkit.entity.Player;
 
 import com.google.common.collect.Maps;
 
+/**
+ * Selections are made to define areas.
+ * For restoring selections see
+ * {@link net.galaxygaming.selection.RegenableSelection}
+ * class.
+ */
 public class Selection implements ConfigurationSerializable {
 	private transient Player player;
 	private Location pointOne, pointTwo;
@@ -29,14 +35,14 @@ public class Selection implements ConfigurationSerializable {
 	}
 	
 	/**
-	 * clones a selection so its unmodifiable
+	 * Clones a selection so it's unmodifiable
 	 * @param selection
 	 */
 	public Selection(Selection selection) {
 	    this(selection.pointOne, selection.pointTwo);
 	}
 	
-	/*
+	/**
 	 * This is for creating a Selection from 
 	 * a config that does not belong to any 
 	 * specific player, but rather to the server.

@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.io.File;
@@ -9,9 +6,6 @@ import net.galaxygaming.dispenser.MessagesResource;
 
 import com.google.common.collect.Maps;
 
-/**
- * @author t7seven7t
- */
 public class GameType {
     private static final Map<String, GameType> lookup = Maps.newConcurrentMap();
     

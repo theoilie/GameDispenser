@@ -5,9 +5,6 @@ import org.bukkit.permissions.Permission;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
 
-/**
- * 
- */
 class ComponentCommand extends Command {
 
     public ComponentCommand() {

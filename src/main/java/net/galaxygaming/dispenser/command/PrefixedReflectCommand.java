@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import java.util.List;
@@ -13,9 +10,6 @@ import org.bukkit.command.CommandSender;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-/**
- * @author t7seven7t
- */
 class PrefixedReflectCommand extends ReflectCommand implements CommandExecutor {
 
     private final Set<Command> subCommands;

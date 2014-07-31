@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import org.bukkit.permissions.Permission;
@@ -8,9 +5,6 @@ import org.bukkit.permissions.Permission;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
 
-/**
- * @author t7seven7t
- */
 class EndCommand extends Command {
 
     public EndCommand() {

@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import java.util.Arrays;
@@ -12,9 +9,6 @@ import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.SelectionUtil;
 
-/**
- * @author t7seven7t
- */
 class SetCommand extends Command {
 
     public SetCommand() {

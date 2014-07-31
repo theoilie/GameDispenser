@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.util.logging.LogRecord;
@@ -8,10 +5,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.Plugin;
 
-/**
- * @author t7seven7t
- */
 class GameLogger extends Logger {
+
     private String gameName;
     private String pluginName;
     

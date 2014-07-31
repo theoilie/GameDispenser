@@ -16,10 +16,7 @@ public class TeamBase implements Team {
 	public void add(Player player) {
 	    members.add(player);
 	}
-
-	/*
-	 * Checking for contains before removal is unnecessary
-	 */
+	
 	@Override
 	public void remove(Player player) {
 	    members.remove(player);

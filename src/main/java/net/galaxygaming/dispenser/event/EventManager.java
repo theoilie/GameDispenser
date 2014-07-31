@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.event;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,9 +26,6 @@ import org.bukkit.plugin.EventExecutor;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-/**
- * @author t7seven7t
- */
 public class EventManager {
     
     /** Singleton instance */

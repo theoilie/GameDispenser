@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.io.InputStream;
@@ -14,9 +11,6 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-/**
- * @author t7seven7t
- */
 public class GameDescriptionFile {
     private static final Yaml yaml = new Yaml(new SafeConstructor());
     private String name;

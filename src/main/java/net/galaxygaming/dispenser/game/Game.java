@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.util.List;
@@ -15,9 +12,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.Metadatable;
 
-/**
- * @author t7seven7t
- */
 public interface Game {
     
     /**

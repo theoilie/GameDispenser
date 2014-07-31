@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.io.File;
@@ -20,11 +17,9 @@ import org.bukkit.plugin.PluginLoader;
 import com.avaje.ebean.EbeanServer;
 
 /**
- * @author t7seven7t
- * 
- * This class should not be accessed by anything, only act
- * as an object to trick bukkit's metadata system so that
- * each game can have its own metadata storage
+ * This class should not be accessed by anything, and only
+ * act as an object to trick bukkit's metadata system so
+ * that each game can have its own metadata storage.
  */
 class FakePlugin implements Plugin {
 
@@ -139,5 +134,4 @@ class FakePlugin implements Plugin {
     public void setNaggable(boolean arg0) {
         
     }
-
 }

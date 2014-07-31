@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.io.File;
@@ -29,9 +26,6 @@ import com.google.common.collect.Sets;
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.GameLoader;
 
-/**
- * @author t7seven7t
- */
 public class GameManager {
     
     public static final String GAME_CONFIG_EXTENSION = ".yml";

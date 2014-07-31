@@ -5,9 +5,6 @@ import net.galaxygaming.util.SelectionUtil;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permission;
 
-/**
- * 
- */
 class WandCommand extends Command {
 
     public WandCommand() {

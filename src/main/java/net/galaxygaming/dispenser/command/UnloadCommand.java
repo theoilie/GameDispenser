@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import org.bukkit.permissions.Permission;
@@ -10,9 +7,6 @@ import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.GameType;
 import net.galaxygaming.dispenser.game.InvalidGameException;
 
-/**
- * @author t7seven7t
- */
 class UnloadCommand extends Command {
 
     public UnloadCommand() {

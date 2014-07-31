@@ -1,13 +1,7 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import org.bukkit.ChatColor;
 
-/**
- * @author t7seven7t
- */
 public class GameState {
     
     public static final GameState   
@@ -26,14 +20,19 @@ public class GameState {
     }
     
     /**
-     * Returns the ordinal of this GameState (its position in 
-     * the progression of a game)
+     * Returns the ordinal of this GameState (its
+     * position in the progression of a game)
      * @return the ordinal of this state
      */
     public int ordinal() {
         return this.ordinal;
     }
     
+    /**
+     * Returns a more meaningful name
+     * to display on signs, etc...
+     * @return the name of the state
+     */
     public String getFancyName() {
         return name;
     }

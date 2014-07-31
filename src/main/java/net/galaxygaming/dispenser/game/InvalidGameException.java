@@ -1,11 +1,5 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
-/**
- * @author t7seven7t
- */
 public class InvalidGameException extends Exception {
     private static final long serialVersionUID = 6909203799009299139L;
     

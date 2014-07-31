@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.event;
 
 import java.util.List;
@@ -31,9 +28,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.metadata.MetadataValue;
 
-/**
- * @author t7seven7t
- */
 class Events implements Listener {
 
     /*

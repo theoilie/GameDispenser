@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.io.File;
@@ -23,10 +20,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-/**
- * @author t7seven7t
- */
-public class GameClassLoader extends URLClassLoader {
+class GameClassLoader extends URLClassLoader {
 
     private final GameLoader loader;
     private final Map<String, Class<?>> classes;

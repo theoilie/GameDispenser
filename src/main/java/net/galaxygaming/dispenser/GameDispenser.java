@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser;
 
 import java.util.logging.Level;
@@ -16,9 +13,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/**
- * @author t7seven7t
- */
 public class GameDispenser extends JavaPlugin {
 
     private static GameDispenser instance;

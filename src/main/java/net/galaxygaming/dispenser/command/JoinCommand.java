@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import org.bukkit.permissions.Permission;
@@ -10,10 +7,8 @@ import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.GameState;
 
 /**
- * @author t7seven7t
- * 
- * Extend this class to setup a join command
- * No permission set for the command by default
+ * Extend this class to setup a join command.
+ * No permission is set for the command by default.
  */
 class JoinCommand extends Command {
 

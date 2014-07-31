@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.io.File;
@@ -42,9 +39,6 @@ import com.google.common.collect.Sets;
 
 import net.galaxygaming.dispenser.game.GameLoader;
 
-/**
- * @author t7seven7t
- */
 public abstract class GameBase implements Game {
 
     /** The current game state */

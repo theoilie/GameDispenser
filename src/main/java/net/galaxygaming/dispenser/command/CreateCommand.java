@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import net.galaxygaming.dispenser.game.Game;
@@ -10,9 +7,6 @@ import net.galaxygaming.dispenser.game.InvalidGameException;
 
 import org.bukkit.permissions.Permission;
 
-/**
- * @author t7seven7t
- */
 class CreateCommand extends Command {
 
     public CreateCommand() {

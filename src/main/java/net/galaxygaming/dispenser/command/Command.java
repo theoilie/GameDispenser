@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import java.util.List;
@@ -18,9 +15,6 @@ import org.bukkit.permissions.Permission;
 
 import com.google.common.collect.Lists;
 
-/**
- * @author t7seven7t
- */
 public abstract class Command implements CommandExecutor {
     
     private final GameDispenser plugin = GameDispenser.getInstance();

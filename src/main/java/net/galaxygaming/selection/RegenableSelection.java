@@ -19,7 +19,8 @@ import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.task.GameRunnable;
 
 /**
- * 
+ * Used for areas that should be
+ * restored after the game ends
  */
 public class RegenableSelection {    
     private static final int MAX_BLOCKS_PER_INTERVAL = 250;
@@ -226,7 +227,6 @@ public class RegenableSelection {
                 }
             }
         }
-        
         return null;
     }
 }

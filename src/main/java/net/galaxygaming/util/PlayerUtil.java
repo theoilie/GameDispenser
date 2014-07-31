@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.util;
 
 import java.util.List;
@@ -9,9 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-/**
- * @author t7seven7t
- */
 public class PlayerUtil {
 
 	public PlayerUtil() {

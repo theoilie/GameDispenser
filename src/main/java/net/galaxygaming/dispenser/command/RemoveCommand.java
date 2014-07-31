@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import java.util.logging.Level;
@@ -9,9 +6,6 @@ import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
 
-/**
- * @author t7seven7t
- */
 class RemoveCommand extends Command {
 
     public RemoveCommand() {

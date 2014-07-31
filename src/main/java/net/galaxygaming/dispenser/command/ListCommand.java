@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import java.util.List;
@@ -16,9 +13,6 @@ import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.dispenser.game.GameType;
 
-/**
- * @author t7seven7t
- */
 class ListCommand extends Command {
 
     public ListCommand() {

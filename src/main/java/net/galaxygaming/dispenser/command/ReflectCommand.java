@@ -1,15 +1,9 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-/**
- * @author t7seven7t
- */
 class ReflectCommand extends org.bukkit.command.Command {
 
     private CommandExecutor executor;

@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.game;
 
 import java.io.File;
@@ -30,9 +27,6 @@ import net.galaxygaming.dispenser.command.CommandManager;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.util.FormatUtil;
 
-/**
- * @author t7seven7t
- */
 class GameLoader {
 
     private final Map<String, Class<?>> classes;
@@ -217,5 +211,4 @@ class GameLoader {
             }
         }
     }
-    
 }

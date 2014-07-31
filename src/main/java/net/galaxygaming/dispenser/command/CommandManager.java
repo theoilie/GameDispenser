@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.dispenser.command;
 
 import java.lang.reflect.Field;
@@ -16,9 +13,6 @@ import net.galaxygaming.dispenser.game.GameType;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-/**
- * @author t7seven7t
- */
 public class CommandManager {
     
     /** Singleton instance */

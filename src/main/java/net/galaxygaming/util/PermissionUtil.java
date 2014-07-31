@@ -1,15 +1,9 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.util;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 
-/**
- * @author t7seven7t
- */
 public class PermissionUtil {
 
 	public PermissionUtil() {

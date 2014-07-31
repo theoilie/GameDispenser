@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2012 t7seven7t
- */
 package net.galaxygaming.util;
 
 import java.io.File;
@@ -10,9 +7,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * @author t7seven7t
- */
 public class FileResourceLoader extends ClassLoader {
 
 	private final transient File directory;

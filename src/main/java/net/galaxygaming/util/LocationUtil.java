@@ -1,15 +1,9 @@
-/**
- * Copyright (C) 2014 t7seven7t
- */
 package net.galaxygaming.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-/**
- * @author t7seven7t
- */
 public class LocationUtil {
 
 	public LocationUtil() {
