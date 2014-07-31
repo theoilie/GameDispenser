@@ -3,11 +3,13 @@
  */
 package net.galaxygaming.dispenser;
 
+import java.util.logging.Level;
+
 import net.galaxygaming.dispenser.command.CommandManager;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.selection.Selection;
-import net.galaxygaming.util.LogUtil;
+import net.galaxygaming.util.FormatUtil;
 import net.galaxygaming.util.SelectionUtil;
 
 import org.apache.commons.lang.Validate;
@@ -21,7 +23,6 @@ public class GameDispenser extends JavaPlugin {
 
     private static GameDispenser instance;
     
-    private LogUtil log;
     private MessagesResource messages;
     private String[] blacklistedCommands;
         
@@ -37,16 +38,14 @@ public class GameDispenser extends JavaPlugin {
         
         EventManager.getInstance().setup(this);
         CommandManager.getInstance().setup(this);
-        LogUtil.getInstance().setup(this);
-        log = LogUtil.getInstance();
         
         GameManager gameManager = GameManager.getInstance();
         gameManager.setup(this, this.getDataFolder());
         
         SelectionUtil.getInstance().setWand(getConfig().getString("wand"));
                 
-        log.log("Loaded {0} game types.", gameManager.loadGameTypes().length);
-        log.log("Loaded {0} games.", gameManager.loadGames().length);
+        getLogger().log(Level.INFO, FormatUtil.format("Loaded {0} game types.", gameManager.loadGameTypes().length));
+        getLogger().log(Level.INFO, FormatUtil.format("Loaded {0} games.", gameManager.loadGames().length));
     }
     
     public void onDisable() {
