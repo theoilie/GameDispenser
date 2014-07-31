@@ -132,6 +132,9 @@ class Events implements Listener {
 	    onDisconnect(event.getPlayer());
 	}
 	
+	/*
+	 * Remove player from game if they disconnect
+	 */
 	public void onDisconnect(Player player) {
 	    Game game = GameManager.getInstance().getGameForPlayer(player);
 	    if (game == null) {
@@ -141,6 +144,9 @@ class Events implements Listener {
 	    game.removePlayer(player);
 	}
 	
+	/*
+	 * Add game signs
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 	    if (event.getPlayer().hasPermission("gamedispenser.command.sign")) {
@@ -156,6 +162,9 @@ class Events implements Listener {
 	    }
 	}
 	
+	/*
+	 * Remove game signs when broken by anyone/anything
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event) {
 	    if (event.getBlock().getType().equals(Material.SIGN)
@@ -167,6 +176,9 @@ class Events implements Listener {
 	    }
 	}
 	
+	/*
+	 * Add player to game if they interact with a game sign
+	 */
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 	    if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {

@@ -33,7 +33,7 @@ import net.galaxygaming.util.FormatUtil;
 /**
  * @author t7seven7t
  */
-public class GameLoader {
+class GameLoader {
 
     private final Map<String, Class<?>> classes;
     private final Map<String, GameClassLoader> loaders;

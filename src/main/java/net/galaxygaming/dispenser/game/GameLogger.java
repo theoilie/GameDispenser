@@ -11,7 +11,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * @author t7seven7t
  */
-public class GameLogger extends Logger {
+class GameLogger extends Logger {
     private String gameName;
     private String pluginName;
     
