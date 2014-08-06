@@ -19,6 +19,10 @@ import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.EventExecutor;
@@ -70,7 +74,10 @@ public class EventManager {
             if (eh == null) continue;
             final Class<?> checkClass = method.getParameterTypes()[0];
             final Class<? extends Game> gameClass;
-            if (method.getParameterTypes().length == 2 && Game.class.isAssignableFrom(method.getParameterTypes()[1]) && (EntityEvent.class.isAssignableFrom(checkClass) || PlayerEvent.class.isAssignableFrom(checkClass))) {
+            if (method.getParameterTypes().length == 2 && Game.class.isAssignableFrom(method.getParameterTypes()[1]) 
+                    && (EntityEvent.class.isAssignableFrom(checkClass) || PlayerEvent.class.isAssignableFrom(checkClass)
+                            || BlockBreakEvent.class.isAssignableFrom(checkClass) || BlockPlaceEvent.class.isAssignableFrom(checkClass)
+                            || BlockDamageEvent.class.isAssignableFrom(checkClass) || SignChangeEvent.class.isAssignableFrom(checkClass))) {
                 gameClass = method.getParameterTypes()[1].asSubclass(Game.class);
             } else if (method.getParameterTypes().length != 1 || !Event.class.isAssignableFrom(checkClass)) {
                 plugin.getLogger().severe(type.toString() + " attempted to register an invalid EventHandler method signature '" + method.toGenericString() + "' in " + listener.getClass());
@@ -98,6 +105,14 @@ public class EventManager {
                                 if (entity instanceof Player) {
                                     player = (Player) entity;
                                 }
+                            } else if (event instanceof BlockBreakEvent) {
+                                player = ((BlockBreakEvent) event).getPlayer();
+                            } else if (event instanceof BlockPlaceEvent) {
+                                player = ((BlockPlaceEvent) event).getPlayer();
+                            } else if (event instanceof BlockDamageEvent) {
+                                player = ((BlockDamageEvent) event).getPlayer();
+                            } else if (event instanceof SignChangeEvent) {
+                                player = ((SignChangeEvent) event).getPlayer();
                             }
                             
                             if (player == null) {
