@@ -33,6 +33,7 @@ public class KitBase implements Kit {
 	public void load() {
 		ConfigurationSection kitSection = game.getConfig().getConfigurationSection("kits." + configName);
 		String[] itemStrings = kitSection.getString("items").split(",");
+		items = new ItemStack[itemStrings.length];
 		for (int i = 0; i < itemStrings.length; i++) {
 			items[i] = ItemUtil.getInstance().getItem(itemStrings[i]);
 		}
