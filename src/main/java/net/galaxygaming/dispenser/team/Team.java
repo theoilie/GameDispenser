@@ -2,6 +2,9 @@ package net.galaxygaming.dispenser.team;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.galaxygaming.util.FormatUtil;
+
 import org.bukkit.entity.Player;
 
 public class Team {
@@ -18,6 +21,7 @@ public class Team {
      */
 	public void add(Player player) {
 	    members.add(player);
+	    player.sendMessage(FormatUtil.format("&eYou are on the &3" + name + "&e team."));
 	}
 	
 	/**
@@ -26,6 +30,13 @@ public class Team {
      */
 	public void remove(Player player) {
 	    members.remove(player);
+	}
+	
+	/**
+	 * Resets this team to no members
+	 */
+	public void reset() {
+	    members.clear();
 	}
 	
 	/**
