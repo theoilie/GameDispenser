@@ -46,16 +46,36 @@ public class GameDispenser extends JavaPlugin {
         GameManager.getInstance().unloadAll();
     }
     
+    /**
+     * Gets the messages file
+     * @return the messages file
+     */
     public MessagesResource getMessages() {
         return messages;
     }
     
+    /**
+     * Gets the list of blacklisted commands
+     * @return the blacklisted commands
+     */
     public String[] getBlacklistedCommands() {
         return blacklistedCommands.clone();
     }
     
+    /**
+     * Gets the singleton instance
+     * @return singleton instance of GameDispenser
+     */
     public static GameDispenser getInstance() {
-        Validate.notNull(GameDispenser.instance, "GameDispenser is not yet initialized.");
-        return GameDispenser.instance;
-    }   
+        Validate.notNull(instance, "GameDispenser is not yet initialized.");
+        return instance;
+    }
+    
+    /**
+     * Cloning is not supported.
+     */
+    @Override
+    public EventManager clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 }

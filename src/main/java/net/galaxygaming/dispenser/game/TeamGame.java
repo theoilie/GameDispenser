@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import net.galaxygaming.dispenser.exception.TeamException;
 import net.galaxygaming.dispenser.team.Team;
 import net.galaxygaming.util.FormatUtil;
 
@@ -26,8 +27,8 @@ public abstract class TeamGame extends GameBase {
     private final Map<Player, Team> queue = Maps.newLinkedHashMap();
     
     /**
-     * Gives an immutable list of teams in this game 
-     * @return list of teams
+     * Gives an immutable list of teams in this game
+     * @return a list of teams
      */
     public List<Team> getTeams() {
         return Collections.unmodifiableList(teams);
@@ -35,7 +36,7 @@ public abstract class TeamGame extends GameBase {
     
     /**
      * Adds a team to the game's team list
-     * @param team
+     * @param team - the team to be added
      */
     public void addTeam(Team team) {
         teams.add(team);
@@ -45,7 +46,7 @@ public abstract class TeamGame extends GameBase {
      * Removes a team from the team listing.
      * Also removes any players from the
      * team object's player list.
-     * @param team
+     * @param team - the team to remove
      */
     public void removeTeam(Team team) {
         teams.remove(team);
@@ -65,7 +66,7 @@ public abstract class TeamGame extends GameBase {
         Set<Player> players = Sets.newHashSet(getPlayers());
         int teamPlayerCount = players.size() / getTeamCount();
         for (Entry<Player, Team> entry : queue.entrySet()) {
-            // Add queued players in the order they queued but also maintain team balance
+            // Add queued players in the order they queued, but also maintain team balance.
             if (entry.getValue().getSize() < teamPlayerCount) {
                 entry.getValue().add(entry.getKey());
                 players.remove(entry.getKey());
@@ -97,19 +98,17 @@ public abstract class TeamGame extends GameBase {
     }
     
     /**
-     * Queues a player to join a team when 
-     * the game starts
-     * @param player
-     * @param team
+     * Queues a player to join a team when the game starts
+     * @param player - the player to queue
+     * @param team - the team to queue the player for
+     * @throws TeamException if the player gets queued for a team in a different game
      */
-    public void queueForTeam(Player player, Team team) {
-        if (!teams.contains(team)) {
-            throw new RuntimeException("Cannot queue for team as it is not in this game");
-        }
+    public void queueForTeam(Player player, Team team) throws TeamException {
+        if (!teams.contains(team))
+            throw new TeamException("You cannot queue for a team that is not in this game.");
         
-        if (queue.containsKey(player)) {
+        if (queue.containsKey(player))
             queue.remove(player);
-        }
         
         queue.put(player, team);
         
@@ -120,7 +119,6 @@ public abstract class TeamGame extends GameBase {
             }
         }
         
-        player.sendMessage(FormatUtil.format("&eYou are place &3{0}&e in the queue for team &3{1}", count, team.getName()));
-    }
-    
+        player.sendMessage(FormatUtil.format("&eYou are number &6{0}&e in the queue for team &6{1}", count, team.getName()));
+    } 
 }

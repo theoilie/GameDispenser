@@ -6,6 +6,9 @@ import net.galaxygaming.dispenser.MessagesResource;
 
 import com.google.common.collect.Maps;
 
+/**
+ * Used for sorting games by type
+ */
 public class GameType {
     private static final Map<String, GameType> lookup = Maps.newConcurrentMap();
     

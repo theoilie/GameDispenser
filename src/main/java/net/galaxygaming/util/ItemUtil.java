@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.exception.InvalidInputException;
 
 import org.bukkit.Bukkit;
@@ -27,7 +28,7 @@ public class ItemUtil {
 	 * Example: item_name1,diamond_sword,another_item
 	 * See {@link #addEnchantmentsWithoutName(String[], ItemStack)} for enchantment format.
 	 * See {@link #addColor(String[], ItemStack)} for leather coloring format.
-	 * @param item - A String to make the ItemStack (includes information such as name and enchantments).
+	 * @param item a String to make the ItemStack (includes information such as name and enchantments)
 	 * @return ItemStack that was formed.
 	 */
 	public ItemStack getItem(String item) {
@@ -56,9 +57,9 @@ public class ItemUtil {
 	 * Determines whether or not data contains the item name or not,
 	 * and then adds the enchantments to the item.
 	 * This can accept the format item_name/enchantment*level or enchantment*level.
-	 * @param data - The enchantment, with or without the item name.
-	 * @param item - The ItemStack on which the enchantment will be applied.
-	 * @throws InvalidInputException if the input was formatted incorrectly.
+	 * @param data the enchantment, with or without the item name
+	 * @param item the ItemStack on which the enchantment will be applied
+	 * @throws InvalidInputException if the input was formatted incorrectly
 	 */
 	public void addEnchantments(String[] data, ItemStack item) throws InvalidInputException {
 		if (data == null || !data.toString().contains("!"))
@@ -70,9 +71,9 @@ public class ItemUtil {
 	/**
 	 * This does the same thing as {@link #addEnchantments(String[], ItemStack)},
 	 * but with a String instead of an array.
-	 * @param data - The enchantment, with or without the item name.
-	 * @param item - The ItemStack on which the enchantment will be applied.
-	 * @throws InvalidInputException if the input is formatted incorrectly.
+	 * @param data the enchantment, with or without the item name
+	 * @param item the ItemStack on which the enchantment will be applied
+	 * @throws InvalidInputException if the input is formatted incorrectly
 	 */
 	public void addEnchantments(String data, ItemStack item) throws InvalidInputException {
 		// If data contains the item name
@@ -87,9 +88,9 @@ public class ItemUtil {
 	 * Use this instead of {@link #addEnchantments(String[], ItemStack)} if
 	 * your String array does not contain the item name because
 	 * enchantNames requires the enchantments only.
-	 * @param enchantNames - A string array of enchantments to be added.
-	 * @param item - The item which the enchantments should be applied to.
-	 * @throws InvalidInputException if the input is formatted incorrectly.
+	 * @param enchantNames a string array of enchantments to be added
+	 * @param item the item which the enchantments should be applied to
+	 * @throws InvalidInputException if the input is formatted incorrectly
 	 */
 	public void addEnchantmentsWithoutItemName(String[] enchantNames, ItemStack item) throws InvalidInputException {
 		for (String enchant : enchantNames) {
@@ -101,9 +102,9 @@ public class ItemUtil {
 	 * Add a slash for enchantments, and then a * to set the level.
 	 * Individual enchantments are divided by explanation marks.
 	 * Example: item_name/protection*1!featherfalling*2
-	 * @param enc - The enchantment to be added (example: sharpness*1).
-	 * @param item - The item to enchant.
-	 * @throws InvalidInputException if the input is formatted incorrectly.
+	 * @param enc the enchantment to be added (example: sharpness*1)
+	 * @param item the item to enchant
+	 * @throws InvalidInputException if the input is formatted incorrectly
 	 */
 	public void addEnchantment(String enc, ItemStack item) throws InvalidInputException {
 		String[] enchant = null;
@@ -118,9 +119,9 @@ public class ItemUtil {
 	/**
 	 * Checks for leather and adds color from with the format color1!color2!color3.
 	 * Example: leather_chestplate/protection*1/255!255!255
-	 * @param data - The color information, with or without the item name (item_name/color1!color2!color3 OR color1!color2!color3).
-	 * @param item - The leather item to which color will be added.
-	 * @throws InvalidInputException if the colors are invalid.
+	 * @param data the color information, with or without the item name (item_name/color1!color2!color3 OR color1!color2!color3)
+	 * @param item the leather item to which color will be added
+	 * @throws InvalidInputException if the colors are invalid
 	 */
 	public void addColor(String[] data, ItemStack item) throws InvalidInputException {
 		if (!item.getType().name().contains("leather"))
@@ -132,9 +133,9 @@ public class ItemUtil {
 	/**
 	 * This does the same thing as {@link #addColor(String[], ItemStack)}, but without an array.
 	 * A String with or without the item name are acceptable.
-	 * @param data - The String containing three RGB values for leather coloring.
-	 * @param item - The item to color.
-	 * @throws InvalidInputException if the colors are invalid.
+	 * @param data the String containing three RGB values for leather coloring
+	 * @param item the item to color
+	 * @throws InvalidInputException if the colors are invalid
 	 */
 	public void addColor(String data, ItemStack item) throws InvalidInputException {
 		if (data.contains("/"))
@@ -144,10 +145,10 @@ public class ItemUtil {
 	}
 	
 	/**
-	 * Adds color to leather armor based on the three RGB colors given.
-	 * @param data - An array of three RGB colors.
-	 * @param item - The leather item to be colored.
-	 * @throws InvalidInputException if the colors are invalid.
+	 * Adds color to leather armor based on the three RGB colors given
+	 * @param data an array of three RGB colors
+	 * @param item the leather item to be colored
+	 * @throws InvalidInputException if the colors are invalid
 	 */
 	public void addColorAfterCheck(String[] data, ItemStack item) throws InvalidInputException {
 		ItemMeta meta = item.getItemMeta();
@@ -163,9 +164,9 @@ public class ItemUtil {
 	
 	/**
 	 * Turns an enchantment name into an actual Enchantment enum.
-	 * @param name - The name to be translated.
-	 * @return An Enchantment enumeration based on the name.
-	 * @throws InvalidInputException if no enchantment is found.
+	 * @param name the name to be translated
+	 * @return an Enchantment enumeration based on the name
+	 * @throws InvalidInputException if no enchantment is found
 	 */
 	public Enchantment getEnchantment(String name) throws InvalidInputException {
 		String newName = name;
@@ -227,4 +228,12 @@ public class ItemUtil {
 			throw new InvalidInputException("No enchantment was found for: " + name + ". Was everything spelled correctly?");
 		}
 	}
+	
+    /**
+     * Cloning is not supported.
+     */
+    @Override
+    public EventManager clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 }

@@ -17,23 +17,23 @@ public class Team {
 	
 	/**
      * Adds a player to this team
-     * @param player to be added
+     * @param player the player to be added
      */
 	public void add(Player player) {
 	    members.add(player);
-	    player.sendMessage(FormatUtil.format("&eYou are on the &3" + name + "&e team."));
+	    player.sendMessage(FormatUtil.format("&eYou are on the &6" + name + "&e team."));
 	}
 	
 	/**
      * Removes a player from this team
-     * @param player to be removed
+     * @param player the player to be removed
      */
 	public void remove(Player player) {
 	    members.remove(player);
 	}
 	
 	/**
-	 * Resets this team to no members
+	 * Resets this team to have no members
 	 */
 	public void reset() {
 	    members.clear();
@@ -41,8 +41,8 @@ public class Team {
 	
 	/**
      * Checks whether a player is on this team
-     * @param player to check for
-     * @return true if player is on the team
+     * @param player the player to check for
+     * @return true if the player is on this team
      */
 	public boolean isOnTeam(Player player) {
 		return members.contains(player);
@@ -50,7 +50,7 @@ public class Team {
 	
 	/**
      * Gives the number of players on the team
-     * @return team size
+     * @return team count
      */
 	public int getSize() {
 		return members.size();

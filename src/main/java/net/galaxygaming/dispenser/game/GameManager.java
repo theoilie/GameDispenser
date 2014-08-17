@@ -48,10 +48,19 @@ public class GameManager {
         this.gameLoader = new GameLoader();
     }
     
+    /**
+     * Gets the singleton instance
+     * @return GameManager instance
+     */
     public static GameManager getInstance() {
         return instance;
     }
     
+    /**
+     * Sets up the singleton instance
+     * @param plugin the GameDispenser instance
+     * @param directory the directory of GameDispenser
+     */
     public void setup(GameDispenser plugin, File directory) {
         Validate.notNull(directory, "Directory cannot be null");
         Validate.isTrue(directory.isDirectory(), "Directory must be a directory");
@@ -73,6 +82,10 @@ public class GameManager {
         }.runTaskTimer(plugin, 0L, 1L);
     }
     
+    /**
+     * Loads all game types
+     * @return all game types
+     */
     public GameType[] loadGameTypes() {
         Map<GameDescriptionFile, File> jars = Maps.newHashMap();
         Pattern filter = Pattern.compile("\\.jar$");
@@ -191,10 +204,19 @@ public class GameManager {
         return type;
     }
     
+    /**
+     * Loads all games
+     * @return all games
+     */
     public Game[] loadGames() {
         return loadGames(null);
     }
     
+    /**
+     * Loads all game instances for the specified GameType
+     * @param type type of the game to load
+     * @return
+     */
     public Game[] loadGames(GameType type) {
         Pattern filter = Pattern.compile("\\" + GAME_CONFIG_EXTENSION + "$");
         
@@ -223,7 +245,7 @@ public class GameManager {
      * Loads a game by name
      * @param name name of game
      * @return loaded game
-     * @throws InvalidGameException if could not load
+     * @throws InvalidGameException if cannot not load
      */
     public Game loadGame(String name) throws InvalidGameException {
         File file = new File(directory, name + GAME_CONFIG_EXTENSION);
@@ -311,7 +333,7 @@ public class GameManager {
     }
     
     /**
-     * Returns a new game instance of the type given.
+     * Returns a new game instance of the type given
      * @param type type of game
      * @param name name of the instance
      * @return a new game instance
@@ -399,10 +421,9 @@ public class GameManager {
     /**
      * Retrieves a game matching the name specified otherwise null
      * @param name name of game
-     * @return game
+     * @return game based on the name
      */
     public Game getGame(String name) {
-        // Iterators are fastest for small sets but longest for large sets o.o
         Iterator<Game> it = games.iterator();
         while (it.hasNext()) {
             Game game = it.next();
@@ -434,8 +455,8 @@ public class GameManager {
     
     /**
      * Adds a player to the game lookup listing
-     * @param player
-     * @param game
+     * @param player the player to add
+     * @param game the game to add to
      */
     public void addPlayerToGame(Player player, Game game) {
         lookupPlayers.put(player.getName(), game);
@@ -443,7 +464,7 @@ public class GameManager {
     
     /**
      * Removes a player from the lookup listing
-     * @param player
+     * @param player the player to remove
      */
     public void removePlayerFromGame(Player player) {
         lookupPlayers.remove(player.getName());
@@ -451,7 +472,7 @@ public class GameManager {
     
     /**
      * Gives the game a player is currently in otherwise null
-     * @param player
+     * @param player the player to get the game from
      * @return game this player is in, or null if none
      */
     public Game getGameForPlayer(Player player) {
@@ -461,9 +482,9 @@ public class GameManager {
     /**
      * Gives the game a player is currently in
      * only if the game class matches the class
-     * parameter otherwise null
-     * @param player
-     * @param clazz
+     * parameter, otherwise null
+     * @param player the player to get the game from
+     * @param clazz the class of the game
      * @return game the player is in, or null if not
      * an instance of clazz
      */
@@ -476,6 +497,9 @@ public class GameManager {
         return null;
     }
     
+    /**
+     * Cloning is not supported.
+     */
     @Override
     public GameManager clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();

@@ -1,8 +1,7 @@
 package net.galaxygaming.dispenser.team;
 
 /**
- * Creates a team that can be
- * used for spectators
+ * Creates a team for spectators
  */
 public class Spectator extends Team {
 

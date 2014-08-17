@@ -24,7 +24,7 @@ public class GameDescriptionFile {
     }
     
     /**
-     * Gives the name of the game.
+     * Gives the name of the game
      * @return the name of the game
      */
     public String getName() {
@@ -32,7 +32,7 @@ public class GameDescriptionFile {
     }
     
     /**
-     * Gives the fully qualified name for the main class of the game.
+     * Gives the fully qualified name for the main class of the game
      * @return the fully qualified main class for the game
      */
     public String getMain() {
@@ -40,7 +40,7 @@ public class GameDescriptionFile {
     }
     
     /**
-     * Gives the version of the game.
+     * Gives the version of the game
      * @return the version of the game
      */
     public String getVersion() {
@@ -48,7 +48,7 @@ public class GameDescriptionFile {
     }
     
     /**
-     * Gives the name of a game, including the version.
+     * Gives the name of a game, including the version
      * @return the name of the game and respective version
      */
     public String getFullName() {
@@ -56,7 +56,7 @@ public class GameDescriptionFile {
     }
     
     /**
-     * Gives a list of authors of the game.
+     * Gives a list of authors of the game
      * @return an immutable list of the game's authors
      */
     public List<String> getAuthors() {
@@ -64,7 +64,7 @@ public class GameDescriptionFile {
     }
     
     /**
-     * Gives a list of other games this game requires.
+     * Gives a list of other games this game requires
      * @return an immutable list of this game's dependencies
      */
     public List<String> getDepend() {

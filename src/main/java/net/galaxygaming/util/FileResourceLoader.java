@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import net.galaxygaming.dispenser.event.EventManager;
+
 public class FileResourceLoader extends ClassLoader {
 
 	private final transient File directory;
@@ -45,4 +47,12 @@ public class FileResourceLoader extends ClassLoader {
 	    }
 		return super.getResourceAsStream(string);
 	}
+	
+    /**
+     * Cloning is not supported.
+     */
+    @Override
+    public EventManager clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 }

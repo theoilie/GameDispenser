@@ -42,16 +42,28 @@ public class EventManager {
         listeners = Maps.newHashMap();
     }
     
+    /**
+     * Sets up the manager
+     * @param plugin the GameDispenser singleton instance
+     */
     public void setup(GameDispenser plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(new Events(), plugin);
     }
     
+    /**
+     * Cloning is not supported.
+     */
     @Override
     public EventManager clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
     
+    /**
+     * Registers a listener for a GameType
+     * @param listener the listener to be registered
+     * @param type the type of game to register the listener for
+     */
     public void registerListener(Listener listener, GameType type) {
         Set<Method> methods;
         try {
@@ -146,6 +158,10 @@ public class EventManager {
         }          
     }
     
+    /**
+     * Unregisters a listener
+     * @param listener the listener to unregister
+     */
     public void unregisterListener(Listener listener) {
         HandlerList.unregisterAll(listener);
         for (Entry<GameType, Set<Listener>> entry : listeners.entrySet()) {
@@ -155,6 +171,10 @@ public class EventManager {
         }
     }
     
+    /**
+     * Unregisters listeners for a GameType
+     * @param type the type of game to unregister listeners for
+     */
     public void unregisterListeners(GameType type) {
         Set<Listener> listenerSet = listeners.get(type);
         if (listenerSet != null) {
@@ -165,6 +185,10 @@ public class EventManager {
         listeners.remove(type);
     }
     
+    /**
+     * Gets the singleton instance of this clas
+     * @return singleton instance of EventManager
+     */
     public static EventManager getInstance() {
         return instance;
     }   
