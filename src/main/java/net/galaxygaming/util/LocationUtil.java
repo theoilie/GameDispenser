@@ -10,6 +10,11 @@ public class LocationUtil {
 		throw new AssertionError("Cannot instantiate utility class.");
 	}
 	
+	/**
+	 * Converts a Location to a String.
+	 * @param location - The Location to be converted.
+	 * @return The String form of the location parameter.
+	 */
 	public static String serializeLocation(Location location) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(location.getWorld().getName());
@@ -22,6 +27,11 @@ public class LocationUtil {
 		return builder.toString();
 	}
 	
+	/**
+	 * Converts a String to a Location
+	 * @param string - The String to be converted.
+	 * @return The Location form of the string parameter.
+	 */
 	public static Location deserializeLocation(String string) {
 	    if (string == null) {
 	        return null;
