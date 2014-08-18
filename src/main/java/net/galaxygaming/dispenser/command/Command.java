@@ -18,23 +18,47 @@ public abstract class Command implements CommandExecutor {
     
     private final GameDispenser plugin = GameDispenser.getInstance();
     
+    /** The sender of this command */
     protected CommandSender sender;
+    /** The player that sent this command if it was a player */
     protected Player player;
+    /** Arguments the sender sent with the command */
     protected String args[];
     
+    /** The name of this command */
     protected String name = "";
+    /** The description of this command as shown to the user when checking help */
     protected String description = "";
+    /** The permission required to use this command */
     protected Permission permission = null;
     
+    /** Whether the sender must be a player */
     protected boolean mustBePlayer;
+    /** A list of required arguments */
     protected List<String> requiredArgs = Lists.newArrayList();
+    /** A list of optional arguments */
     protected List<String> optionalArgs = Lists.newArrayList();
+    /** A list of aliases this command can be performed as */
     protected List<String> aliases = Lists.newArrayList();
     
+    /** A prefix for this command if desired */
     protected String prefix = "";
     
+    /** 
+     * A {@link MessagesResource} that looks for a messages properties file in 
+     * the game linked to this command's jar file but will fall back to 
+     * GameDispenser's default messages file.
+     */
     protected MessagesResource messages = new MessagesResource(getClass().getClassLoader());
     
+    /**
+     * Called whenever a command passes the following checks:
+     * <ul>
+     * <li>if {@link #mustBePlayer} is true then sender must be an instance of {@link Player}</li>
+     * <li>all required args are entered</li>
+     * <li>sender has the necessary permission required</li>
+     * </ul> 
+     */
     public abstract void perform();
     
     public final boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
@@ -63,6 +87,9 @@ public abstract class Command implements CommandExecutor {
         return true;
     }
     
+    /**
+     * @return true if the sender of this command is a player
+     */
     protected final boolean isPlayer() {
         return (player != null);
     }
@@ -71,6 +98,12 @@ public abstract class Command implements CommandExecutor {
         return sender.hasPermission(permission);
     }
     
+    /**
+     * Checks if a string matches any of the aliases provided
+     * @param arg argument to check
+     * @param aliases aliases
+     * @return true if match found
+     */
     protected final boolean argMatchesAlias(String arg, String... aliases) {
         for (String s : aliases) {
             if (arg.equalsIgnoreCase(s))
@@ -79,10 +112,20 @@ public abstract class Command implements CommandExecutor {
         return false;
     }
     
+    /**
+     * Formats and then sends an error message to the sender
+     * @param message format of the message
+     * @param args any formatting parameters
+     */
     protected final void error(String message, Object... args) {
         sendMessage(messages.getMessage(CommandMessage.ERROR), FormatUtil.format(message, args));
     }
     
+    /**
+     * Sends an error message about this exception and prints stack trace
+     * @param message contents of message
+     * @param t throwable
+     */
     protected final void error(String message, Throwable t) {
         error(message);
         if (t.getStackTrace() != null && t.getStackTrace().length != 0) {
@@ -91,10 +134,20 @@ public abstract class Command implements CommandExecutor {
         }
     }
     
+    /**
+     * Formats and then sends a message to the sender
+     * @param message format of the message
+     * @param args any formatting parameters
+     */
     protected final void sendMessage(String message, Object... args) {
         sender.sendMessage(ChatColor.YELLOW + FormatUtil.format(message, args));
     }
     
+    /**
+     * Prints an array of objects, 30 a page
+     * @param page page to print
+     * @param objects array of objects
+     */
     protected final void printList(int page, Object[] objects) {
         int total = objects.length;
         int pages = total / 30;
@@ -112,30 +165,59 @@ public abstract class Command implements CommandExecutor {
         sendMessage(result.toString());
     }
     
+    /**
+     * Gives the name of this command
+     * @return name
+     */
     public final String getName() {
         return name;
     }
     
+    /**
+     * Gives the description for this command
+     * @return description
+     */
     public final String getDescription() {
         return description;
     }
     
+    /**
+     * Returns true if this command has a prefix, otherwise false
+     * @return true if prefixed
+     */
     public final boolean hasPrefix() {
         return prefix != null && !prefix.isEmpty();
     }
     
+    /**
+     * Gives the prefix for this command
+     * @return prefix
+     */
     public final String getPrefix() {
         return prefix;
     }
     
+    /**
+     * Gives a list of aliases associated with this command
+     * @return aliases
+     */
     public final List<String> getAliases() {
         return aliases;
     }
     
+    /**
+     * A reference to GameDispenser
+     * @return GameDispenser main instance
+     */
     protected final GameDispenser getPlugin() {
         return plugin;
     }
     
+    /**
+     * Gives a string representing how this command can be used
+     * @param displayHelp
+     * @return usage string
+     */
     public String getUsageTemplate(final boolean displayHelp) {
         StringBuilder result = new StringBuilder();
         result.append("&b/");
@@ -166,6 +248,9 @@ public abstract class Command implements CommandExecutor {
         return FormatUtil.format(result.toString());
     }
     
+    /**
+     * Predefined messages in GameDispenser's {@link MessagesResource}.
+     */
     protected class CommandMessage {
         protected static final String
             ERROR                        = "commands.error",
@@ -185,12 +270,12 @@ public abstract class Command implements CommandExecutor {
             NO_COMPONENT                 = "commands.noComponent",
             NO_PAGE                      = "commands.noPage",
             NOT_A_NUMBER                 = "commands.notANumber",
-            SET_COMPONENT_SUCCESS		= "commands.setComponentSuccess",
-            GAME_CREATE_SUCCESS			= "commands.gameCreated",
-            GAME_END_ATTEMPT				= "commands.attemptGameEnd",
-            GAME_START_ATTEMPT			= "commands.attemptGameStart",
-            GAME_LOADED					= "commands.gameLoaded",
-            GAME_UNLOADED				= "commands.gameUnloaded",
-        		WAND_MESSAGE					= "selection.wandMessage";
+            SET_COMPONENT_SUCCESS		 = "commands.setComponentSuccess",
+            GAME_CREATE_SUCCESS			 = "commands.gameCreated",
+            GAME_END_ATTEMPT			 = "commands.attemptGameEnd",
+            GAME_START_ATTEMPT			 = "commands.attemptGameStart",
+            GAME_LOADED					 = "commands.gameLoaded",
+            GAME_UNLOADED				 = "commands.gameUnloaded",
+            WAND_MESSAGE			     = "selection.wandMessage";
     }   
 }
