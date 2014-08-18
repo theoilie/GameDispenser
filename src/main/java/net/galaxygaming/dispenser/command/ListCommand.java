@@ -25,11 +25,11 @@ class ListCommand extends Command {
     @Override
     public void perform() {
         Map<GameType, List<Game>> map = Maps.newHashMap();
-        for (GameType gameType : GameManager.getInstance().getGameTypes()) {
+        for (GameType gameType : GameManager.getGameManager().getGameTypes()) {
             map.put(gameType, Lists.<Game>newArrayList());
         }
         
-        for (Game game : GameManager.getInstance().getGames()) {
+        for (Game game : GameManager.getGameManager().getGames()) {
             map.get(game.getType()).add(game);
         }
         

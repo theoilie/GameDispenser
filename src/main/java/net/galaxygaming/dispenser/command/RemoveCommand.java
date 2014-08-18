@@ -16,13 +16,13 @@ class RemoveCommand extends Command {
     
     @Override
     public void perform() {
-        Game game = GameManager.getInstance().getGame(args[0]);
+        Game game = GameManager.getGameManager().getGame(args[0]);
         if (game == null) {
             error(messages.getMessage(CommandMessage.UNKNOWN_GAME), args[0]);
             return;
         }
         
-        GameManager.getInstance().deleteGame(game);
+        GameManager.getGameManager().deleteGame(game);
         sendMessage(messages.getMessage(CommandMessage.GAME_DELETED), args[0]);
         GameDispenser.getInstance().getLogger().log(Level.INFO, player.getName() + " has deleted the game " + args[0]);
     }

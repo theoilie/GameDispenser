@@ -52,7 +52,7 @@ public class GameManager {
      * Gets the singleton instance
      * @return GameManager instance
      */
-    public static GameManager getInstance() {
+    public static GameManager getGameManager() {
         return instance;
     }
     

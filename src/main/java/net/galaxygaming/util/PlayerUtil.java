@@ -12,8 +12,13 @@ public class PlayerUtil {
 		throw new AssertionError("Cannot instantiate utility class.");	
 	}
 	
-    public static Player matchPlayer(String p) {
-        List<Player> players = Bukkit.matchPlayer(p);
+	/**
+	 * Retrieves a player with a name similar to the string given.
+	 * @param string player name
+	 * @return player or null if no match
+	 */
+    public static Player matchPlayer(String string) {
+        List<Player> players = Bukkit.matchPlayer(string);
         
         if (players.size() >= 1)
             return players.get(0);
@@ -21,12 +26,21 @@ public class PlayerUtil {
         return null;
     }
     
-    public static OfflinePlayer matchOfflinePlayer(String p) {
-        if (matchPlayer(p) != null)
-            return matchPlayer(p);
+    /**
+     * Retrieves an {@link OfflinePlayer} with name
+     * matching the string given. <br><br>
+     * This method will first attempt to return {@link #matchPlayer(String)}.
+     * If no player can be found online with that name this will proceed
+     * to search for an offline player with an exact name match.
+     * @param string player name
+     * @return player or null if no match
+     */
+    public static OfflinePlayer matchOfflinePlayer(String string) {
+        if (matchPlayer(string) != null)
+            return matchPlayer(string);
         
         for (OfflinePlayer o : Bukkit.getOfflinePlayers()) {
-            if (o.getName().equalsIgnoreCase(p))
+            if (o.getName().equalsIgnoreCase(string))
                 return o;
         }
         return null;

@@ -29,9 +29,9 @@ class CreateCommand extends Command {
         try {
         		Game game = null;
             if (args.length == 2) {
-                game = GameManager.getInstance().newGame(type, args[1]);
+                game = GameManager.getGameManager().newGame(type, args[1]);
             } else {
-                game = GameManager.getInstance().newGame(type);
+                game = GameManager.getGameManager().newGame(type);
             }
     			sendMessage(messages.getMessage(CommandMessage.GAME_CREATE_SUCCESS), game.getName(), game.getType().toString());
         } catch (InvalidGameException e) {

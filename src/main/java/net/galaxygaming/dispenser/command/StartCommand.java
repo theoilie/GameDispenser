@@ -17,7 +17,7 @@ class StartCommand extends Command {
     
     @Override
     public void perform() {        
-        Game game = GameManager.getInstance().getGame(args[0]);
+        Game game = GameManager.getGameManager().getGame(args[0]);
         if (game == null) {
             error(messages.getMessage(CommandMessage.UNKNOWN_GAME), args[0]);
             return;

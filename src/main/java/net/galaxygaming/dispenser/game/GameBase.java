@@ -363,7 +363,7 @@ public abstract class GameBase implements Game {
         }
         
         players.add(player);        
-        GameManager.getInstance().addPlayerToGame(player, this);
+        GameManager.getGameManager().addPlayerToGame(player, this);
         
         if (players.size() >= minimumPlayers) {
             startCountdown();
@@ -392,7 +392,7 @@ public abstract class GameBase implements Game {
                     maximumPlayers > 0 ? maximumPlayers : "\u221e");
         }
 
-        GameManager.getInstance().removePlayerFromGame(player);
+        GameManager.getGameManager().removePlayerFromGame(player);
         players.remove(player);
         if (getMetadata(player, "gameLastLocation") != null) {
             Location loc = (Location) getMetadata(player, "gameLastLocation").value();

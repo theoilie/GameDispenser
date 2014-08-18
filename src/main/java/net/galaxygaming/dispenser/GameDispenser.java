@@ -33,7 +33,7 @@ public class GameDispenser extends JavaPlugin {
         EventManager.getInstance().setup(this);
         CommandManager.getCommandManager().setup(this);
         
-        GameManager gameManager = GameManager.getInstance();
+        GameManager gameManager = GameManager.getGameManager();
         gameManager.setup(this, this.getDataFolder());
         
         SelectionUtil.getInstance().setWand(getConfig().getString("wand"));
@@ -43,7 +43,7 @@ public class GameDispenser extends JavaPlugin {
     }
     
     public void onDisable() {
-        GameManager.getInstance().unloadAll();
+        GameManager.getGameManager().unloadAll();
     }
     
     /**

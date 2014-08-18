@@ -17,7 +17,7 @@ class LeaveCommand extends Command {
     
     @Override
     public void perform() {
-        Game game = GameManager.getInstance().getGameForPlayer(player);
+        Game game = GameManager.getGameManager().getGameForPlayer(player);
         if (game == null) {
             error(messages.getMessage(CommandMessage.NOT_IN_GAME));
             return;

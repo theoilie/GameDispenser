@@ -131,7 +131,7 @@ public class EventManager {
                                 return;
                             }
                             
-                            Game game = GameManager.getInstance().getGameForPlayer(player, gameClass);
+                            Game game = GameManager.getGameManager().getGameForPlayer(player, gameClass);
                             if (game == null)
                                 return;
                             

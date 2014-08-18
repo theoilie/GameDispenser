@@ -35,7 +35,7 @@ class Events implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-        Game game = GameManager.getInstance().getGameForPlayer(event.getPlayer());
+        Game game = GameManager.getGameManager().getGameForPlayer(event.getPlayer());
         if (game == null)
             return;
         
@@ -48,7 +48,7 @@ class Events implements Listener {
      */
     @EventHandler(ignoreCancelled = true)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        if (GameManager.getInstance().getGameForPlayer(event.getPlayer()) == null) {
+        if (GameManager.getGameManager().getGameForPlayer(event.getPlayer()) == null) {
             return;
         }
         
@@ -70,7 +70,7 @@ class Events implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        if (GameManager.getInstance().getGameForPlayer(event.getPlayer()) != null) {
+        if (GameManager.getGameManager().getGameForPlayer(event.getPlayer()) != null) {
             return;
         }
         
@@ -130,7 +130,7 @@ class Events implements Listener {
 	 * Remove player from game if they disconnect
 	 */
 	public void onDisconnect(Player player) {
-	    Game game = GameManager.getInstance().getGameForPlayer(player);
+	    Game game = GameManager.getGameManager().getGameForPlayer(player);
 	    if (game == null) {
 	        return;
 	    }
@@ -145,7 +145,7 @@ class Events implements Listener {
 	public void onSignChange(SignChangeEvent event) {
 	    if (event.getPlayer().hasPermission("gamedispenser.command.sign")) {
 	        if (event.getLine(0).equalsIgnoreCase("[game]")) {
-	            Game game = GameManager.getInstance().getGame(event.getLine(1));
+	            Game game = GameManager.getGameManager().getGame(event.getLine(1));
 	            if (game == null) {
 	                event.setLine(1, "GAME NOT FOUND");
 	                return;
@@ -164,7 +164,7 @@ class Events implements Listener {
 	    if (event.getBlock().getType().equals(Material.SIGN)
 	            || event.getBlock().getType().equals(Material.SIGN_POST)
 	            || event.getBlock().getType().equals(Material.WALL_SIGN)) {
-	        for (Game game : GameManager.getInstance().getGames()) {
+	        for (Game game : GameManager.getGameManager().getGames()) {
 	            game.removeSign(event.getBlock().getLocation());
 	        }
 	    }
@@ -188,12 +188,12 @@ class Events implements Listener {
 	            return;
 	        }
 	        
-	        if (GameManager.getInstance().getGameForPlayer(event.getPlayer()) != null) {
+	        if (GameManager.getGameManager().getGameForPlayer(event.getPlayer()) != null) {
                 event.getPlayer().sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages().getMessage("commands.alreadyInGame")));
 	            return;
 	        }
 	        
-	        for (Game game : GameManager.getInstance().getGames()) {
+	        for (Game game : GameManager.getGameManager().getGames()) {
 	            if (game.getSigns().contains(event.getClickedBlock().getLocation())) {
 	                if (game.getState().ordinal() < GameState.INACTIVE.ordinal() || !game.isSetup()) {
 	                    event.getPlayer().sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages().getMessage("commands.gameNotSetup")));

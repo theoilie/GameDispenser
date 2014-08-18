@@ -23,12 +23,12 @@ class JoinCommand extends Command {
     
     @Override
     public void perform() {
-        if (GameManager.getInstance().getGameForPlayer(player) != null) {
+        if (GameManager.getGameManager().getGameForPlayer(player) != null) {
             error(messages.getMessage(CommandMessage.ALREADY_IN_GAME));
             return;
         }
         
-        Game game = GameManager.getInstance().getGame(args[0]);
+        Game game = GameManager.getGameManager().getGame(args[0]);
         if (game == null) {
             error(messages.getMessage(CommandMessage.UNKNOWN_GAME), args[0]);
             return;

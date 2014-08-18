@@ -20,9 +20,9 @@ class LoadCommand extends Command {
     public void perform() {
         try {
             if (argMatchesAlias(args[0], "type", "t")) {
-                GameManager.getInstance().loadGameType(args[1]);
+                GameManager.getGameManager().loadGameType(args[1]);
             } else if (argMatchesAlias(args[0], "game", "g")) {
-                GameManager.getInstance().loadGame(args[1]);
+                GameManager.getGameManager().loadGame(args[1]);
             } else {
                 error("Please specify either 'game' or 'type'.");
                 return;

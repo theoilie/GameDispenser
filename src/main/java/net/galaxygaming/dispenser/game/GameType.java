@@ -7,7 +7,7 @@ import net.galaxygaming.dispenser.MessagesResource;
 import com.google.common.collect.Maps;
 
 /**
- * Used for sorting games by type
+ * Represents a type of Game; as in each unique Game jar file
  */
 public class GameType {
     private static final Map<String, GameType> lookup = Maps.newConcurrentMap();
@@ -28,6 +28,10 @@ public class GameType {
         lookup.put(name, this);
     }
     
+    /**
+     * Retrieves the {@link MessagesResource} for this GameType
+     * @return message resource
+     */
     public MessagesResource getMessages() {
         return messages;
     }
@@ -48,10 +52,18 @@ public class GameType {
         return this.dataFolder;
     }
     
+    /**
+     * Gives the name of this game type
+     * @return name
+     */
     public String getName() {
         return this.name;
     }
     
+    /**
+     * Gives the name of this game type
+     * @return name
+     */
     @Override
     public String toString() {
         return this.name;
@@ -76,9 +88,14 @@ public class GameType {
     
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return name.toLowerCase().hashCode();
     }
     
+    /**
+     * Gets the game type with this name
+     * @param name name of game type
+     * @return game type
+     */
     public static GameType get(String name) {
         GameType result = lookup.get(name);
         if (result == null) {

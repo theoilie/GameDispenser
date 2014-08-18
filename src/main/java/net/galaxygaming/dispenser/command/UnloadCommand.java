@@ -27,14 +27,14 @@ class UnloadCommand extends Command {
                     error(messages.getMessage(CommandMessage.UNKNOWN_GAME_TYPE), args[1]);
                     return;
                 }
-                GameManager.getInstance().unloadGameType(type);
+                GameManager.getGameManager().unloadGameType(type);
             } else if (argMatchesAlias(args[0], "game", "g")) {
-                Game game = GameManager.getInstance().getGame(args[1]);
+                Game game = GameManager.getGameManager().getGame(args[1]);
                 if (game == null) {
                     error(messages.getMessage(CommandMessage.UNKNOWN_GAME), args[1]);
                     return;
                 }
-                GameManager.getInstance().unloadGame(game);
+                GameManager.getGameManager().unloadGame(game);
             } else {
                 error("Please specify either 'game' or 'type'");
                 return;
