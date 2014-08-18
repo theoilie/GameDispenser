@@ -32,6 +32,11 @@ public class RegenableSelection {
     private byte[] blocks;
     private byte[] data;
 
+    /**
+     * @param game game this selection belongs to
+     * @param regionName name of this region
+     * @param selection selection specifying area
+     */
     public RegenableSelection(Game game, String regionName, Selection selection) {
         this.selection = selection;
         this.game = game;
@@ -49,6 +54,10 @@ public class RegenableSelection {
         this.data = data;
     }   
     
+    /**
+     * Updates the blocks saved by this selection with the blocks
+     * currently in the world in the selection.
+     */
     @SuppressWarnings("deprecation")
     public void reloadBlockData() {
         Location min = selection.getMin();
@@ -79,12 +88,25 @@ public class RegenableSelection {
         save();
     }
     
+    /**
+     * Gets the underlying {@link Selection} that defines the volume
+     * controlled by this class
+     * @return selection
+     */
     public Selection getSelection() {
         return selection;
     }
     
+    /**
+     * Regenerates this selection with the stored block data.
+     * This method uses block states in a update fast method
+     * meaning no lighting updates are performed. It is also
+     * processed over asynchronously over multiple seconds.
+     */
     @SuppressWarnings("deprecation")
     public void regen() {
+        // TODO: Check thread safety, cannot run at same time as reloadBlockData()
+        
         new GameRunnable() {
             @Override
             public void run() {
@@ -140,6 +162,9 @@ public class RegenableSelection {
         }.runTaskAsynchronously();
     }
     
+    /**
+     * Saves this regenable selection block data to disk
+     */
     public void save() {
         if (!game.getType().getDataFolder().exists()) {
             game.getType().getDataFolder().mkdir();
@@ -185,6 +210,12 @@ public class RegenableSelection {
         game.save();
     }
     
+    /** 
+     * Loads a RegenableSelection for a game
+     * @param game Game to load selection for
+     * @param regionName name of region
+     * @return RegenableSelection
+     */
     public static RegenableSelection load(Game game, String regionName) {
         Selection selection = (Selection) game.getConfig().get(regionName);
         if (selection == null) {
