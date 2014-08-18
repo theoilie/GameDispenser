@@ -136,7 +136,7 @@ class GameLoader {
             }
             
             for (Command command : loader.loadEventClasses(Command.class)) {
-                CommandManager.getInstance().registerCommand(command, type);
+                CommandManager.getCommandManager().registerCommand(command, type);
             }
         } catch (InvalidGameException e) {
             GameDispenser.getInstance().getLogger().log(Level.WARNING,

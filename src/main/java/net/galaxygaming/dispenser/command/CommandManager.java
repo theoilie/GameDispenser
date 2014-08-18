@@ -46,6 +46,12 @@ public class CommandManager {
         throw new CloneNotSupportedException();
     }
     
+    /**
+     * Registers a {@link Command} for bukkit to watch for.
+     * Multiple commands with the same prefix can be set.
+     * @param command
+     * @param type
+     */
     public void registerCommand(Command command, GameType type) {
         Set<ReflectCommand> commandSet = commands.get(type);
         if (commandSet == null) {
@@ -98,6 +104,10 @@ public class CommandManager {
         return cmap;
     }
     
+    /**
+     * Unregisters all commands associated with this game type
+     * @param type
+     */
     public void unregisterCommands(GameType type) {
         Set<ReflectCommand> commandSet = commands.get(type);
         if (commandSet != null) {
@@ -108,6 +118,10 @@ public class CommandManager {
         commands.remove(type);
     }
     
+    /**
+     * Unregisters all commands for every game except the commands
+     * in-built into GameDispenser.
+     */
     public void unregisterAll() {
         for (Set<ReflectCommand> commandSet : commands.values()) {
             for (ReflectCommand command : commandSet) {
@@ -117,7 +131,11 @@ public class CommandManager {
         commands.clear();
     }
     
-    public static CommandManager getInstance() {
+    /**
+     * Returns the singleton instance of CommandManager
+     * @return CommandManager singleton
+     */
+    public static CommandManager getCommandManager() {
         return instance;
     }
 }

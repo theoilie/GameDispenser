@@ -31,7 +31,7 @@ public class GameDispenser extends JavaPlugin {
         blacklistedCommands = getConfig().getStringList("blacklistedCommands").toArray(new String[0]);
         
         EventManager.getInstance().setup(this);
-        CommandManager.getInstance().setup(this);
+        CommandManager.getCommandManager().setup(this);
         
         GameManager gameManager = GameManager.getInstance();
         gameManager.setup(this, this.getDataFolder());
