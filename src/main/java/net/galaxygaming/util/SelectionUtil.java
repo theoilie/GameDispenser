@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import net.galaxygaming.dispenser.GameDispenser;
+import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.selection.Selection;
 
 import org.bukkit.Material;
@@ -18,7 +19,7 @@ public class SelectionUtil {
 	private static SelectionUtil instance = new SelectionUtil();
 	
 	/**
-	 * Gets the instance of SelectionUtil to use all of the methods.
+	 * Gets the singelton instance of SelectionUtil
 	 * @return SelectionUtil instance
 	 */
 	public static SelectionUtil getInstance() {
@@ -26,8 +27,8 @@ public class SelectionUtil {
 	}
 	
 	/**
-	 * Sets the selection wand.
-	 * @param material - The material of the wand.
+	 * Sets the selection wand
+	 * @param material the material of the wand
 	 */
 	@SuppressWarnings("deprecation")
 	public void setWand(String material) {
@@ -42,62 +43,70 @@ public class SelectionUtil {
 	}
 	
 	/**
-	 * Checks if the wand is set.
-	 * @return true if the wand is set.
+	 * Checks if the wand is set
+	 * @return true if the wand is set
 	 */
 	public boolean isWandSet() {
 		return wand != null && wand != Material.AIR;
 	}
 	
 	/**
-	 * Gets the wand material.
-	 * @return Material of the wand.
+	 * Gets the wand material
+	 * @return material of the wand
 	 */
 	public Material getWand() {
 		return wand;
 	}
 	
 	/**
-	 * Gets a player's selection.
-	 * @param player - The player with the selection.
-	 * @return The player's selection.
+	 * Gets a player's selection
+	 * @param player the player with the selection
+	 * @return the player's selection
 	 */
 	public Selection getSelection(Player player) {
 		return getSelection(player.getUniqueId());
 	}
 	
 	/**
-	 * Gets a player's selection.
-	 * @param uuid - The unique identifier of the player with the selection.
-	 * @return The player's selection.
+	 * Gets a player's selection
+	 * @param uuid the unique identifier of the player with the selection
+	 * @return the player's selection
 	 */
 	public Selection getSelection(UUID uuid) {
 		return selections.get(uuid);
 	}
 	
 	/**
-	 * Checks if the player has a selection.
-	 * @param player - The player to check.
-	 * @return true if the player has a selection.
+	 * Checks if the player has a selection
+	 * @param player the player to check
+	 * @return true if the player has a selection
 	 */
 	public boolean hasSelection(Player player) {
 		return hasSelection(player.getUniqueId());
 	}
 	
 	/**
-	 * Checks if the player has a selection.
-	 * @param uuid The unique identifier of the player to check.
-	 * @return true if the player has a selection.
+	 * Checks if the player has a selection
+	 * @param uuid the unique identifier of the player to check
+	 * @return true if the player has a selection
 	 */
 	public boolean hasSelection(UUID uuid) {
 		return getSelection(uuid) != null;
 	}
 	
 	/**
-	 * Adds a selection to the list.
-	 * @param selection - The selection to be added.
+	 * Adds a selection to the list
+	 * @param selection the selection to be added
 	 */
 	public void addSelection(Selection selection) {
 		selections.put(selection.getPlayer().getUniqueId(), selection);
 	}
+	
+    /**
+     * Cloning is not supported.
+     */
+    @Override
+    public EventManager clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 }

@@ -2,6 +2,9 @@ package net.galaxygaming.dispenser.game;
 
 import org.bukkit.ChatColor;
 
+/**
+ * Used for keeping track of the game's progression
+ */
 public class GameState {
     
     public static final GameState   
@@ -14,6 +17,7 @@ public class GameState {
     
     private final int ordinal;
     private final String name;
+    
     public GameState(int ordinal, String name) {
         this.ordinal = ordinal;
         this.name = name;

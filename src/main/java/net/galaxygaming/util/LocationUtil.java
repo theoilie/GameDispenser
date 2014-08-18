@@ -1,5 +1,7 @@
 package net.galaxygaming.util;
 
+import net.galaxygaming.dispenser.event.EventManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -11,9 +13,9 @@ public class LocationUtil {
 	}
 	
 	/**
-	 * Converts a Location to a String.
-	 * @param location - The Location to be converted.
-	 * @return The String form of the location parameter.
+	 * Converts a Location to a String
+	 * @param location the Location to be converted
+	 * @return the String form of the location parameter
 	 */
 	public static String serializeLocation(Location location) {
 		StringBuilder builder = new StringBuilder();
@@ -29,8 +31,8 @@ public class LocationUtil {
 	
 	/**
 	 * Converts a String to a Location
-	 * @param string - The String to be converted.
-	 * @return The Location form of the string parameter.
+	 * @param string the String to be converted
+	 * @return the Location form of the string parameter
 	 */
 	public static Location deserializeLocation(String string) {
 	    if (string == null) {
@@ -58,5 +60,13 @@ public class LocationUtil {
 			throw new RuntimeException("Location string was invalid: " + string);
 		
 		return new Location(world, x, y, z);
-	}	
+	}
+	
+    /**
+     * Cloning is not supported.
+     */
+    @Override
+    public EventManager clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
 }

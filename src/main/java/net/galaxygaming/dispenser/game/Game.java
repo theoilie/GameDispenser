@@ -16,7 +16,7 @@ public interface Game {
     
     /**
      * Adds a sign showing information about this game.
-     * @param location
+     * @param location the location of the sign
      */
     public void addSign(Location location);
     
@@ -26,26 +26,26 @@ public interface Game {
     public void updateSigns();
     
     /**
-     * Remove a sign to stop the game monitoring this location
-     * @param location
+     * Removes a sign to stop the game from monitoring this location
+     * @param location the location of the sign
      */
     public void removeSign(Location location);
     
     /**
      * Gives a set of sign locations for this game
-     * @return
+     * @return the signs
      */
     public Set<Location> getSigns();
     
      /**
       * Sends a message to every player in the game
-      * @param message
+      * @param message the message to broadcast
       */
     public void broadcast(String message, Object... objects);
     
     /**
-     * Retrieves a config file unique to this game instance.
-     * @return config
+     * Retrieves a configuration file unique to this game instance
+     * @return configuration file
      */
     public FileConfiguration getConfig();
     
@@ -54,18 +54,22 @@ public interface Game {
      */
     public void save();
     
+    /**
+     * Gets the class that loads this game
+     * @return the GameLoader class associated with this Game instance
+     */
     public GameLoader getGameLoader();
     
     /**
      * Gives a logger unique to this game instance
-     * @return logger
+     * @return this game's logger
      */
     public Logger getLogger();
     
     /**
      * Retrieves the metadata for a metadatable object using key
      * and this game instance to ensure correct selection
-     * @param object metadatable object
+     * @param object a metadatable object
      * @param key metadata key
      * @return game metadata
      */
@@ -73,8 +77,8 @@ public interface Game {
     
     /**
      * Removes metadata from an object
-     * @param object object to remove metadata for
-     * @param key key to metadata
+     * @param object the object to remove metadata from
+     * @param key the key to the metadata
      */
     public void removeMetadata(Metadatable object, String key);
     
@@ -85,64 +89,64 @@ public interface Game {
     public GameDispenser getPlugin();
     
     /**
-     * Gets the current GameState of this game
-     * @return GameState
+     * Gets the current GameState of this game (idle, starting, playing, etc...)
+     * @return state of this game
      */
     public GameState getState();
     
     /**
      * Sets the current GameState of this game
-     * @param state
+     * @param state the GameState to set
      */
     public void setState(GameState state);
     
     /**
      * Gets the GameType of this game
-     * @return GameType
+     * @return GameType of the game
      */
     public GameType getType(); 
     
     /**
      * Gives the name of this game instance
-     * @return name
+     * @return name of the game
      */
     public String getName();
     
     /**
      * Sets the name of this game instance
-     * @param name
+     * @param name the name of this game instance
      */
     public void setName(String name);
     
     /**
      * Adds a player to this game
-     * @param player
-     * @return false if cannot add player
+     * @param player the player to be added
+     * @return false if the player can't be added
      */
     public boolean addPlayer(Player player);
     
     /**
-     * Removes a player from the game
-     * Same as calling {@link removePlayer(Player, false)}
-     * @param player
+     * Removes a player from the game without broadcasting.
+     * Same as calling {@link #removePlayer(Player, false)}
+     * @param player the player to be removed
      */
     public void removePlayer(Player player);
     
     /**
-     * Removes a player
-     * @param player
-     * @param broadcast whether to broadcast the player left
+     * Removes a player with the option to broadcast
+     * @param player the player to remove
+     * @param broadcast whether to broadcast the player's departure
      */
     public void removePlayer(Player player, boolean broadcast);
     
     /**
      * Returns a list of all players in this game
-     * @return
+     * @return players in the game
      */
     public Player[] getPlayers();
 
     /**
-     * Do stuff when save() is called.
+     * Do stuff when save() is called
      */
     public void onSave();
     
@@ -175,34 +179,34 @@ public interface Game {
     
     /**
      * Do stuff whenever a player joins
-     * @param player
+     * @param player the player who joined
      */
     public void onPlayerJoin(Player player);
     
     /**
      * Do stuff whenever a player leaves
-     * @param player
+     * @param player the player who left
      */
     public void onPlayerLeave(Player player);
     
     /**
-     * Sets a component in this game with a {@link Location}
-     * @param componentName
-     * @param location
+     * Sets a component in this game with a {@link org.bukkit.location.Location}
+     * @param componentName the name of the component
+     * @param location the location of what to set
      */
     public boolean setComponent(String componentName, Location location);
     
     /**
      * Sets a component in this game with a {@link Selection}
-     * @param componentName
-     * @param selection
+     * @param componentName the name of the component
+     * @param selection the selection of what to set
      */
     public boolean setComponent(String componentName, Selection selection);
     
     /**
      * Sets a component in this game with a String array
-     * @param componentName
-     * @param args
+     * @param componentName the name of the component to be set
+     * @param args the args of what to set
      */
     public boolean setComponent(String componentName, String[] args);
     
@@ -218,9 +222,9 @@ public interface Game {
     public void startCountdown();
     
     /**
-     * Start the game
+     * Start the game after the countdown ends
      */
-    public void start(); // After countdown is over
+    public void start();
     
     /**
      * Ticks the game, do not call this method.
@@ -228,21 +232,22 @@ public interface Game {
     public void tick();
     
     /**
-     * End the game,
+     * End the game after someone wins,
      * removes all players from the game
      */
     public void end(); // After someone wins
     
     /**
-     * Override this method to check for ending conditions
+     * Override this method to check for ending conditions.
      * Every tick the game will check this method and end
      * if it returns true. Alternatively just call 
      * {@link #end()} yourself when ready.
-     * @return
+     * @return true if the game is finished
      */
     public boolean isFinished();
     
     /**
+     * Override this method to determine if the game is setup.
      * @return true if the game is setup correctly
      */
     public boolean isSetup();

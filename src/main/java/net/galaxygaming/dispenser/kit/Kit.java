@@ -21,7 +21,7 @@ public class Kit {
 	}
 	
 	/**
-     * Gets the items the kit has.
+     * Gets the items the kit has
      * @return ItemStack array of items in the kit.
      */
 	public ItemStack[] getItems() {
@@ -29,8 +29,7 @@ public class Kit {
 	}
 
 	/**
-	 * Loads the kit from its file into the class.
-	 * This finds kits.configName in the config and loads the items in it.
+	 * Finds kits.configName in the config and loads the items in it.
 	 * See {@link net.galaxygaming.dispenser.util.ItemUtil#getItem(String)} for format information.
 	 */
 	public void load() {
@@ -43,8 +42,8 @@ public class Kit {
 	}
 
     /**
-     * Applies the kit to a player.
-     * @param player - The player the kit is being given to.
+     * Applies the kit to a player
+     * @param player the player the kit is being given to
      */
 	public void apply(Player player) {
 		player.getInventory().addItem(items);
@@ -52,31 +51,31 @@ public class Kit {
 
     /**
      * Added for clarity. Does the same as {@link #apply(Player)}.
-     * @param player - The player the kit is being given to.
+     * @param player the player the kit is being given to
      */
 	public void give(Player player) {
 		apply(player);
 	}
 
     /**
-     * Gets the name of this kit.
-     * @return The name of the kit.
+     * Gets the name of this kit
+     * @return the name of the kit
      */
 	public String getName() {
 		return name;
 	}
 	
     /**
-     * Gets the name of the kit in game the config.
-     * @return The name of the kit in the config.
+     * Gets the name of the kit in game the config
+     * @return the name of the kit in the config
      */
 	public String getConfigName() {
 		return configName;
 	}
 	
     /**
-     * Gets the game that this kit belongs to.
-     * @return The game associated with this kit.
+     * Gets the game that this kit belongs to
+     * @return the game associated with this kit
      */
 	public Game getGame() {
 		return game;

@@ -41,6 +41,9 @@ public class CommandManager {
         root.addExecutor(new ListCommand());
     }
     
+    /**
+     * Cloning is not supported.
+     */
     @Override
     public CommandManager clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();

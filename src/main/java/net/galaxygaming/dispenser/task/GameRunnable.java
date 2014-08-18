@@ -12,7 +12,7 @@ public abstract class GameRunnable implements Runnable {
     private int taskId = -1;
 
     /**
-     * Attempts to cancel this task.
+     * Attempts to cancel this task
      *
      * @throws IllegalStateException if task was not scheduled yet
      */
@@ -21,7 +21,7 @@ public abstract class GameRunnable implements Runnable {
     }
 
     /**
-     * Schedules this in the Bukkit scheduler to run on next tick.
+     * Schedules this in the Bukkit scheduler to run on next tick
      *
      * @return a BukkitTask that contains the id number
      * @throws IllegalStateException if this was already scheduled
@@ -35,7 +35,7 @@ public abstract class GameRunnable implements Runnable {
      * <b>Asynchronous tasks should never access any API in Bukkit. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
-     * Schedules this in the Bukkit scheduler to run asynchronously.
+     * Schedules this in the Bukkit scheduler to run asynchronously
      *
      * @return a BukkitTask that contains the id number
      * @throws IllegalStateException if this was already scheduled
@@ -46,7 +46,7 @@ public abstract class GameRunnable implements Runnable {
     }
 
     /**
-     * Schedules this to run after the specified number of server ticks.
+     * Schedules this to run after the specified number of server ticks
      *
      * @param delay the ticks to wait before running the task
      * @return a BukkitTask that contains the id number
@@ -61,8 +61,7 @@ public abstract class GameRunnable implements Runnable {
      * <b>Asynchronous tasks should never access any API in Bukkit. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
-     * Schedules this to run asynchronously after the specified number of
-     * server ticks.
+     * Schedules this to run asynchronously after the specified number of server ticks
      *
      * @param delay the ticks to wait before running the task
      * @return a BukkitTask that contains the id number
@@ -75,7 +74,7 @@ public abstract class GameRunnable implements Runnable {
 
     /**
      * Schedules this to repeatedly run until cancelled, starting after the
-     * specified number of server ticks.
+     * specified number of server ticks
      *
      * @param delay the ticks to wait before running the task
      * @param period the ticks to wait between runs
@@ -92,10 +91,9 @@ public abstract class GameRunnable implements Runnable {
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
      * Schedules this to repeatedly run asynchronously until cancelled,
-     * starting after the specified number of server ticks.
+     * starting after the specified number of server ticks
      *
-     * @param delay the ticks to wait before running the task for the first
-     *     time
+     * @param delay the ticks to wait before running the task for the first time
      * @param period the ticks to wait between runs
      * @return a BukkitTask that contains the id number
      * @throws IllegalStateException if this was already scheduled
@@ -106,7 +104,7 @@ public abstract class GameRunnable implements Runnable {
     }
 
     /**
-     * Gets the task id for this runnable.
+     * Gets the task id for this runnable
      *
      * @return the task id that this runnable was scheduled as
      * @throws IllegalStateException if task was not scheduled yet
