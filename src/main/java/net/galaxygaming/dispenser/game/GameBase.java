@@ -481,7 +481,7 @@ public abstract class GameBase implements Game {
     
     @Override
     public final int hashCode() {
-        return name.hashCode();
+        return name.toLowerCase().hashCode();
     }
     
     public final InputStream getResource(String fileName) {
