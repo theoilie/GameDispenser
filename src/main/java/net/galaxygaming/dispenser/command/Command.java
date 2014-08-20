@@ -276,6 +276,8 @@ public abstract class Command implements CommandExecutor {
             GAME_START_ATTEMPT			 = "commands.attemptGameStart",
             GAME_LOADED					 = "commands.gameLoaded",
             GAME_UNLOADED				 = "commands.gameUnloaded",
-            WAND_MESSAGE			     = "selection.wandMessage";
+            WAND_MESSAGE			     = "selection.wandMessage",
+            NO_TEAM                      = "commands.noTeam",
+            NOT_TEAM_GAME                = "commands.notTeamGame";
     }   
 }
