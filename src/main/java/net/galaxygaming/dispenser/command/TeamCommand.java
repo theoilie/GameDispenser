@@ -11,7 +11,7 @@ import org.bukkit.permissions.Permission;
 /**
  * 
  */
-public class TeamCommand extends Command {
+class TeamCommand extends Command {
 
     public TeamCommand() {
         this.prefix = "gd";
