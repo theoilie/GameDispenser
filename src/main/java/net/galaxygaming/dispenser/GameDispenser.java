@@ -3,6 +3,7 @@ package net.galaxygaming.dispenser;
 import java.util.logging.Level;
 
 import net.galaxygaming.dispenser.command.CommandManager;
+import net.galaxygaming.dispenser.database.Database;
 import net.galaxygaming.dispenser.event.EventManager;
 import net.galaxygaming.dispenser.game.GameManager;
 import net.galaxygaming.selection.Selection;
@@ -43,6 +44,7 @@ public class GameDispenser extends JavaPlugin {
     }
     
     public void onDisable() {
+    		Database.getDatabase().unload();
         GameManager.getGameManager().unloadAll();
     }
     

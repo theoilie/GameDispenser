@@ -1,3 +1,6 @@
 debug: true
 blacklistedCommands: [spawn]
 wand: 2262
+database: yaml
+yaml:
+  file name: database.yml
