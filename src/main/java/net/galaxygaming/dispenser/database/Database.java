@@ -69,18 +69,6 @@ public abstract class Database {
 	}
 	
 	/**
-	 * Gets object from database based on key and game name. <br>
-	 * Example: get("games played", "survivalgames") could
-	 * get how many times the game Survival Games has been played.
-	 * @param key they key of what to get from the database
-	 * @param game the name of the game associated with the key
-	 * @return the value associated with the key and game
-	 */
-	public Object get(String key, String game) {
-		return get(key, game);
-	}
-	
-	/**
 	 * Gets object from database based on key, game, and player. <br>
 	 * Example: get("games played", survivalgames, player) could
 	 * get how many times the player lactem has player Survival Games.
@@ -90,7 +78,7 @@ public abstract class Database {
 	 * @return the value associated with the key, game, and player
 	 */
 	public Object get(String key, Game game, Player player) {
-		return get(key, game.getName(), player.getUniqueId().toString());
+		return get(key, game, player.getUniqueId());
 	}
 	
 	/**
@@ -116,7 +104,7 @@ public abstract class Database {
 	 * @return the value associated with the key, game, and player
 	 */
 	public Object get(String key, String game, Player player) {
-		return get(key, game, player.getUniqueId().toString());
+		return get(key, game, player.getUniqueId());
 	}
 	
 	/**
@@ -169,18 +157,6 @@ public abstract class Database {
 	}
 	
 	/**
-	 * Sets the value of key to value for a game in the database. <br>
-	 * Example: set("games played", "survivalgames", "10") could set the amount
-	 * of times a game has been played to 10.
-	 * @param key the key to be set
-	 * @param game the game associated with the key and value
-	 * @param value the value to set key to
-	 */
-	public void set(String key, String game, String value) {
-		set(key, game, value);
-	}
-	
-	/**
 	 * Sets the value of key to value player in a specific game in the database. <br>
 	 * Example: set("wins", game, player, "10") could set the amount
 	 * of times a player has won in a game to 10.
@@ -190,7 +166,7 @@ public abstract class Database {
 	 * @param value the value to set key to
 	 */
 	public void set(String key, Game game, Player player, String value) {
-		set(key, game.getName(), player.getUniqueId().toString(), value);
+		set(key, game.getName(), player.getUniqueId(), value);
 	}
 	
 	/**
@@ -216,7 +192,7 @@ public abstract class Database {
 	 * @param value the value to set key to
 	 */
 	public void set(String key, String game, Player player, String value) {
-		set(key, game, player.getUniqueId().toString(), value);
+		set(key, game, player.getUniqueId(), value);
 	}
 	
 	/**
