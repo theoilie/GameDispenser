@@ -1,10 +1,11 @@
 package net.galaxygaming.dispenser.game;
 
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
+import net.galaxygaming.dispenser.game.component.Component;
+import net.galaxygaming.dispenser.game.component.SetComponentException;
 import net.galaxygaming.selection.Selection;
 
 import org.bukkit.Location;
@@ -190,23 +191,35 @@ public interface Game {
     public void onPlayerLeave(Player player);
     
     /**
-     * Sets a component in this game with a {@link org.bukkit.location.Location}
-     * @param componentName the name of the component
-     * @param location the location of what to set
+     * Sets a component in this game
+     * @param componentName
+     * @param player
+     * @param args as a single string
+     * @return
+     */
+    public void setComponent(String componentName, Player player, String args) throws SetComponentException;
+    
+    /**
+     * Sets a component in this game with a {@link Location}
+     * @param componentName
+     * @param location
+     * @deprecated @see {@link Component}
      */
     public boolean setComponent(String componentName, Location location);
     
     /**
      * Sets a component in this game with a {@link Selection}
-     * @param componentName the name of the component
-     * @param selection the selection of what to set
+     * @param componentName
+     * @param selection
+     * @deprecated @see {@link Component}
      */
     public boolean setComponent(String componentName, Selection selection);
     
     /**
      * Sets a component in this game with a String array
-     * @param componentName the name of the component to be set
-     * @param args the args of what to set
+     * @param componentName
+     * @param args
+     * @deprecated @see {@link Component}
      */
     public boolean setComponent(String componentName, String[] args);
     
@@ -214,7 +227,7 @@ public interface Game {
      * Gives a list of components that have been registered for this game
      * @return list of component names
      */
-    public List<String> getComponents();
+    public Set<String> getComponents();
     
     /**
      * Begins the countdown process before this game starts
@@ -249,6 +262,8 @@ public interface Game {
     /**
      * Override this method to determine if the game is setup.
      * @return true if the game is setup correctly
+     * @deprecated Don't override this method in new 
+     * component system @see {@link Component}
      */
     public boolean isSetup();
 }

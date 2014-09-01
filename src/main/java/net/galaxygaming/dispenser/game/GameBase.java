@@ -3,11 +3,14 @@ package net.galaxygaming.dispenser.game;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,8 +19,6 @@ import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.task.GameRunnable;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
-import net.galaxygaming.util.LocationUtil;
-
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,9 +36,13 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import net.galaxygaming.dispenser.game.GameLoader;
+import net.galaxygaming.dispenser.game.component.Component;
+import net.galaxygaming.dispenser.game.component.ComponentManager;
+import net.galaxygaming.dispenser.game.component.SetComponentException;
 
 public abstract class GameBase implements Game {
 
@@ -50,27 +55,33 @@ public abstract class GameBase implements Game {
     /** List of players in this game */
     private List<Player> players;
     
-    /** List of component names for this game */
-    private List<String> components;
+    /** Set of component for this game */
+    private Map<String, Field> components;
         
     /** 
      * The maximum number of players the game can have. 
-     * A value of 0 will be interpreted as the maximum
-     * that a list is capable of holding.
+     * A value of 0 will be interpreted as no maximum
      */
-    protected int maximumPlayers;
+    @Component(name = "maximum players")
+    protected int maximumPlayers = 0;
     
     /** The minimum number of players before the game can start */
-    protected int minimumPlayers;
+    @Component(name = "minimum players")
+    protected int minimumPlayers = 2;
     
     /** The length of the countdown period in seconds */
-    protected int countdownDuration;
+    @Component(name = "countdown duration")
+    protected int countdownDuration = 30;
     
     /** The length of the game in seconds, if -1 the game will never end */
-    protected int gameTime;
+    @Component(name = "game time")
+    protected int gameTime = -1;
     
     /** The option to use a built-in scoreboard */
-    protected boolean useScoreboardPlayers, useScoreboardTime;
+    @Component(name = "use scoreboard players")
+    protected boolean useScoreboardPlayers = false;
+    @Component(name = "use scoreboard time")
+    protected boolean useScoreboardTime = false;
     
     /** The game's scoreboard */
     protected Scoreboard board;
@@ -91,7 +102,8 @@ public abstract class GameBase implements Game {
     protected int lastTimeRemaining;
     
     /** The length of the grace period in seconds */
-    protected int graceDuration;
+    @Component(name = "grace duration")
+    protected int graceDuration = 5;
     
     private GameType type;
     private GameLoader loader;
@@ -102,6 +114,7 @@ public abstract class GameBase implements Game {
     private GameDispenser plugin;
     Plugin fakePlugin;
     
+    @Component(ignoreSetup = true)
     private Set<Location> signs;
     
     private int counter;
@@ -148,13 +161,17 @@ public abstract class GameBase implements Game {
         }
     }
     
-    protected final void addComponent(String componentName) {
-        components.add(componentName);
-    }
+    /**
+     * Why would you use this, don't ever use this
+     * @see {@link Component}
+     * @param componentName
+     */
+    @Deprecated
+    protected final void addComponent(String componentName) {}
     
     @Override
-    public final List<String> getComponents() {
-        return Lists.newArrayList(components);
+    public final Set<String> getComponents() {
+        return components.keySet();
     }
     
     @Override
@@ -176,11 +193,9 @@ public abstract class GameBase implements Game {
     
     @Override
     public final void save() {
-        List<String> signLocations = Lists.newArrayList();
-        for (Location location : signs) {
-            signLocations.add(LocationUtil.serializeLocation(location));
+        for (Entry<String, Field> entry : components.entrySet()) {
+            ComponentManager.saveComponent(this, entry.getValue(), entry.getKey());
         }
-        config.set("signs", signLocations);
         
         onSave();
         
@@ -410,6 +425,16 @@ public abstract class GameBase implements Game {
         return players.toArray(new Player[players.size()]);
     }
     
+    @Override
+    public boolean isSetup() {
+        for (Field f : components.values()) {
+            if (!ComponentManager.isSetup(this, f)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     /* Override the following methods and let
      * devs choose whether to use them or not
      */
@@ -440,6 +465,16 @@ public abstract class GameBase implements Game {
     @Override
     public boolean isFinished() {
         return false;
+    }
+    
+    @Override
+    public void setComponent(String componentName, Player player, String args) throws SetComponentException {
+        for (String name : components.keySet()) {
+            if (name.equalsIgnoreCase(componentName)) {
+                ComponentManager.setComponent(this, components.get(name), player, componentName, args);
+                return;
+            }
+        }
     }
     
     @Override
@@ -520,45 +555,41 @@ public abstract class GameBase implements Game {
         this.plugin = GameDispenser.getInstance();
         this.fakePlugin = new FakePlugin();
         this.type = GameType.get(config.getString("type"));
-        this.components = Lists.newArrayList();
+        this.components = Maps.newHashMap();
         this.lastPlayerCount = getPlayers().length;
         this.signs = Sets.newHashSet();
-        
-        getConfig().addDefault("minimum players", 2);
-        getConfig().addDefault("maximum players", 0);
-        getConfig().addDefault("countdown duration", 30);
-        getConfig().addDefault("game time", -1);
-        getConfig().addDefault("use scoreboard players", false);
-        getConfig().addDefault("use scoreboard time", false);
-        getConfig().addDefault("grace duration", 5);
-                		
-        if (getConfig().isList("signs")) {
-            for (String location : getConfig().getStringList("signs")) {
-                signs.add(LocationUtil.deserializeLocation(location));
-            }
-        }
 
         onLoad();
         
-        minimumPlayers = getConfig().getInt("minimum players");
-        maximumPlayers = getConfig().getInt("maximum players");
-        countdownDuration = getConfig().getInt("countdown duration");
-        gameTime = getConfig().getInt("game time");
-        useScoreboardPlayers = getConfig().getBoolean("use scoreboard players");
-        useScoreboardTime = getConfig().getBoolean("use scoreboard time");
-        graceDuration = getConfig().getInt("grace duration");
+        board = Bukkit.getScoreboardManager().getNewScoreboard();
+        objective = board.registerNewObjective(ChatColor.translateAlternateColorCodes('&', 
+                "&6&l" + getType().toString()), "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        updateScoreboard();
         
-        		board = Bukkit.getScoreboardManager().getNewScoreboard();
-        		objective = board.registerNewObjective
-        			(ChatColor.translateAlternateColorCodes('&', "&6&l" + getType().toString()), "dummy");
-        		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        		updateScoreboard();
-
-        for (String key : getConfig().getDefaults().getKeys(false)) {
-            if (getConfig().get(key, null) == null) {
-                getConfig().set(key, getConfig().getDefaults().get(key));
+        /*
+         * Find all fields which are components
+         */
+        Class<?> current = this.getClass();
+        while(current.getSuperclass() != null) {
+            for (Field field : current.getDeclaredFields()) {
+                Component c = field.getAnnotation(Component.class);
+                if (c != null) {
+                    components.put(c.name().isEmpty() ? field.getName() : c.name(), field);
+                }
             }
+            
+            current = current.getSuperclass();
         }
+        
+        /*
+         * Attempt to load components in this next loop
+         */
+        for (Entry<String, Field> entry : components.entrySet()) {            
+            ComponentManager.loadComponent(this, entry.getValue(), entry.getKey());
+        }
+        
+        save();
     }
     
 	protected void updateScoreboard() {

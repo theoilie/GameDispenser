@@ -6,8 +6,7 @@ import org.bukkit.permissions.Permission;
 
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.dispenser.game.GameManager;
-import net.galaxygaming.selection.Selection;
-import net.galaxygaming.util.SelectionUtil;
+import net.galaxygaming.dispenser.game.component.SetComponentException;
 
 class SetCommand extends Command {
 
@@ -16,7 +15,7 @@ class SetCommand extends Command {
         this.name = "set";
         this.requiredArgs.add("name");
         this.requiredArgs.add("component");
-        this.requiredArgs.add("location/selection/other");
+        this.optionalArgs.add("other stuff");
         this.mustBePlayer = true;
         this.description = "Set game components such as spawns, boundaries or other configurations";
         this.permission = new Permission("gamedispenser.command.set");
@@ -29,39 +28,28 @@ class SetCommand extends Command {
             error(messages.getMessage(CommandMessage.UNKNOWN_GAME), args[0]);
             return;
         }
-
-        boolean result = false;
         
-        if (this.argMatchesAlias(args[2], "l", "location")) {
-            result = game.setComponent(args[1], player.getLocation());
-        } else if (this.argMatchesAlias(args[2], "s", "selection")) {
-            Selection selection = SelectionUtil.getInstance().getSelection(player);
-            if (selection == null) {
-                error(messages.getMessage(CommandMessage.NO_SELECTION));
-                return;
+        String joinArgs = "";
+        if (args.length > 2) {
+            StringBuilder result = new StringBuilder();
+            for (String arg : Arrays.copyOfRange(args, 2, args.length)) {
+                result.append(arg + " ");
             }
-            if (!selection.arePointsSet()) {
-                error(messages.getMessage("selection.noSelection"));
-                return;
-            }
-            if (!selection.arePointsInSameWorld()) {
-                error(messages.getMessage("selection.pointsDifferentWorlds"));
-        		return;
-            }
-            
-            result = game.setComponent(args[1], selection.clone());
-        } else {
-            if (args[1].equalsIgnoreCase("description")) {
-                 result = true;
-                 game.getConfig().set("description", Arrays.copyOfRange(args, 2, args.length));
-            } else {
-                result = game.setComponent(args[1], Arrays.copyOfRange(args, 2, args.length));
-            }
+            result.deleteCharAt(result.length());
+            joinArgs = result.toString();
         }
         
-        if (result)
-        		sendMessage(messages.getMessage(CommandMessage.SET_COMPONENT_SUCCESS), args[1], args[0]);
-        else
-            error(messages.getMessage(CommandMessage.NO_COMPONENT));
+        try {
+            game.setComponent(args[1], player, joinArgs);
+            sendMessage(messages.getMessage(CommandMessage.SET_COMPONENT_SUCCESS), args[1], args[0]);
+        } catch (SetComponentException e) {
+            if (e.getMessage() != null) {
+                sendMessage(e.getMessage());
+            }
+            
+            if (e.getCause() != null) {
+                error(e.getCause());
+            }
+        }
     }
 }

@@ -128,6 +128,10 @@ public abstract class Command implements CommandExecutor {
      */
     protected final void error(String message, Throwable t) {
         error(message);
+        error(t);
+    }
+    
+    protected final void error(Throwable t) {
         if (t.getStackTrace() != null && t.getStackTrace().length != 0) {
             sendMessage(messages.getMessage(CommandMessage.SEE_CONSOLE));
             t.printStackTrace();
@@ -267,10 +271,9 @@ public abstract class Command implements CommandExecutor {
             GAME_ALREADY_ACTIVE          = "commands.gameAlreadyActive",
             GAME_IS_FULL                 = "commands.gameIsFull",
             NO_SELECTION                 = "commands.noSelection",
-            NO_COMPONENT                 = "commands.noComponent",
             NO_PAGE                      = "commands.noPage",
             NOT_A_NUMBER                 = "commands.notANumber",
-            SET_COMPONENT_SUCCESS		 = "commands.setComponentSuccess",
+            SET_COMPONENT_SUCCESS		 = "component.successful",
             GAME_CREATE_SUCCESS			 = "commands.gameCreated",
             GAME_END_ATTEMPT			 = "commands.attemptGameEnd",
             GAME_START_ATTEMPT			 = "commands.attemptGameStart",

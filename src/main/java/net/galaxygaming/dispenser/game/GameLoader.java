@@ -25,6 +25,7 @@ import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.command.Command;
 import net.galaxygaming.dispenser.command.CommandManager;
 import net.galaxygaming.dispenser.event.EventManager;
+import net.galaxygaming.dispenser.game.component.ComponentType;
 import net.galaxygaming.util.FormatUtil;
 
 class GameLoader {
@@ -58,6 +59,10 @@ class GameLoader {
         if (type == null) {
             type = GameType.get(config.getString("type"));        
         } else if (type != GameType.get(config.getString("type"))) {
+            return null;
+        }
+        
+        if (type == null) {
             return null;
         }
         
@@ -138,6 +143,8 @@ class GameLoader {
             for (Command command : loader.loadEventClasses(Command.class)) {
                 CommandManager.getCommandManager().registerCommand(command, type);
             }
+            
+            loader.loadEventClasses(ComponentType.class);
         } catch (InvalidGameException e) {
             GameDispenser.getInstance().getLogger().log(Level.WARNING,
                     "Failed to register events for " + type.toString(), e);
