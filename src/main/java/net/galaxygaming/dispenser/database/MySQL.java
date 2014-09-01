@@ -1,6 +1,6 @@
 package net.galaxygaming.dispenser.database;
 
-public class YAML extends Database {
+public class MySQL extends Database {
 
 	@Override
 	protected Object get(String minigame, String player, String key) {
