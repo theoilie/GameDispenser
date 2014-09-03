@@ -4,3 +4,11 @@ wand: 2262
 database: yaml
 yaml:
   file name: database.yml
+mysql:
+  host: host
+  port: 3306
+  database: database
+  user: username
+  pass: password
+  miscellaneous table: MISCELLANEOUS
+  ordered table: ORDERED
