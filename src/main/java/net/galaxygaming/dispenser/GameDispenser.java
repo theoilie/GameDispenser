@@ -13,7 +13,10 @@ import net.galaxygaming.util.SelectionUtil;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
-
+/**
+ * @author Lactem
+ * @author t7seven7t
+ */
 public class GameDispenser extends JavaPlugin {
 
     private static GameDispenser instance;
