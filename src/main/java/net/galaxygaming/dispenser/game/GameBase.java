@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -16,9 +17,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
+import net.galaxygaming.dispenser.game.component.Component;
+import net.galaxygaming.dispenser.game.component.ComponentManager;
+import net.galaxygaming.dispenser.game.component.SetComponentException;
+import net.galaxygaming.dispenser.kit.Kit;
 import net.galaxygaming.dispenser.task.GameRunnable;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -38,11 +44,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-
-import net.galaxygaming.dispenser.game.GameLoader;
-import net.galaxygaming.dispenser.game.component.Component;
-import net.galaxygaming.dispenser.game.component.ComponentManager;
-import net.galaxygaming.dispenser.game.component.SetComponentException;
 
 public abstract class GameBase implements Game {
 
@@ -119,6 +120,8 @@ public abstract class GameBase implements Game {
     
     private int counter;
     private int tick;
+    
+    private ArrayList<Kit> kits = Lists.newArrayList();
     
     public final void addSign(Location location) {
         Validate.notNull(location, "Location cannot be null");
@@ -645,5 +648,21 @@ public abstract class GameBase implements Game {
 			if (player.getScoreboard() != board)
 				player.setScoreboard(board);
 		}
+    }
+    
+    @Override
+    public ArrayList<Kit> getKits() {
+    		return kits;
+    }
+    
+    @Override
+    public void addKit(Kit kit) {
+    		kits.add(kit);
+    }
+    
+    @Override
+    public void removeKit(Kit kit) {
+    		if (kits.contains(kit))
+    			kits.remove(kit);
     }
 }

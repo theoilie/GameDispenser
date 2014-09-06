@@ -8,9 +8,6 @@ import net.galaxygaming.dispenser.team.Team;
 
 import org.bukkit.permissions.Permission;
 
-/**
- * 
- */
 class TeamCommand extends Command {
 
     public TeamCommand() {
@@ -18,8 +15,8 @@ class TeamCommand extends Command {
         this.name = "team";
         this.mustBePlayer = true;
         this.optionalArgs.add("team name");
-        this.description = "Join a team";
-        this.permission = new Permission("gamedispenser.command.join");
+        this.description = "Join a team.";
+        this.permission = new Permission("gamedispenser.command.team");
     }
     
     @Override
@@ -45,7 +42,8 @@ class TeamCommand extends Command {
         Team selectedTeam = null;
         for (Team team : teams) {
             if (team.getName().equalsIgnoreCase(args[0])) {
-                selectedTeam = team; 
+                selectedTeam = team;
+                break;
             }
         }
         

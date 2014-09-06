@@ -1,11 +1,13 @@
 package net.galaxygaming.dispenser.game;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.component.Component;
 import net.galaxygaming.dispenser.game.component.SetComponentException;
+import net.galaxygaming.dispenser.kit.Kit;
 import net.galaxygaming.selection.Selection;
 
 import org.bukkit.Location;
@@ -266,4 +268,22 @@ public interface Game {
      * component system @see {@link Component}
      */
     public boolean isSetup();
+    
+    /**
+     * Gets a games kits, if applicable
+     * @return a list of kits available in this game
+     */
+    public ArrayList<Kit> getKits();
+    
+    /**
+     * Adds a kit to the game
+     * @param kit the kit to add
+     */
+    public void addKit(Kit kit);
+
+    /**
+     * Removes a kit from the game
+     * @param kit the kit to remove
+     */
+    public void removeKit(Kit kit);
 }
