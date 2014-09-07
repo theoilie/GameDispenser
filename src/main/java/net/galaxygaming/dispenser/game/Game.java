@@ -202,30 +202,6 @@ public interface Game {
     public void setComponent(String componentName, Player player, String args) throws SetComponentException;
     
     /**
-     * Sets a component in this game with a {@link Location}
-     * @param componentName
-     * @param location
-     * @deprecated @see {@link Component}
-     */
-    public boolean setComponent(String componentName, Location location);
-    
-    /**
-     * Sets a component in this game with a {@link Selection}
-     * @param componentName
-     * @param selection
-     * @deprecated @see {@link Component}
-     */
-    public boolean setComponent(String componentName, Selection selection);
-    
-    /**
-     * Sets a component in this game with a String array
-     * @param componentName
-     * @param args
-     * @deprecated @see {@link Component}
-     */
-    public boolean setComponent(String componentName, String[] args);
-    
-    /**
      * Gives a list of components that have been registered for this game
      * @return list of component names
      */

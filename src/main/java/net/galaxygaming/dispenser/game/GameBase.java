@@ -22,7 +22,6 @@ import net.galaxygaming.dispenser.game.component.ComponentManager;
 import net.galaxygaming.dispenser.game.component.SetComponentException;
 import net.galaxygaming.dispenser.kit.Kit;
 import net.galaxygaming.dispenser.task.GameRunnable;
-import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.FormatUtil;
 
 import org.apache.commons.lang.Validate;
@@ -163,14 +162,6 @@ public abstract class GameBase implements Game {
             sign.update(false, false);
         }
     }
-    
-    /**
-     * Why would you use this, don't ever use this
-     * @see {@link Component}
-     * @param componentName
-     */
-    @Deprecated
-    protected final void addComponent(String componentName) {}
     
     @Override
     public final Set<String> getComponents() {
@@ -318,17 +309,11 @@ public abstract class GameBase implements Game {
 			onSecond();
 			if (counter > 0) {
 				updateScoreboard();
-				if (counter % 60 == 0 || (counter < 60 && counter % 30 == 0)
-						|| (counter <= 5 && counter > 0)) {
-					if (getState().ordinal() == GameState.STARTING.ordinal()) {
-						broadcast(
-								type.getMessages().getMessage(
-										"game.countdown.start"), counter);
-					} else if (getState().ordinal() > GameState.GRACE.ordinal()) {
-						broadcast(
-								type.getMessages().getMessage(
-										"game.countdown.end"), counter);
-					}
+				if (counter % 60 == 0 || (counter < 60 && counter % 30 == 0) || (counter <= 5 && counter > 0)) {
+					if (getState().ordinal() == GameState.STARTING.ordinal())
+						broadcast(type.getMessages().getMessage("game.countdown.start"), counter);
+					else if (getState().ordinal() > GameState.GRACE.ordinal())
+						broadcast(type.getMessages().getMessage("game.countdown.end"), counter);
 				}
 
 				counter--;
@@ -387,9 +372,7 @@ public abstract class GameBase implements Game {
             startCountdown();
         }
         
-        broadcast(type.getMessages().getMessage("game.broadcastPlayerJoin"),
-                player.getName(), players.size(), 
-                maximumPlayers > 0 ? maximumPlayers : "\u221e");
+        broadcast(type.getMessages().getMessage("game.broadcastPlayerJoin"), player.getName(), players.size(), maximumPlayers > 0 ? maximumPlayers : "\u221e");
         
         onPlayerJoin(player);
         updateSigns();
@@ -404,11 +387,8 @@ public abstract class GameBase implements Game {
     
     @Override
     public final void removePlayer(Player player, boolean broadcast) {
-        if (broadcast) {
-            broadcast(type.getMessages().getMessage("game.broadcastPlayerLeave"),
-                    player.getName(), players.size(), 
-                    maximumPlayers > 0 ? maximumPlayers : "\u221e");
-        }
+        if (broadcast)
+            broadcast(type.getMessages().getMessage("game.broadcastPlayerLeave"), player.getName(), players.size(), maximumPlayers > 0 ? maximumPlayers : "\u221e");
 
         GameManager.getGameManager().removePlayerFromGame(player);
         players.remove(player);
@@ -481,21 +461,6 @@ public abstract class GameBase implements Game {
     }
     
     @Override
-    public boolean setComponent(String componentName, Location location) {
-        return false;
-    }
-    
-    @Override
-    public boolean setComponent(String componentName, Selection selection) {
-        return false;
-    }
-    
-    @Override
-    public boolean setComponent(String componentName, String[] args) {
-        return false;
-    }
-    
-    @Override
     public final boolean equals(Object o) {
         if (o == null) {
             return false;
@@ -506,13 +471,11 @@ public abstract class GameBase implements Game {
         }
         
         if (getClass() == o.getClass()) {            
-            if (this.name.equalsIgnoreCase(((GameBase) o).name)) {
+            if (this.name.equalsIgnoreCase(((GameBase) o).name))
                 return true;
-            }
         } else if (o.getClass() == String.class) {
-            if (this.name.equalsIgnoreCase((String) o)) {
+            if (this.name.equalsIgnoreCase((String) o))
                 return true;
-            }
         }
         return false;
     }
