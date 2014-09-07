@@ -13,9 +13,6 @@ import net.galaxygaming.dispenser.game.Game;
 
 import com.google.common.collect.Sets;
 
-/**
- * 
- */
 public class ComponentManager {
 
     private static final Set<ComponentType> registeredTypes = Sets.newHashSet();

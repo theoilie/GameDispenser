@@ -5,9 +5,6 @@ import java.lang.reflect.Field;
 import org.bukkit.entity.Player;
 import net.galaxygaming.dispenser.game.Game;
 
-/**
- * 
- */
 public abstract class ComponentType {
 
     Class<?>[] types;

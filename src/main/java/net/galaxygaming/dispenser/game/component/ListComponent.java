@@ -11,9 +11,6 @@ import com.google.common.collect.Lists;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.util.LocationUtil;
 
-/**
- * 
- */
 class ListComponent extends ComponentType {
 
     public ListComponent() {

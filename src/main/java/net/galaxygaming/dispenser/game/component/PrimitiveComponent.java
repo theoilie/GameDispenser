@@ -10,9 +10,6 @@ import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.SelectionUtil;
 
-/**
- * 
- */
 class PrimitiveComponent extends ComponentType {
 
     public PrimitiveComponent() {

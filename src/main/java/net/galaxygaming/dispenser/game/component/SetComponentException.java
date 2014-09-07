@@ -3,9 +3,6 @@ package net.galaxygaming.dispenser.game.component;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.util.FormatUtil;
 
-/**
- * 
- */
 public class SetComponentException extends Exception {
     private static final long serialVersionUID = 191857850174787104L;
     

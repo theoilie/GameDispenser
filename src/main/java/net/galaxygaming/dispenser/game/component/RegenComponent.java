@@ -9,9 +9,6 @@ import net.galaxygaming.selection.RegenableSelection;
 import net.galaxygaming.selection.Selection;
 import net.galaxygaming.util.SelectionUtil;
 
-/**
- * 
- */
 class RegenComponent extends ComponentType {
 
     public RegenComponent() {

@@ -12,9 +12,6 @@ import org.bukkit.entity.Player;
 
 import com.google.common.collect.Lists;
 
-/**
- * 
- */
 class Array1DComponent extends ComponentType {
 
     // No constructor because array has no inbuilt type

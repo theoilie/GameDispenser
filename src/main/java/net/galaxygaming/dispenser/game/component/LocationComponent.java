@@ -8,9 +8,6 @@ import org.bukkit.entity.Player;
 import net.galaxygaming.dispenser.game.Game;
 import net.galaxygaming.util.LocationUtil;
 
-/**
- * 
- */
 class LocationComponent extends ComponentType {
 
     public LocationComponent() {
