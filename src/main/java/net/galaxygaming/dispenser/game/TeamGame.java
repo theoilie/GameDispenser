@@ -18,9 +18,6 @@ import net.galaxygaming.dispenser.exception.TeamException;
 import net.galaxygaming.dispenser.team.Team;
 import net.galaxygaming.util.FormatUtil;
 
-/**
- * 
- */
 public abstract class TeamGame extends GameBase {
 
     protected List<Team> teams = Lists.newArrayList();
