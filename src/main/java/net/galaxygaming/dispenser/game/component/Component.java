@@ -21,7 +21,7 @@ public @interface Component {
     /**
      * Flag whether to ignore this component
      * when checking if the game is setup
-     * @return
+     * @return whether or not to ignore this when checking if the game is setup
      */
     boolean ignoreSetup() default false;
 }
