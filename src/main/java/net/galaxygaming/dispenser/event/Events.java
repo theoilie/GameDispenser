@@ -15,7 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -36,7 +35,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.EventExecutor;
-import org.bukkit.projectiles.ProjectileSource;
 
 class Events implements Listener, EventExecutor {
 
@@ -229,7 +227,8 @@ class Events implements Listener, EventExecutor {
 		Entity damager = event.getDamager();
 		Entity damagee = event.getEntity();
 		if (damager instanceof Player && damagee instanceof Player) {
-			
+			Bukkit.getPluginManager().callEvent(new PlayerDamagePlayerEvent((Player) damager, (Player) damagee, event.getDamage()));
+			event.setCancelled(true);
 		} else if (damager instanceof Player && damagee instanceof LivingEntity) {
 			Bukkit.getPluginManager().callEvent(new PlayerDamageEntityEvent((Player) damager, (LivingEntity) damagee, event.getDamage()));
 			event.setCancelled(true);
@@ -247,10 +246,13 @@ class Events implements Listener, EventExecutor {
 	@Override
 	public void execute(Listener listener, Event event) throws EventException {
 		if (event instanceof PlayerDamageEntityEvent)
-			((PlayerDamageEntityEvent) event).getDamagee().damage(((PlayerDamageEntityEvent) event).getDamage());
+			if (!((PlayerDamageEntityEvent) event).isCancelled())
+				((PlayerDamageEntityEvent) event).getDamagee().damage(((PlayerDamageEntityEvent) event).getDamage());
 		else if (event instanceof EntityDamagePlayerEvent)
-			((EntityDamagePlayerEvent) event).getDamagee().damage(((EntityDamagePlayerEvent) event).getDamage());
+			if (!((EntityDamagePlayerEvent) event).isCancelled())
+				((EntityDamagePlayerEvent) event).getDamagee().damage(((EntityDamagePlayerEvent) event).getDamage());
 		else if (event instanceof PlayerDamagePlayerEvent)
-			((PlayerDamagePlayerEvent) event).getDamagee().damage(((PlayerDamagePlayerEvent) event).getDamage());
+			if (!((PlayerDamagePlayerEvent) event).isCancelled())
+				((PlayerDamagePlayerEvent) event).getDamagee().damage(((PlayerDamagePlayerEvent) event).getDamage());
 	}
 }

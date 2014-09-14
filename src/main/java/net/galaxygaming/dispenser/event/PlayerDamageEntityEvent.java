@@ -40,7 +40,7 @@ public class PlayerDamageEntityEvent extends EntityDamageEvent implements Cancel
 	public LivingEntity getDamagee() {
 		return damagee;
 	}
-	
+
 	/**
 	 * Gets the amount of damage done
 	 * @return the amount of damage dealt

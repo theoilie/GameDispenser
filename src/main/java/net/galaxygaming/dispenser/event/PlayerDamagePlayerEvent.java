@@ -10,6 +10,7 @@ public class PlayerDamagePlayerEvent extends EntityDamageEvent implements Cancel
 	private Player damagee;
 	private double damage;
 	private boolean cancel;
+	private boolean isPlayer1InGame, isPlayer2InGame;
 
 	/**
 	 * When a player hurts another player
@@ -57,6 +58,38 @@ public class PlayerDamagePlayerEvent extends EntityDamageEvent implements Cancel
 		this.damage = damage;
 	}
 	
+	/**
+	 * Checks if the damager is in a game
+	 * @return true if the damager is playing a minigame
+	 */
+	public boolean isPlayer1InGame() {
+		return isPlayer1InGame;
+	}
+
+	/**
+	 * Sets if the damager is in a game
+	 * @param isPlayer1InGame whether or not the damager is playing a minigame
+	 */
+	public void setPlayer1InGame(boolean isPlayer1InGame) {
+		this.isPlayer1InGame = isPlayer1InGame;
+	}
+	
+	/**
+	 * Checks if the damagee is in a game
+	 * @return true if the damagee is playing a minigame
+	 */
+	public boolean isPlayer2InGame() {
+		return isPlayer2InGame;
+	}
+
+	/**
+	 * Sets if the damagee is in a game
+	 * @param isPlayer1InGame whether or not the damaged is playing a minigame
+	 */
+	public void setPlayer2InGame(boolean isPlayer2InGame) {
+		this.isPlayer2InGame = isPlayer2InGame;
+	}
+	
 	@Override
 	public HandlerList getHandlers() {
 		return super.getHandlers();
@@ -71,4 +104,5 @@ public class PlayerDamagePlayerEvent extends EntityDamageEvent implements Cancel
 	public void setCancelled(boolean cancel) {
 		this.cancel = cancel;
 	}
+
 }

@@ -115,13 +115,24 @@ public class EventManager {
                         
                         if (gameClass != null) {
                             Player player = null;
+                            Player player2 = null;
                             if (event instanceof PlayerEvent) {
                                 player = ((PlayerEvent) event).getPlayer();
                             } else if (event instanceof EntityEvent) {
-                                Entity entity = ((EntityEvent) event).getEntity();
-                                if (entity instanceof Player) {
-                                    player = (Player) entity;
-                                }
+								if (event instanceof PlayerDamagePlayerEvent) {
+									player = ((PlayerDamagePlayerEvent) event).getDamager();
+									player2 = ((PlayerDamagePlayerEvent) event).getDamagee();
+									((PlayerDamagePlayerEvent) event).setPlayer1InGame(GameManager.getGameManager().getGameForPlayer(player, gameClass) != null);
+									((PlayerDamagePlayerEvent) event).setPlayer2InGame(GameManager.getGameManager().getGameForPlayer(player2, gameClass) != null);
+								} else if (event instanceof PlayerDamageEntityEvent) {
+									player = ((PlayerDamageEntityEvent) event).getDamager();
+								}
+								else {
+									Entity entity = ((EntityEvent) event).getEntity();
+									if (entity instanceof Player) {
+										player = (Player) entity;
+									}
+								}
                             } else if (event instanceof BlockBreakEvent) {
                                 player = ((BlockBreakEvent) event).getPlayer();
                             } else if (event instanceof BlockPlaceEvent) {
@@ -132,15 +143,19 @@ public class EventManager {
                                 player = ((SignChangeEvent) event).getPlayer();
                             }
                             
-                            if (player == null) {
-                                return;
-                            }
+                            if (player == null)
+                            		return;
                             
                             Game game = GameManager.getGameManager().getGameForPlayer(player, gameClass);
-                            if (game == null)
-                                return;
+                            if (game == null) {
+                            		if (player2 != null) // If PlayerDamageByPlayerEvent and damager is not in a game, then check if damagee is in a game.
+                            			game = GameManager.getGameManager().getGameForPlayer(player2, gameClass);
+                            		if (game != null)
+                                    	method.invoke(listener, event, gameClass.cast(game));
+                            		return;
+                            }
                             
-                            method.invoke(listener, event, gameClass.cast(game));
+                            	method.invoke(listener, event, gameClass.cast(game));
                         } else {
                             method.invoke(listener, event);
                         }

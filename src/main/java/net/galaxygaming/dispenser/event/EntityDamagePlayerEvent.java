@@ -39,7 +39,7 @@ public class EntityDamagePlayerEvent extends EntityDamageEvent implements Cancel
 	 */
 	public Player getDamagee() {
 		return damagee;
-	}
+	}	
 	
 	/**
 	 * Gets the amount of damage done
