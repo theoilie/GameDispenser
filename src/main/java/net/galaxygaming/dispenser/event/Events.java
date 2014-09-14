@@ -228,17 +228,13 @@ class Events implements Listener, EventExecutor {
 		Entity damagee = event.getEntity();
 		if (damager instanceof Player && damagee instanceof Player) {
 			Bukkit.getPluginManager().callEvent(new PlayerDamagePlayerEvent((Player) damager, (Player) damagee, event.getDamage()));
-			event.setCancelled(true);
 		} else if (damager instanceof Player && damagee instanceof LivingEntity) {
 			Bukkit.getPluginManager().callEvent(new PlayerDamageEntityEvent((Player) damager, (LivingEntity) damagee, event.getDamage()));
-			event.setCancelled(true);
 		} else if (damagee instanceof Player) {
 			if (damager instanceof LivingEntity) {
 				Bukkit.getPluginManager().callEvent(new EntityDamagePlayerEvent((LivingEntity) damager, (Player) damagee, event.getDamage()));
-				event.setCancelled(true);
 			} else if (damager instanceof Projectile) {
 				Bukkit.getPluginManager().callEvent(new EntityDamagePlayerEvent((LivingEntity) ((Projectile) damager).getShooter(), (Player) damagee, event.getDamage()));
-				event.setCancelled(true);
 			}
 		}
 	}
