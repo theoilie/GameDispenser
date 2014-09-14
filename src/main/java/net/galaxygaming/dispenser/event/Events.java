@@ -96,8 +96,7 @@ class Events implements Listener {
 				Location loc = event.getClickedBlock().getLocation();
 				
 				player.sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages()
-					.getMessage("selection.pointSelected"), "1",
-						LocationUtil.serializeLocation(loc)));
+					.getMessage("selection.pointSelected"), "1", LocationUtil.serializeLocation(loc)));
 				
 				selection.setPointOne(loc);
 				event.setCancelled(true);
@@ -107,8 +106,7 @@ class Events implements Listener {
 				Location loc = event.getClickedBlock().getLocation();
 				
 				player.sendMessage(FormatUtil.format(GameDispenser.getInstance().getMessages()
-					.getMessage("selection.pointSelected"), "2",
-						LocationUtil.serializeLocation(loc)));
+					.getMessage("selection.pointSelected"), "2", LocationUtil.serializeLocation(loc)));
 				
 				selection.setPointTwo(loc);
 				event.setCancelled(true);
