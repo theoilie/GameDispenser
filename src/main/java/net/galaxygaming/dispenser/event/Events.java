@@ -11,15 +11,23 @@ import net.galaxygaming.util.FormatUtil;
 import net.galaxygaming.util.LocationUtil;
 import net.galaxygaming.util.SelectionUtil;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,8 +35,10 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.EventExecutor;
+import org.bukkit.projectiles.ProjectileSource;
 
-class Events implements Listener {
+class Events implements Listener, EventExecutor {
 
     /*
      * Control what messages players can see while in game
@@ -74,7 +84,7 @@ class Events implements Listener {
             return;
         }
         
-        // Hopefully no one else registers metadata with this name lol
+        // Hopefully no one else registers metadata with this name
         List<MetadataValue> metadata = event.getPlayer().getMetadata("gameLastLocation");
         if (metadata != null && !metadata.isEmpty()) {
             event.setRespawnLocation((Location) metadata.get(0).value());
@@ -209,5 +219,38 @@ class Events implements Listener {
 	            }
 	        }
 	    }
+	}
+	
+	/*
+	 * Registers custom events originating from players dealing and receiving damage
+	 */
+	@EventHandler
+	private void onEntityDamage(EntityDamageByEntityEvent event) {
+		Entity damager = event.getDamager();
+		Entity damagee = event.getEntity();
+		if (damager instanceof Player && damagee instanceof Player) {
+			
+		} else if (damager instanceof Player && damagee instanceof LivingEntity) {
+			Bukkit.getPluginManager().callEvent(new PlayerDamageEntityEvent((Player) damager, (LivingEntity) damagee, event.getDamage()));
+			event.setCancelled(true);
+		} else if (damagee instanceof Player) {
+			if (damager instanceof LivingEntity) {
+				Bukkit.getPluginManager().callEvent(new EntityDamagePlayerEvent((LivingEntity) damager, (Player) damagee, event.getDamage()));
+				event.setCancelled(true);
+			} else if (damager instanceof Projectile) {
+				Bukkit.getPluginManager().callEvent(new EntityDamagePlayerEvent((LivingEntity) ((Projectile) damager).getShooter(), (Player) damagee, event.getDamage()));
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@Override
+	public void execute(Listener listener, Event event) throws EventException {
+		if (event instanceof PlayerDamageEntityEvent)
+			((PlayerDamageEntityEvent) event).getDamagee().damage(((PlayerDamageEntityEvent) event).getDamage());
+		else if (event instanceof EntityDamagePlayerEvent)
+			((EntityDamagePlayerEvent) event).getDamagee().damage(((EntityDamagePlayerEvent) event).getDamage());
+		else if (event instanceof PlayerDamagePlayerEvent)
+			((PlayerDamagePlayerEvent) event).getDamagee().damage(((PlayerDamagePlayerEvent) event).getDamage());
 	}
 }

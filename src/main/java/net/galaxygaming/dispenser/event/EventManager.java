@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -48,7 +49,11 @@ public class EventManager {
      */
     public void setup(GameDispenser plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(new Events(), plugin);
+        Events events = new Events();
+        plugin.getServer().getPluginManager().registerEvents(events, plugin);
+        plugin.getServer().getPluginManager().registerEvent(PlayerDamageEntityEvent.class, events, EventPriority.NORMAL, events, plugin);
+        plugin.getServer().getPluginManager().registerEvent(EntityDamagePlayerEvent.class, events, EventPriority.NORMAL, events, plugin);
+        plugin.getServer().getPluginManager().registerEvent(PlayerDamagePlayerEvent.class, events, EventPriority.NORMAL, events, plugin);
     }
     
     /**
