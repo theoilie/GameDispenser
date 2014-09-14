@@ -525,12 +525,12 @@ public abstract class GameBase implements Game {
         this.lastPlayerCount = getPlayers().length;
         this.signs = Sets.newHashSet();
 
+        board = Bukkit.getScoreboardManager().getNewScoreboard();
+        objective = board.registerNewObjective(ChatColor.translateAlternateColorCodes('&', "&6&l" + getType().toString()), "dummy");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        
         onLoad();
         
-        board = Bukkit.getScoreboardManager().getNewScoreboard();
-        objective = board.registerNewObjective(ChatColor.translateAlternateColorCodes('&', 
-                "&6&l" + getType().toString()), "dummy");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         updateScoreboard();
         
         /*
