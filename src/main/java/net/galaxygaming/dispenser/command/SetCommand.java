@@ -35,7 +35,7 @@ class SetCommand extends Command {
             for (String arg : Arrays.copyOfRange(args, 2, args.length)) {
                 result.append(arg + " ");
             }
-            result.deleteCharAt(result.length());
+            result.deleteCharAt(result.length() - 1);
             joinArgs = result.toString();
         }
         
