@@ -22,9 +22,9 @@ import net.galaxygaming.dispenser.task.GameRunnable;
  * Used for areas that should be restored
  * sometime during or after the game
  */
-public class RegenableSelection {    
-    private static final int MAX_BLOCKS_PER_INTERVAL = 250;
-    private static final long INTERVAL_LENGTH = 20;
+public class RegenableSelection {
+    private int blocksPerInterval = 2500;
+    private long intervalTicks = 10;
     
     private final Selection selection;
     private final Game game;
@@ -125,7 +125,7 @@ public class RegenableSelection {
                 
                 List<List<BlockState>> blockUpdates = Lists.newArrayList();
                 
-                for (int i = 0; i < Math.ceil(((double) blocks.length) / MAX_BLOCKS_PER_INTERVAL); i++) {
+                for (int i = 0; i < Math.ceil(((double) blocks.length) / blocksPerInterval); i++) {
                     blockUpdates.add(Lists.<BlockState>newArrayList());
                 }
                 
@@ -135,12 +135,19 @@ public class RegenableSelection {
                     for (int j = 0; j < Ly; j++) {
                         int y = j + min.getBlockY();
                         for (int k = 0; k < Lz; k++) {
-                            int updateIndex = (int) Math.floor(blockCount / MAX_BLOCKS_PER_INTERVAL);
+                            int updateIndex = (int) Math.floor(blockCount / blocksPerInterval);
                             int z = k + min.getBlockZ();
                             int index = i + j * Lx + k * Lx * Ly;
                             BlockState state = world.getBlockAt(x, y, z).getState();
-                            state.setTypeId(blocks[index] & 0xFF);
-                            state.setRawData((byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))));
+                            
+                            int id = blocks[index] & 0xFF;
+                            byte rawdata = (byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2)));
+                            if (state.getTypeId() == id && state.getRawData() == rawdata) {
+                                continue;
+                            }
+                            
+                            state.setTypeId(id);
+                            state.setRawData(rawdata);
                             blockUpdates.get(updateIndex).add(state);
                             blockCount++;
                         }
@@ -156,7 +163,7 @@ public class RegenableSelection {
                                 state.update(true, false);
                             }
                         }
-                    }.runTaskLater(i * INTERVAL_LENGTH);
+                    }.runTaskLater(i * intervalTicks);
                 }
             }
         }.runTaskAsynchronously();
@@ -243,6 +250,8 @@ public class RegenableSelection {
             in.read(data);
             
             RegenableSelection region = new RegenableSelection(game, regionName, selection, blocks, data);
+            region.blocksPerInterval = game.getConfig().getInt("blocks per interval", region.blocksPerInterval);
+            region.intervalTicks = game.getConfig().getLong("interval ticks", region.intervalTicks);
             return region;
         } catch (FileNotFoundException e) {
             game.getLogger().log(Level.WARNING, "Could not find file: " + file.getName(), e);
