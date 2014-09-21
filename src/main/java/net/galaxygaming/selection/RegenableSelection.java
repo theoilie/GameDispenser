@@ -123,19 +123,13 @@ public class RegenableSelection {
                     return;
                 }
                 
-                List<List<BlockState>> blockUpdates = Lists.newArrayList();
+                List<BlockState> updates = Lists.newArrayList();
                 
-                for (int i = 0; i < Math.ceil(((double) blocks.length) / blocksPerInterval); i++) {
-                    blockUpdates.add(Lists.<BlockState>newArrayList());
-                }
-                
-                int blockCount = 0;
                 for (int i = 0; i < Lx; i++) {
                     int x = i + min.getBlockX();
                     for (int j = 0; j < Ly; j++) {
                         int y = j + min.getBlockY();
                         for (int k = 0; k < Lz; k++) {
-                            int updateIndex = (int) Math.floor(blockCount / blocksPerInterval);
                             int z = k + min.getBlockZ();
                             int index = i + j * Lx + k * Lx * Ly;
                             BlockState state = world.getBlockAt(x, y, z).getState();
@@ -148,14 +142,23 @@ public class RegenableSelection {
                             
                             state.setTypeId(id);
                             state.setRawData(rawdata);
-                            blockUpdates.get(updateIndex).add(state);
-                            blockCount++;
+                            updates.add(state);
                         }
                     }
                 }
                 
-                for (int i = 0; i < blockUpdates.size(); i++) {
-                    final List<BlockState> states = blockUpdates.get(i);
+                List<List<BlockState>> splitUpdates = Lists.newArrayList();
+                
+                for (int i = 0; i < Math.ceil(((double) updates.size()) / blocksPerInterval); i++) {
+                    splitUpdates.add(Lists.<BlockState>newArrayList());
+                }
+                
+                for (int i = 0; i < updates.size(); i++) {
+                    splitUpdates.get((int) Math.floor(i / blocksPerInterval)).add(updates.get(i));
+                }
+                
+                for (int i = 0; i < splitUpdates.size(); i++) {
+                    final List<BlockState> states = splitUpdates.get(i);
                     new GameRunnable() {
                         @Override
                         public void run() {
@@ -214,6 +217,8 @@ public class RegenableSelection {
         }
         
         game.getConfig().set(regionName, selection);
+        game.getConfig().set("blocks per interval", blocksPerInterval);
+        game.getConfig().set("interval ticks", intervalTicks);
     }
     
     /** 
