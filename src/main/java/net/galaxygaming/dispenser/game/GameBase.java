@@ -83,6 +83,10 @@ public abstract class GameBase implements Game {
     @Component(name = "use scoreboard time")
     protected boolean useScoreboardTime = false;
     
+    /** Spawn player back at spawn or last location */
+    @Component(name = "spawn at last location")
+    protected boolean useLastLocation = false;
+    
     /** The game's scoreboard */
     protected Scoreboard board;
     
@@ -392,13 +396,17 @@ public abstract class GameBase implements Game {
 
         GameManager.getGameManager().removePlayerFromGame(player);
         players.remove(player);
-        if (getMetadata(player, "gameLastLocation") != null) {
-            Location loc = (Location) getMetadata(player, "gameLastLocation").value();
-            if (!player.isDead()) {
-                player.teleport(loc);
-                removeMetadata(player, "gameLastLocation");
+        
+        if (!player.isDead()) {
+            if (useLastLocation && getMetadata(player, "gameLastLocation") != null) {
+                player.teleport((Location) getMetadata(player, "gameLastLocation").value());
+            } else {
+                player.teleport(player.getWorld().getSpawnLocation());
             }
         }
+        
+        removeMetadata(player, "gameLastLocation");        
+        
         updateSigns();
         updateScoreboard();
     }
