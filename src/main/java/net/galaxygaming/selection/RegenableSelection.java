@@ -139,7 +139,7 @@ public class RegenableSelection {
                             int z = k + min.getBlockZ();
                             int index = i + j * Lx + k * Lx * Ly;
                             BlockState state = world.getBlockAt(x, y, z).getState();
-                            state.setTypeId(blocks[index]);
+                            state.setTypeId(blocks[index] & 0xFF);
                             state.setRawData((byte) (data[(int) Math.floor(index / 2)] >> (4 * (index % 2))));
                             blockUpdates.get(updateIndex).add(state);
                             blockCount++;
