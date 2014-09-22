@@ -405,7 +405,9 @@ public abstract class GameBase implements Game {
             }
         }
         
-        removeMetadata(player, "gameLastLocation");        
+        removeMetadata(player, "gameLastLocation");
+        
+        onPlayerLeave(player);
         
         updateSigns();
         updateScoreboard();
@@ -555,6 +557,8 @@ public abstract class GameBase implements Game {
             
             current = current.getSuperclass();
         }
+        
+        // TODO: add regen selection interval stuff if any components are regen selection
         
         /*
          * Attempt to load components in this next loop
