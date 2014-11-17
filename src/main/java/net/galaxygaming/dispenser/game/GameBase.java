@@ -468,6 +468,8 @@ public abstract class GameBase implements Game {
                 return;
             }
         }
+        
+        throw new SetComponentException(this, "component.notmatched", this.getName(), componentName);
     }
     
     @Override
@@ -551,7 +553,7 @@ public abstract class GameBase implements Game {
             for (Field field : current.getDeclaredFields()) {
                 Component c = field.getAnnotation(Component.class);
                 if (c != null) {
-                    components.put(c.name().isEmpty() ? field.getName() : c.name(), field);
+                    components.put(c.name().isEmpty() ? field.getName() : c.name().replaceAll(" ", "_"), field);
                 }
             }
             
