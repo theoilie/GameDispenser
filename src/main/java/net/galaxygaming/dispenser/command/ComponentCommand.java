@@ -33,6 +33,6 @@ class ComponentCommand extends Command {
                 return;
             }
         }
-        printList(page, game.getComponents().toArray(new String[0]));
+        printList(page, "Components", game.getComponents().toArray(new String[0]));
     }
 }

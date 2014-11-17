@@ -28,7 +28,7 @@ class KitCommand extends Command {
         Kit[] kits = game.getKits().toArray(new Kit[0]);
         
         if (args.length == 0) {
-            printList(1, kits);
+            printList(1, "Kits", kits);
             return;
         }
         
@@ -42,7 +42,7 @@ class KitCommand extends Command {
         
         if (selectedKit == null) {
             error(messages.getMessage(CommandMessage.NO_KIT), args[0]);
-            printList(1, kits);
+            printList(1, "Kits", kits);
             return;
         }
         

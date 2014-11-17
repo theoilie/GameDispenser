@@ -148,25 +148,23 @@ public abstract class Command implements CommandExecutor {
     }
     
     /**
-     * Prints an array of objects, 30 a page
+     * Prints an array of objects, 9 a page
      * @param page page to print
      * @param objects array of objects
      */
-    protected final void printList(int page, Object[] objects) {
+    protected final void printList(int page, String header, Object[] objects) {
         int total = objects.length;
-        int pages = total / 30;
+        int pages = (total + 8) / 9;
         
         if (page < 1 || page > pages) {
-            error(messages.getMessage(CommandMessage.NO_PAGE));
+            error(messages.getMessage(CommandMessage.NO_PAGE), page);
             return;
         }
         
-        StringBuilder result = new StringBuilder();
-        for (int i = (page - 1) * 30; i < page * 30 && i < objects.length; i++) {
-            result.append(objects[i].toString());
+        sendMessage(messages.getMessage(CommandMessage.LIST_HEADER_FORMAT), header, page, pages);
+        for (int i = (page - 1) * 9; i < page * 9 && i < objects.length; i++) {
+            sendMessage(objects[i].toString());
         }
-        
-        sendMessage(result.toString());
     }
     
     /**
@@ -282,6 +280,7 @@ public abstract class Command implements CommandExecutor {
             WAND_MESSAGE					= "selection.wandMessage",
             NO_TEAM                      = "commands.noTeam",
             NOT_TEAM_GAME                = "commands.notTeamGame",
-            NO_KIT						= "commands.noKit";
+            NO_KIT						= "commands.noKit",
+            LIST_HEADER_FORMAT           = "commands.listHeaderFormat";
     }   
 }
