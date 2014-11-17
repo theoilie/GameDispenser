@@ -8,8 +8,6 @@ import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.component.Component;
 import net.galaxygaming.dispenser.game.component.SetComponentException;
 import net.galaxygaming.dispenser.kit.Kit;
-import net.galaxygaming.selection.Selection;
-
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
