@@ -39,6 +39,9 @@ public class CommandManager {
         root.addExecutor(new WandCommand());
         root.addExecutor(new SetCommand());
         root.addExecutor(new ListCommand());
+        root.addExecutor(new ComponentCommand());
+        root.addExecutor(new TeamCommand());
+        root.addExecutor(new KitCommand());
     }
     
     /**
