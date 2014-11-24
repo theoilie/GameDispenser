@@ -28,4 +28,14 @@ class LocationComponent extends ComponentType {
     public Object componentFromSetup(Game game, String name, Class<?> clazz, Player player, String args) throws SetComponentException {
         return player.getLocation();
     }
+    
+    @Override
+    public String[] getInfo(Game game, Field field) throws IllegalArgumentException, IllegalAccessException {        
+        return new String[] {field.getType().getSimpleName(), (!isSetup(game, field) ? "&cX": "&a" + LocationUtil.serializeLocationShort((Location) field.get(game)))};
+    }
+    
+    @Override
+    public String getPrintedValue(Class<?> clazz, Object o) {
+        return LocationUtil.serializeLocationShort((Location) o);
+    }
 }

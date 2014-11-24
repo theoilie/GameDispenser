@@ -10,11 +10,25 @@ class ComponentCommand extends Command {
     public ComponentCommand() {
         this.prefix = "gd";
         this.name = "component";
+        this.aliases.add("comp");
+        this.aliases.add("components");
         this.requiredArgs.add("game name");
         this.optionalArgs.add("page");
         this.description = "Shows a list of components a game has";
         this.permission = new Permission("gamedispenser.command.component");
     }
+    
+    String[] titles = new String[] {
+            "Name",
+            "Type",
+            "Value"
+    };
+    
+    int[] spacings = new int[] {
+            25,
+            15,
+            18
+    };
     
     @Override
     public void perform() {
@@ -32,7 +46,14 @@ class ComponentCommand extends Command {
                 error(messages.getMessage(CommandMessage.NOT_A_NUMBER), args[1]);
                 return;
             }
-        }
-        printList(page, "Components", game.getComponents().toArray(new String[0]));
+        }        
+        
+        Object[] result = game.getComponentsInfo();
+        int[] counts = (int[]) result[0];
+        String[][] data = (String[][]) result[1];
+        int ratio = (counts[0] * 100 / counts[1]);
+        String header = "Components " + (ratio == 100 ? "&a" : "&c") + ratio + "%";
+        
+        printTable(titles, data, spacings, header, page, !isPlayer());
     }
 }

@@ -188,6 +188,11 @@ public class Selection implements ConfigurationSerializable {
         return result;
     }
     
+    @Override
+    public String toString() {
+        return "min:" + LocationUtil.serializeLocationShort(getMin()) + ", max:" + LocationUtil.serializeLocationShort(getMax());
+    }
+    
     /**
      * Clones this selection
      * @return a clone of this selection

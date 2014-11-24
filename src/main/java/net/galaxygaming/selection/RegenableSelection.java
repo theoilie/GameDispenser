@@ -38,7 +38,7 @@ public class RegenableSelection {
      * @param selection selection specifying area
      */
     public RegenableSelection(Game game, String regionName, Selection selection) {
-        this.selection = selection;
+        this.selection = selection.clone();
         this.game = game;
         this.regionName = regionName;
         

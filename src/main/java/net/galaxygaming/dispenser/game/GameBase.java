@@ -119,7 +119,7 @@ public abstract class GameBase implements Game {
     Plugin fakePlugin;
     
     @Component(ignoreSetup = true)
-    private Set<Location> signs;
+    private List<Location> signs;
     
     private int counter;
     private int tick;
@@ -142,8 +142,8 @@ public abstract class GameBase implements Game {
         signs.remove(location);
     }
     
-    public final Set<Location> getSigns() {
-        return Collections.unmodifiableSet(signs);
+    public final List<Location> getSigns() {
+        return Collections.unmodifiableList(signs);
     }
     
     public final void updateSigns() {
@@ -170,6 +170,40 @@ public abstract class GameBase implements Game {
     @Override
     public final Set<String> getComponents() {
         return components.keySet();
+    }
+    
+    @Override
+    public final String[] getComponentInfo(String componentName) {
+        Field f = components.get(componentName);
+        if (f == null) {
+            return new String[] {componentName, "is not a", "component"};
+        }
+        
+        String[] info = ComponentManager.getComponentInfo(this, f);
+        return new String[] {componentName, info[0], info.length > 1 ? info[1] : ""};
+    }
+    
+    @Override
+    public final Object[] getComponentsInfo() {
+        Set<String> resultComponents = Sets.newTreeSet(String.CASE_INSENSITIVE_ORDER);
+        int setupComponents = 0;
+        
+        for (String componentName : getComponents()) {
+            if (!components.get(componentName).getAnnotation(Component.class).ignoreSetup()) {
+                resultComponents.add(componentName);
+                if (ComponentManager.isSetup(this, components.get(componentName))) {
+                    setupComponents++;
+                }
+            }
+        }        
+        
+        String[][] result = new String[resultComponents.size()][3];
+        Iterator<String> it = resultComponents.iterator();
+        for (int i = 0; i < resultComponents.size(); i++) {
+            result[i] = getComponentInfo(it.next());
+        }
+        
+        return new Object[] {new int[] {setupComponents, resultComponents.size()}, result};
     }
     
     @Override
@@ -428,6 +462,12 @@ public abstract class GameBase implements Game {
         return true;
     }
     
+    @Override
+    public boolean isSetup(String componentName) {
+        Field f = components.get(componentName);
+        return f == null ? false : ComponentManager.isSetup(this, f);
+    }
+    
     /* Override the following methods and let
      * devs choose whether to use them or not
      */
@@ -535,7 +575,7 @@ public abstract class GameBase implements Game {
         this.type = GameType.get(config.getString("type"));
         this.components = Maps.newHashMap();
         this.lastPlayerCount = getPlayers().length;
-        this.signs = Sets.newHashSet();
+        this.signs = Lists.newArrayList();
 
         board = Bukkit.getScoreboardManager().getNewScoreboard();
         objective = board.registerNewObjective(ChatColor.translateAlternateColorCodes('&', "&6&l" + getType().toString()), "dummy");

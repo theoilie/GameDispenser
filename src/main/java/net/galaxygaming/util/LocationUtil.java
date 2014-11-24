@@ -30,6 +30,21 @@ public class LocationUtil {
 	}
 	
 	/**
+	 * Converts a Location to a String leaving off the world name at the beginning
+     * @param location the Location to be converted
+     * @return the String form of the location parameter
+	 */
+	public static String serializeLocationShort(Location location) {
+	    StringBuilder builder = new StringBuilder();
+        builder.append(location.getBlockX());
+        builder.append(',');
+        builder.append(location.getBlockY());
+        builder.append(',');
+        builder.append(location.getBlockZ());
+        return builder.toString();
+	}
+	
+	/**
 	 * Converts a String to a Location
 	 * @param string the String to be converted
 	 * @return the Location form of the string parameter

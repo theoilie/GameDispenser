@@ -12,7 +12,7 @@ import com.google.common.collect.Sets;
 
 class PrefixedReflectCommand extends ReflectCommand implements CommandExecutor {
 
-    private final Set<Command> subCommands;
+    final Set<Command> subCommands;
     
     public PrefixedReflectCommand(String prefix) {
         super(prefix);
@@ -41,6 +41,7 @@ class PrefixedReflectCommand extends ReflectCommand implements CommandExecutor {
                 }
             }
         }
-        return false;
+        
+        return new HelpCommand().onCommand(sender, null, null, args);
     }
 }

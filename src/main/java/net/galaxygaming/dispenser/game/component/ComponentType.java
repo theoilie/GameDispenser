@@ -33,4 +33,15 @@ public abstract class ComponentType {
             return true;
         }
     }
+    
+    public String getPrintedValue(Class<?> clazz, Object o) {
+        return o.toString();
+    }
+    
+    /**
+     * Returns two arguments if successful: the type of the component, and its existing value
+     */
+    public String[] getInfo(Game game, Field field) throws IllegalArgumentException, IllegalAccessException {        
+        return new String[] {field.getType().getSimpleName(), (!isSetup(game, field) ? "&cX" : "&a" + field.get(game).toString())};
+    }
 }
