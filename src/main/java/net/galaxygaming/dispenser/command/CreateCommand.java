@@ -36,6 +36,7 @@ class CreateCommand extends Command {
     			sendMessage(messages.getMessage(CommandMessage.GAME_CREATE_SUCCESS), game.getName(), game.getType().toString());
         } catch (InvalidGameException e) {
             error(e.getMessage());
+            e.printStackTrace();
         }
     }
 }
