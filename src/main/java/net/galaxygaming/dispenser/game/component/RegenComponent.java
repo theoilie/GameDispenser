@@ -37,14 +37,4 @@ class RegenComponent extends ComponentType {
         }
         return new RegenableSelection(game, name, selection);
     }
-    
-    @Override
-    public String[] getInfo(Game game, Field field) {        
-        return new String[] { "Selection", !isSetup(game, field) ? "&cX" : "&asetup"};
-    }
-    
-    @Override
-    public String getPrintedValue(Class<?> clazz, Object o) {
-        return ((RegenableSelection) o).getSelection().toString();
-    }
 }

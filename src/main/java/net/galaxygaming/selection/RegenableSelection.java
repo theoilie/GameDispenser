@@ -23,7 +23,7 @@ import net.galaxygaming.dispenser.task.GameRunnable;
  * sometime during or after the game
  */
 public class RegenableSelection {
-    private int blocksPerInterval = 2500;
+    private int blocksPerInterval = 5000;
     private long intervalTicks = 10;
     
     private final Selection selection;
@@ -38,7 +38,7 @@ public class RegenableSelection {
      * @param selection selection specifying area
      */
     public RegenableSelection(Game game, String regionName, Selection selection) {
-        this.selection = selection.clone();
+        this.selection = selection;
         this.game = game;
         this.regionName = regionName;
         
@@ -217,8 +217,8 @@ public class RegenableSelection {
         }
         
         game.getConfig().set(regionName, selection);
-        game.getConfig().set("blocks_per_interval", blocksPerInterval);
-        game.getConfig().set("interval_ticks", intervalTicks);
+        game.getConfig().set("blocks per interval", blocksPerInterval);
+        game.getConfig().set("interval ticks", intervalTicks);
     }
     
     /** 
@@ -255,8 +255,8 @@ public class RegenableSelection {
             in.read(data);
             
             RegenableSelection region = new RegenableSelection(game, regionName, selection, blocks, data);
-            region.blocksPerInterval = game.getConfig().getInt("blocks_per_interval", region.blocksPerInterval);
-            region.intervalTicks = game.getConfig().getLong("interval_ticks", region.intervalTicks);
+            region.blocksPerInterval = game.getConfig().getInt("blocks per interval", region.blocksPerInterval);
+            region.intervalTicks = game.getConfig().getLong("interval ticks", region.intervalTicks);
             return region;
         } catch (FileNotFoundException e) {
             game.getLogger().log(Level.WARNING, "Could not find file: " + file.getName(), e);

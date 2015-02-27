@@ -35,7 +35,7 @@ class TeamCommand extends Command {
         Team[] teams = ((TeamGame) game).getTeams().toArray(new Team[0]);
         
         if (args.length == 0) {
-            printList(1, "Teams", teams);
+            printList(1, teams);
             return;
         }
         
@@ -49,7 +49,7 @@ class TeamCommand extends Command {
         
         if (selectedTeam == null) {
             error(messages.getMessage(CommandMessage.NO_TEAM), args[0]);
-            printList(1, "Teams", teams);
+            printList(1, teams);
             return;
         }
         

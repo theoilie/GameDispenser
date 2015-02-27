@@ -75,7 +75,7 @@ class PrimitiveComponent extends ComponentType {
                 } else if (!selection.arePointsInSameWorld()) {
                     throw new SetComponentException(game, "selection.pointsDifferentWorlds");
                 }
-                return selection.clone();
+                return selection;
             }
         } catch (NumberFormatException e) {
             throw new SetComponentException(game, "commands.notANumber", args);
@@ -83,15 +83,4 @@ class PrimitiveComponent extends ComponentType {
         
         return null;
     }
-    
-//    @Override
-//    public String getPrintedValue(Class<?> clazz, Object o) {
-//        if (Selection.class.isAssignableFrom(clazz)) {
-//            return ((Selection) o).toString();
-//        } else if (ItemStack.class.isAssignableFrom(clazz)) {
-//            return ((ItemStack) o).toString();
-//        }
-//        
-//        return super.getPrintedValue(clazz, o);
-//    }
 }

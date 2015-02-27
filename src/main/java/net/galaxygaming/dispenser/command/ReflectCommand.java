@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 
 class ReflectCommand extends org.bukkit.command.Command {
 
-    CommandExecutor executor;
+    private CommandExecutor executor;
     
     ReflectCommand(String name, Command command, CommandExecutor executor) {
         super(name, command.getDescription(), command.getUsageTemplate(false), command.getAliases());        

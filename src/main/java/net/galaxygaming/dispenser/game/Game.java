@@ -1,7 +1,6 @@
 package net.galaxygaming.dispenser.game;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -9,6 +8,8 @@ import net.galaxygaming.dispenser.GameDispenser;
 import net.galaxygaming.dispenser.game.component.Component;
 import net.galaxygaming.dispenser.game.component.SetComponentException;
 import net.galaxygaming.dispenser.kit.Kit;
+import net.galaxygaming.selection.Selection;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -37,7 +38,7 @@ public interface Game {
      * Gives a set of sign locations for this game
      * @return the signs
      */
-    public List<Location> getSigns();
+    public Set<Location> getSigns();
     
      /**
       * Sends a message to every player in the game
@@ -207,22 +208,6 @@ public interface Game {
     public Set<String> getComponents();
     
     /**
-     * Gives information for a component: its type, and whether it is setup
-     * @param componentName name of the component
-     * @return
-     */
-    public String[] getComponentInfo(String componentName);
-    
-    /**
-     * Gives information for all components: their type, and whether they are setup
-     * @return Two object in the array: <ol>
-     *      <li>int array with number of components already setup and total components
-     *      <li>String[][] array with data for each component
-     *      </ol>
-     */
-    public Object[] getComponentsInfo();
-
-    /**
      * Begins the countdown process before this game starts
      */
     public void startCountdown();
@@ -253,19 +238,12 @@ public interface Game {
     public boolean isFinished();
     
     /**
-     * Checks to see if all components are setup
-     * <br>component system @see {@link Component}
+     * Override this method to determine if the game is setup.
      * @return true if the game is setup correctly
+     * @deprecated Don't override this method in new 
+     * component system @see {@link Component}
      */
     public boolean isSetup();
-    
-    /**
-     * Checks if a component is set yet
-     * <br>component system @see {@link Component}
-     * @param componentName component to check is setup
-     * @return true if the component has already been setup correctly
-     */
-    public boolean isSetup(String componentName);
     
     /**
      * Gets a games kits, if applicable

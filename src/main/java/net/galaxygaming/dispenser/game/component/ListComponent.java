@@ -120,11 +120,4 @@ class ListComponent extends ComponentType {
         }
         return result;
     }
-    
-    public String[] getInfo(Game game, Field field) throws IllegalArgumentException, IllegalAccessException {    
-        field.setAccessible(true);
-        List<?> list = (List<?>) field.get(game);
-        Class<?> type = ComponentManager.getParameterizedType(field.getGenericType());
-        return new String[] {"List: " + type.getSimpleName(), (!isSetup(game, field) ? "&c" : "&a") + list.size() + " values"};
-    }
 }

@@ -95,7 +95,7 @@ public abstract class Command implements CommandExecutor {
     }
     
     private final boolean hasPermission() {
-        return permission == null ? true : sender.hasPermission(permission);
+        return sender.hasPermission(permission);
     }
     
     /**
@@ -148,83 +148,25 @@ public abstract class Command implements CommandExecutor {
     }
     
     /**
-     * Prints an array of objects, 9 a page
+     * Prints an array of objects, 30 a page
      * @param page page to print
      * @param objects array of objects
      */
-    protected final void printList(int page, String header, Object[] objects) {
+    protected final void printList(int page, Object[] objects) {
         int total = objects.length;
-        int pages = (int) Math.ceil(total / 8.0d);
+        int pages = total / 30;
         
         if (page < 1 || page > pages) {
-            error(messages.getMessage(CommandMessage.NO_PAGE), page);
+            error(messages.getMessage(CommandMessage.NO_PAGE));
             return;
         }
         
-        sendMessage(messages.getMessage(CommandMessage.LIST_HEADER_FORMAT), header, page, pages);
-        for (int i = (page - 1) * 8; i < page * 8 && i < objects.length; i++) {
-            sendMessage(objects[i].toString());
-        }
-    }
-    
-    /**
-     * Prints an array of objects in a table format
-     * @param titles
-     * @param data
-     * @param spacings
-     * @param page
-     * @param isConsole
-     */
-    protected final void printTable(String[] titles, String[][] data, int[] spacings, String header, int page, boolean isConsole) {
-        int total = data.length;
-        int pages = (int) Math.ceil(total / 8.0d);
-        
-        if (page < 1 || page > pages) {
-            error(messages.getMessage(CommandMessage.NO_PAGE), page);
-            return;
+        StringBuilder result = new StringBuilder();
+        for (int i = (page - 1) * 30; i < page * 30 && i < objects.length; i++) {
+            result.append(objects[i].toString());
         }
         
-        sendMessage(messages.getMessage(CommandMessage.LIST_HEADER_FORMAT), header, page, pages);        
-
-        int lineCount = (page == pages) ? (total - 8*(pages-1)) + 1 : 9;
-        String[][] lines = new String[lineCount][titles.length];
-        for (int i = 0; i < titles.length; i++) {
-            lines[0][i] = ChatColor.UNDERLINE + titles[i];
-            for (int j = 0; j < lineCount - 1; j++) {
-                lines[j+1][i] = data[j+(page-1)*8][i];
-            }
-        }
-        
-        int lineLen, lineLen2;
-        int spacing;
-        String line;
-        Object[] fields;
-        String result = "";
-        
-        for (int i = 0; i < lineCount; i++) {
-            lineLen = 0;
-            lineLen2 = 0;
-            line = "";
-            
-            for (int j = 0; j < titles.length; j++) {
-                
-                while(lineLen < lineLen2) {
-                    line += ' ';
-                    lineLen += isConsole ? 1 : 4;
-                }
-                
-                spacing = j < spacings.length ? spacings[j] : 10;
-                spacing = isConsole ? spacing : spacing * 6;
-                fields = FormatUtil.pxSubstring(lines[i][j], spacing, isConsole);
-                line += (String) fields[0];
-                lineLen += (int) fields[1];
-                lineLen2 += spacing;
-            }
-            
-            result += "&r&e" + (result.length() < 1 ? line : '\n' + line);
-        }
-        
-        sendMessage(result);
+        sendMessage(result.toString());
     }
     
     /**
@@ -340,7 +282,6 @@ public abstract class Command implements CommandExecutor {
             WAND_MESSAGE					= "selection.wandMessage",
             NO_TEAM                      = "commands.noTeam",
             NOT_TEAM_GAME                = "commands.notTeamGame",
-            NO_KIT						= "commands.noKit",
-            LIST_HEADER_FORMAT           = "commands.listHeaderFormat";
+            NO_KIT						= "commands.noKit";
     }   
 }

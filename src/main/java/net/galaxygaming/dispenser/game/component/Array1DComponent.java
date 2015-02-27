@@ -67,22 +67,6 @@ class Array1DComponent extends ComponentType {
                 throw new SetComponentException(game, "component.array.null", field.getName());
             }
             
-            if (args.matches("^i$|^info$")) {
-                String response = name + " info:\n";
-                for (int i = 0; i < result.length; i++) {
-                    response += i + ": ";
-                    if (result[i] == null) {
-                        response += "null";
-                    } else {
-                        response += ComponentManager.getPrintedValue(type, result[i]);
-                    }
-                    if (i < result.length - 1) {
-                        response += "\n";
-                    }
-                }
-                throw new SetComponentException(response);
-            }
-            
             int index = 0;
             try {
                 index = Integer.valueOf(args);
@@ -125,19 +109,5 @@ class Array1DComponent extends ComponentType {
             }
         }
         return result;
-    }
-    
-    @Override
-    public String[] getInfo(Game game, Field field) throws IllegalArgumentException, IllegalAccessException {
-        field.setAccessible(true);
-        Object[] array = (Object[]) field.get(game);
-        Class<?> type = field.getType().getComponentType();
-        int setup = 0;
-        for (Object o : array) {
-            if (o != null) {
-                setup++;
-            }
-        }
-        return new String[] {"Array: " + type.getSimpleName(), (!isSetup(game, field) ? "&c" : "&a") + setup + "&7/&6" + array.length};
     }
 }

@@ -18,16 +18,15 @@ public class CommandManager {
     /** Singleton instance */
     private static final CommandManager instance = new CommandManager();
     
-    final Map<GameType, Set<ReflectCommand>> commands;
+    private final Map<GameType, Set<ReflectCommand>> commands;
     private CommandMap cmap;
-    PrefixedReflectCommand root;
     
     private CommandManager() {
         commands = Maps.newHashMap();
     }
     
     public void setup(GameDispenser plugin) {
-        root = new PrefixedReflectCommand("gd");
+        PrefixedReflectCommand root = new PrefixedReflectCommand("gd");
         plugin.getCommand("gd").setExecutor(root);
         root.addExecutor(new CreateCommand());
         root.addExecutor(new JoinCommand());
@@ -40,10 +39,6 @@ public class CommandManager {
         root.addExecutor(new WandCommand());
         root.addExecutor(new SetCommand());
         root.addExecutor(new ListCommand());
-        root.addExecutor(new ComponentCommand());
-        root.addExecutor(new TeamCommand());
-        root.addExecutor(new KitCommand());
-        root.addExecutor(new HelpCommand());
     }
     
     /**
@@ -70,10 +65,6 @@ public class CommandManager {
         ReflectCommand cmd;
         
         if (command.hasPrefix()) {
-            if (command.getPrefix().equalsIgnoreCase("gd")) {
-                throw new RuntimeException("Command " + command.getName() + " cannot use the 'gd' prefix");
-            }
-            
             PrefixedReflectCommand prefixedCommand = null;
             
             for (ReflectCommand reflectCommand : commandSet) {
